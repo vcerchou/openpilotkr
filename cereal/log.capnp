@@ -674,6 +674,25 @@ struct ControlsState @0x97ff69c53601abf1 {
   cumLagMs @15 :Float32;
   canErrorCounter @57 :UInt32;
 
+  # atom
+  alertTextMsg1  @66 :Text;
+  alertTextMsg2  @67 :Text;
+  alertTextMsg3  @68 :Text;
+  # opkr
+  lateralControlMethod  @69 :UInt8;
+  limitSpeedCamera @70 :Float32 = 0;
+  limitSpeedCameraDist @71 :Float32 = 0;
+  steerRatio @72 :Float32;
+  mapSign @73 :Float32;
+  mapSignCam @74 :Float32;
+  dynamicTRMode @75 :UInt8;
+  dynamicTRValue @76 :Float32;
+  pauseSpdLimit @77 :Bool;
+  accel @78 :Float32;
+  safetySpeed @79 :Float32;
+  steeringAngleDesiredDeg @80 :Float32;
+  gapBySpeedOn @81 :Bool;
+
   lateralControlState :union {
     indiState @52 :LateralINDIState;
     pidState @53 :LateralPIDState;
@@ -1051,6 +1070,15 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   curvatureRates @28 :List(Float32);
 
   solverExecutionTime @30 :Float32;
+
+  # opkr
+  outputScale @32 :Float32;
+  standstillElapsedTime @33 :Float32;
+  vCruiseSet @34 :Float32;
+  vCurvature @35 :Float32;
+  lanelessMode @36 :Bool;
+  modelSpeed @37 :Float32;
+  totalCameraOffset @38 :Float32;
 
   enum Desire {
     none @0;
@@ -1965,6 +1993,41 @@ struct LiveTorqueParametersData {
   useParams @12 :Bool;
 }
 
+struct LiveENaviData {
+  speedLimit @0 :Int32;
+  safetyDistance @1 :Float32;
+  safetySign @2 :Int32;
+  turnInfo @3 :Int32;
+  distanceToTurn @4 :Float32;
+  safetySignCam @5 :Int32;
+  connectionAlive @6 :Bool;
+  roadLimitSpeed @7 :Int32;
+  linkLength @8 :Int32;
+  currentLinkAngle @9 :Int32;
+  nextLinkAngle @10 :Int32;
+  roadName @11 :Text;
+  isHighway @12 :Bool;
+  isTunnel @13 :Bool;
+  opkr0 @14 :Text;
+  opkr1 @15 :Text;
+  opkr2 @16 :Text;
+  opkr3 @17 :Text;
+  opkr4 @18 :Text;
+  opkr5 @19 :Text;
+  opkr6 @20 :Text;
+  opkr7 @21 :Text;
+  opkr8 @22 :Text;
+  opkr9 @23 :Text;
+  wazeAlertId @24 :Int8;
+  wazeAlertDistance @25 :Int32;
+  wazeRoadSpeedLimit @26 :Int32;
+  wazeRoadName @27 :Text;
+  wazeNavSign @28 :Int64;
+  wazeNavDistance @29 :Int32;
+  wazeCurrentSpeed @30 :Int32;
+  wazeAlertType @31 :Text;
+}
+
 struct LiveMapDataDEPRECATED {
   speedLimitValid @0 :Bool;
   speedLimit @1 :Float32;
@@ -2203,6 +2266,8 @@ struct Event {
     logMessage @18 :Text;
     errorLogMessage @85 :Text;
 
+    # OPKR Navi
+    liveENaviData @117: LiveENaviData;
     # navigation
     navInstruction @82 :NavInstruction;
     navRoute @83 :NavRoute;

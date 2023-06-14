@@ -140,6 +140,34 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     startupFuzzyFingerprintDEPRECATED @97;
     noTargetDEPRECATED @25;
     brakeUnavailableDEPRECATED @2;
+
+    laneChangeManual @118;
+    emgButtonManual @119;
+    driverSteering @120;
+    modeChangeOpenpilot @121;
+    modeChangeDistcurv @122;
+    modeChangeDistance @123;
+    modeChangeCurv @124;
+    modeChangeOneway @125;
+    modeChangeMaponly @126;
+    needBrake @127;
+    standStill @128;
+    e2eLongAlert @129;
+    isgActive @130;
+    camSpeedDown @131;
+    gapAdjusting @132;
+    resCruise @133;
+    curvSpeedDown @134;
+    standstillResButton @135;
+    routineDriveOn @136;
+    lkasEnabled @137;
+    cutinDetection @139;
+    gearNotD @140;
+    unSleepMode @141;
+    speedBump @142;
+    sccDriverOverride @143;
+    doNotDisturb @144;
+    chimeAtResume @145;
   }
 }
 
@@ -217,6 +245,37 @@ struct CarState {
   fuelGauge @41 :Float32; # battery or fuel tank level from 0.0 to 1.0
   charging @43 :Bool;
 
+  # opkr-tpms
+  tpms @48 :TPMS;
+
+  radarDistance @49 :Float32;
+  standStill @50 :Bool;
+  vSetDis @51 :Float32;
+  cruiseButtons @52 :Float32;
+  cruiseAccStatus @53 :Bool;
+  driverAcc @54 :Bool;
+  brakeHold @55 :Bool;    # AutoHold
+  cruiseGapSet @56 :UInt8;
+
+  # opkr
+  safetyDist @57 :Float32;
+  safetySign @58 :Float32;
+  vEgoOP @59 :Float32;  # openpilot speed
+  gearStep @60 :Int8;
+  isMph @61 :Bool;
+  aReqValue @62 :Float32;
+  engineRpm @63 :Float32;
+  chargeMeter @64 :Float32;
+  brakeLights @65 :Bool;
+
+  struct TPMS {
+    unit @0 :Int8;
+    fl @1 :Float32;
+    fr @2 :Float32;
+    rl @3 :Float32;
+    rr @4 :Float32;
+  }
+
   struct WheelSpeeds {
     # optional wheel speeds
     fl @0 :Float32;
@@ -233,6 +292,12 @@ struct CarState {
     speedOffset @3 :Float32;
     standstill @4 :Bool;
     nonAdaptive @5 :Bool;
+
+    # atom
+    modeSel @7 :Int16;
+    cruiseSwState @8 :Int16;
+    accActive @9 :Bool;
+    gapSet @10 :Int16;
   }
 
   enum GearShifter {
@@ -351,6 +416,9 @@ struct CarControl {
     accel @4: Float32; # m/s^2
     longControlState @5: LongControlState;
 
+    # opkr
+    oaccel @9: Float32; # m/s^2
+    
     enum LongControlState @0xe40f3a917d908282{
       off @0;
       pid @1;
@@ -378,6 +446,8 @@ struct CarControl {
     leftLaneVisible @7: Bool;
     rightLaneDepart @8: Bool;
     leftLaneDepart @9: Bool;
+    vFuture @10:Float32;
+    vFutureA @11:Float32;
 
     enum VisualAlert {
       # these are the choices from the Honda
@@ -405,6 +475,8 @@ struct CarControl {
       prompt @6;
       promptRepeat @7;
       promptDistracted @8;
+      warning @9;
+      dingdong @10;
     }
   }
 
@@ -496,6 +568,24 @@ struct CarParams {
     safetyParamDEPRECATED @1 :Int16;
     safetyParam2DEPRECATED @2 :UInt32;
   }
+
+  # opkr
+  mdpsBus @72: Int8;
+  sasBus @73: Int8;
+  sccBus @74: Int8;
+  fcaBus @75: Int8;
+  bsmAvailable @76: Bool;
+  lfaAvailable @77: Bool;
+  lvrAvailable @78: Bool;
+  evgearAvailable @79: Bool;
+  emsAvailable @80: Bool;
+  standStill @81: Bool;
+  vCruisekph @82: Float32;
+  resSpeed @83: Float32;
+  vFuture @84: Float32;
+  aqValue @85: Float32;
+  aqValueRaw @86: Float32;
+  vFutureA @87: Float32;
 
   struct LateralParams {
     torqueBP @0 :List(Int32);

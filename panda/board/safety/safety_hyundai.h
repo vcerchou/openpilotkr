@@ -29,6 +29,15 @@ const CanMsg HYUNDAI_TX_MSGS[] = {
   {832, 0, 8},  // LKAS11 Bus 0
   {1265, 0, 4}, // CLU11 Bus 0
   {1157, 0, 4}, // LFAHDA_MFC Bus 0
+  {1265, 2, 4}, // CLU11 Bus 2
+  {593, 2, 8},  // MDPS12 Bus 2
+  {1056, 0, 8}, // SCC11 Bus 0
+  {1057, 0, 8}, // SCC12 Bus 0
+  {1290, 0, 8}, // SCC13 Bus 0
+  {905, 0, 8},  // SCC14 Bus 0
+  {909, 0, 8},  // FCA11 Bus 0
+  {1155, 0, 8}, // FCA12 Bus 0
+  {1186, 0, 8}, // FRT_RADAR11 Bus 0
 };
 
 const CanMsg HYUNDAI_LONG_TX_MSGS[] = {
@@ -43,12 +52,23 @@ const CanMsg HYUNDAI_LONG_TX_MSGS[] = {
   {909, 0, 8},  // FCA11 Bus 0
   {1155, 0, 8}, // FCA12 Bus 0
   {2000, 0, 8}, // radar UDS TX addr Bus 0 (for radar disable)
+  {1265, 2, 4}, // CLU11 Bus 2
+  {593, 2, 8},  // MDPS12 Bus 2
 };
 
 const CanMsg HYUNDAI_CAMERA_SCC_TX_MSGS[] = {
   {832, 0, 8},  // LKAS11 Bus 0
   {1265, 2, 4}, // CLU11 Bus 2
   {1157, 0, 4}, // LFAHDA_MFC Bus 0
+  {593, 2, 8},  // MDPS12 Bus 2
+  {1265, 0, 4}, // CLU11 Bus 0
+  {1056, 0, 8}, // SCC11 Bus 0
+  {1057, 0, 8}, // SCC12 Bus 0
+  {1290, 0, 8}, // SCC13 Bus 0
+  {905, 0, 8},  // SCC14 Bus 0
+  {909, 0, 8},  // FCA11 Bus 0
+  {1155, 0, 8}, // FCA12 Bus 0
+  {1186, 0, 8}, // FRT_RADAR11 Bus 0
 };
 
 AddrCheckStruct hyundai_addr_checks[] = {
@@ -84,7 +104,7 @@ AddrCheckStruct hyundai_legacy_addr_checks[] = {
            {881, 0, 8, .expected_timestep = 10000U}, { 0 }}},
   {.msg = {{902, 0, 8, .expected_timestep = 10000U}, { 0 }, { 0 }}},
   {.msg = {{916, 0, 8, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
+  //{.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
 #define HYUNDAI_LEGACY_ADDR_CHECK_LEN (sizeof(hyundai_legacy_addr_checks) / sizeof(hyundai_legacy_addr_checks[0]))
 
@@ -175,11 +195,18 @@ static int hyundai_rx_hook(CANPacket_t *to_push) {
   int bus = GET_BUS(to_push);
   int addr = GET_ADDR(to_push);
 
-  // SCC12 is on bus 2 for camera-based SCC cars, bus 0 on all others
-  if (valid && (addr == 1057) && (((bus == 0) && !hyundai_camera_scc) || ((bus == 2) && hyundai_camera_scc))) {
-    // 2 bits: 13-14
-    int cruise_engaged = (GET_BYTES(to_push, 0, 4) >> 13) & 0x3U;
-    hyundai_common_cruise_state_check(cruise_engaged);
+  //// SCC12 is on bus 2 for camera-based SCC cars, bus 0 on all others
+  //if (valid && (addr == 1057) && (((bus == 0) && !hyundai_camera_scc) || ((bus == 2) && hyundai_camera_scc))) {
+  //  // 2 bits: 13-14
+  //  int cruise_engaged = (GET_BYTES(to_push, 0, 4) >> 13) & 0x3U;
+  //  hyundai_common_cruise_state_check(cruise_engaged);
+  //}
+
+  // MainMode ACC
+  if (valid && (addr == 1056)) {
+    // 1 bits: 0
+    int cruise_available = GET_BIT(to_push, 0U);
+    hyundai_common_cruise_state_check(cruise_available);
   }
 
   if (valid && (bus == 0)) {
@@ -229,6 +256,11 @@ static int hyundai_rx_hook(CANPacket_t *to_push) {
   return valid;
 }
 
+uint32_t last_ts_lkas11_from_op = 0;
+uint32_t last_ts_scc12_from_op = 0;
+uint32_t last_ts_mdps12_from_op = 0;
+uint32_t last_ts_fca11_from_op = 0;
+
 static int hyundai_tx_hook(CANPacket_t *to_send) {
 
   int tx = 1;
@@ -258,15 +290,15 @@ static int hyundai_tx_hook(CANPacket_t *to_send) {
     int desired_accel_raw = (((GET_BYTE(to_send, 4) & 0x7U) << 8) | GET_BYTE(to_send, 3)) - 1023U;
     int desired_accel_val = ((GET_BYTE(to_send, 5) << 3) | (GET_BYTE(to_send, 4) >> 5)) - 1023U;
 
-    int aeb_decel_cmd = GET_BYTE(to_send, 2);
-    int aeb_req = GET_BIT(to_send, 54U);
+    //int aeb_decel_cmd = GET_BYTE(to_send, 2);
+    //int aeb_req = GET_BIT(to_send, 54U);
 
     bool violation = false;
 
     violation |= longitudinal_accel_checks(desired_accel_raw, HYUNDAI_LONG_LIMITS);
     violation |= longitudinal_accel_checks(desired_accel_val, HYUNDAI_LONG_LIMITS);
-    violation |= (aeb_decel_cmd != 0);
-    violation |= (aeb_req != 0);
+    //violation |= (aeb_decel_cmd != 0);
+    //violation |= (aeb_req != 0);
 
     if (violation) {
       tx = 0;
@@ -291,15 +323,26 @@ static int hyundai_tx_hook(CANPacket_t *to_send) {
     }
   }
 
-  // BUTTONS: used for resume spamming and cruise cancellation
-  if ((addr == 1265) && !hyundai_longitudinal) {
-    int button = GET_BYTE(to_send, 0) & 0x7U;
+  //// BUTTONS: used for resume spamming and cruise cancellation
+  //if ((addr == 1265) && !hyundai_longitudinal) {
+  //  int button = GET_BYTE(to_send, 0) & 0x7U;
+  //
+  //  bool allowed_resume = (button == 1) && controls_allowed;
+  //
+  //  bool allowed_cancel = (button == 4) && cruise_engaged_prev;
+  //  if (!(allowed_resume || allowed_cancel)) {
+  //    tx = 0;
+  //  }
+  //}
 
-    bool allowed_resume = (button == 1) && controls_allowed;
-    bool allowed_cancel = (button == 4) && cruise_engaged_prev;
-    if (!(allowed_resume || allowed_cancel)) {
-      tx = 0;
-    }
+  if (addr == 832) {
+    last_ts_lkas11_from_op = (tx == 0 ? 0 : microsecond_timer_get());
+  } else if (addr == 1057) {
+    last_ts_scc12_from_op = (tx == 0 ? 0 : microsecond_timer_get());
+  } else if (addr == 593) {
+    last_ts_mdps12_from_op = (tx == 0 ? 0 : microsecond_timer_get());
+  } else if (addr == 909) {
+    last_ts_fca11_from_op = (tx == 0 ? 0 : microsecond_timer_get());
   }
 
   return tx;
@@ -309,12 +352,46 @@ static int hyundai_fwd_hook(int bus_num, int addr) {
 
   int bus_fwd = -1;
 
+  uint32_t now = microsecond_timer_get();
+
   // forward cam to ccan and viceversa, except lkas cmd
   if (bus_num == 0) {
     bus_fwd = 2;
+
+    if(addr == 593) {
+      if(now - last_ts_mdps12_from_op < 200000) {
+        bus_fwd = -1;
+      }
+    }
   }
-  if ((bus_num == 2) && (addr != 832) && (addr != 1157)) {
-    bus_fwd = 0;
+  //if ((bus_num == 2) && (addr != 832) && (addr != 1157)) {
+  //  bus_fwd = 0;
+  //}
+
+  if (bus_num == 2) {
+    bool is_lkas_msg = addr == 832;
+    bool is_lfahda_msg = addr == 1157;
+    bool is_scc_msg = addr == 1056 || addr == 1057 || addr == 1290 || addr == 905;
+    bool is_fca_msg = addr == 909 || addr == 1155;
+
+    bool block_msg = is_lkas_msg || is_lfahda_msg || is_scc_msg; //|| is_fca_msg;
+    if (!block_msg) {
+      bus_fwd = 0;
+    } else {
+      if (is_lkas_msg || is_lfahda_msg) {
+        if (now - last_ts_lkas11_from_op >= 200000) {
+          bus_fwd = 0;
+        }
+      } else if (is_scc_msg) {
+        if (now - last_ts_scc12_from_op >= 400000) {
+          bus_fwd = 0;
+      	}
+      } else if (is_fca_msg) {
+        if (now - last_ts_fca11_from_op >= 400000) {
+          bus_fwd = 0;
+    	}
+      }
+    }
   }
 
   return bus_fwd;

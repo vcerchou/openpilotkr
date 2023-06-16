@@ -15,6 +15,8 @@ from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX, get_friction
 from selfdrive.controls.lib.events import Events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 
+from common.params import Params
+
 ButtonType = car.CarState.ButtonEvent.Type
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
@@ -83,6 +85,8 @@ class CarInterfaceBase(ABC):
     self.CC = None
     if CarController is not None:
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
+
+	self.ufc_mode = Params().get_bool('UFCModeEnabled')
 
   @staticmethod
   def get_pid_accel_limits(CP, current_speed, cruise_speed):
@@ -176,6 +180,14 @@ class CarInterfaceBase(ABC):
     ret.longitudinalActuatorDelayLowerBound = 0.15
     ret.longitudinalActuatorDelayUpperBound = 0.15
     ret.steerLimitTimer = 1.0
+
+    ret.vCruisekph = 0
+    ret.resSpeed = 0
+    ret.vFuture = 0
+    ret.vFutureA = 0
+    ret.aqValue = 0
+    ret.aqValueRaw = 0
+
     return ret
 
   @staticmethod
@@ -273,7 +285,7 @@ class CarInterfaceBase(ABC):
       if not self.CP.pcmCruise and (b.type in enable_buttons and not b.pressed):
         events.add(EventName.buttonEnable)
       # Disable on rising and falling edge of cancel for both stock and OP long
-      if b.type == ButtonType.cancel:
+      if b.type == ButtonType.cancel and not self.ufc_mode:
         events.add(EventName.buttonCancel)
 
     # Handle permanent and temporary steering faults

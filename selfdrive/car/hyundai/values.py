@@ -93,6 +93,15 @@ class CAR:
   TUCSON_4TH_GEN = "HYUNDAI TUCSON 4TH GEN"
   TUCSON_HYBRID_4TH_GEN = "HYUNDAI TUCSON HYBRID 4TH GEN"
   SANTA_CRUZ_1ST_GEN = "HYUNDAI SANTA CRUZ 1ST GEN"
+  AVANTE_AD = "HYUNDAI AVANTE (AD)"
+  AVANTE_CN7 = "HYUNDAI AVANTE (CN7)"
+  AVANTE_HEV_CN7 = "HYUNDAI AVANTE HYBRID (CN7)"
+  I30_PD = "HYUNDAI I30 (PD)"
+  GRANDEUR_IG = "HYUNDAI GRANDEUR (IG)"
+  GRANDEUR_HEV_IG = "HYUNDAI GRANDEUR HYBRID (IG)"
+  GRANDEUR_FL_IG = "HYUNDAI GRANDEUR FL (IG)"
+  GRANDEUR_HEV_FL_IG = "HYUNDAI GRANDEUR HYBRID FL (IG)"
+  NEXO_FE = "HYUNDAI NEXO (FE)"
 
   # Kia
   KIA_FORTE = "KIA FORTE E 2018 & GT 2021"
@@ -116,6 +125,13 @@ class CAR:
   KIA_STINGER_2022 = "KIA STINGER 2022"
   KIA_CEED = "KIA CEED INTRO ED 2019"
   KIA_EV6 = "KIA EV6 2022"
+  K3_BD = "KIA K3 (BD)"
+  K5_JF = "KIA K5 (JF)"
+  K5_HEV_JF = "KIA K5 HYBRID (JF)"
+  K7_YG = "KIA K7 (YG)"
+  K7_HEV_YG = "KIA K7 HYBRID (YG)"
+  SOUL_EV_SK3 = "KIA SOUL EV (SK3)"
+  MOHAVE_HM = "KIA MOHAVE (HM)"
 
   # Genesis
   GENESIS_GV60_EV_1ST_GEN = "GENESIS GV60 ELECTRIC 1ST GEN"
@@ -125,6 +141,8 @@ class CAR:
   GENESIS_G80 = "GENESIS G80 2017"
   GENESIS_G90 = "GENESIS G90 2017"
   GENESIS_GV80 = "GENESIS GV80 2023"
+  GENESIS_DH = "GENESIS (DH)"
+  GENESIS_EQ900_HI = "GENESIS EQ900 (HI)"
 
 
 class Footnote(Enum):
@@ -193,6 +211,15 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
   ],
   CAR.TUCSON_HYBRID_4TH_GEN: HyundaiCarInfo("Hyundai Tucson Hybrid 2022-23", "All", car_parts=CarParts.common([CarHarness.hyundai_n])),
   CAR.SANTA_CRUZ_1ST_GEN: HyundaiCarInfo("Hyundai Santa Cruz 2022-23", car_parts=CarParts.common([CarHarness.hyundai_n])),
+  CAR.AVANTE_AD: HyundaiCarInfo("Hyundai Avante", video_link="https://youtu.be/_EdYQtV52-c"),
+  CAR.AVANTE_CN7: HyundaiCarInfo("Hyundai Avante 2021", video_link="https://youtu.be/_EdYQtV52-c"),
+  CAR.AVANTE_HEV_CN7: HyundaiCarInfo("Hyundai Avante Hybrid 2021"),
+  CAR.I30_PD: HyundaiCarInfo("Hyundai I30", "All"),
+  CAR.GRANDEUR_IG: HyundaiCarInfo("Hyundai Grandeur IG", "All", car_parts=CarParts.common([CarHarness.hyundai_c])),
+  CAR.GRANDEUR_HEV_IG: HyundaiCarInfo("Hyundai Grandeur IG Hybrid", "All", car_parts=CarParts.common([CarHarness.hyundai_c])),
+  CAR.GRANDEUR_FL_IG: HyundaiCarInfo("Hyundai Grandeur IG FL", "All", car_parts=CarParts.common([CarHarness.hyundai_k])),
+  CAR.GRANDEUR_HEV_FL_IG: HyundaiCarInfo("Hyundai Grandeur IG FL Hybrid", "All", car_parts=CarParts.common([CarHarness.hyundai_k])),
+  CAR.NEXO_FE: HyundaiCarInfo("Hyundai Nexo", "All"),
 
   # Kia
   CAR.KIA_FORTE: [
@@ -239,6 +266,11 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
     HyundaiCarInfo("Kia EV6 (without HDA II) 2022-23", "Highway Driving Assist", car_parts=CarParts.common([CarHarness.hyundai_l])),
     HyundaiCarInfo("Kia EV6 (with HDA II) 2022-23", "Highway Driving Assist II", car_parts=CarParts.common([CarHarness.hyundai_p]))
   ],
+  CAR.K3_BD: HyundaiCarInfo("Kia K3 2018-21"),
+  CAR.K5_JF: HyundaiCarInfo("Kia K5 2021-22", "SCC + LFA", car_parts=CarParts.common([CarHarness.hyundai_a])),
+  CAR.K5_HEV_JF: HyundaiCarInfo("Kia K5 Hybrid 2017"),
+  CAR.SOUL_EV_SK3: HyundaiCarInfo("Kia Soul EV 2019"),
+  CAR.MOHAVE_HM: HyundaiCarInfo("Kia Mohave 2019"),
 
   # Genesis
   CAR.GENESIS_GV60_EV_1ST_GEN: [
@@ -254,6 +286,8 @@ CAR_INFO: Dict[str, Optional[Union[HyundaiCarInfo, List[HyundaiCarInfo]]]] = {
   CAR.GENESIS_G80: HyundaiCarInfo("Genesis G80 2018-19", "All", car_parts=CarParts.common([CarHarness.hyundai_h])),
   CAR.GENESIS_G90: HyundaiCarInfo("Genesis G90 2017-18", "All", car_parts=CarParts.common([CarHarness.hyundai_c])),
   CAR.GENESIS_GV80: HyundaiCarInfo("Genesis GV80 2023", "All", car_parts=CarParts.common([CarHarness.hyundai_m])),
+  CAR.GENESIS_DH: HyundaiCarInfo("Genesis 2015-2016", min_enable_speed=19 * CV.MPH_TO_MS, car_parts=CarParts.common([CarHarness.hyundai_j])),
+  CAR.GENESIS_EQ900_HI: HyundaiCarInfo("Genesis EQ900", "All"),
 }
 
 class Buttons:
@@ -1806,15 +1840,18 @@ FW_VERSIONS = {
 }
 
 CHECKSUM = {
-  "crc8": [CAR.SANTA_FE, CAR.SONATA, CAR.PALISADE, CAR.KIA_SELTOS, CAR.ELANTRA_2021, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.SANTA_FE_2022, CAR.KIA_K5_2021, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.KIA_K5_HEV_2020],
-  "6B": [CAR.KIA_SORENTO, CAR.HYUNDAI_GENESIS],
+  "crc8": [CAR.SANTA_FE, CAR.SONATA, CAR.PALISADE, CAR.KIA_SELTOS, CAR.ELANTRA_2021, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.SANTA_FE_2022, CAR.KIA_K5_2021, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.KIA_K5_HEV_2020, CAR.AVANTE_CN7, CAR.SOUL_EV_SK3, CAR.AVANTE_HEV_CN7],
+  "6B": [CAR.KIA_SORENTO, CAR.HYUNDAI_GENESIS, CAR.GENESIS_DH],
 }
 
 CAN_GEARS = {
   # which message has the gear
-  "use_cluster_gears": {CAR.ELANTRA, CAR.KONA},
-  "use_tcu_gears": {CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.SONATA_LF, CAR.VELOSTER, CAR.TUCSON},
-  "use_elect_gears": {CAR.KIA_NIRO_EV, CAR.KIA_NIRO_PHEV, CAR.KIA_NIRO_HEV_2021, CAR.KIA_OPTIMA_H, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.IONIQ, CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.IONIQ_HEV_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.IONIQ_PHEV_2019, CAR.KONA_EV_2022, CAR.KIA_K5_HEV_2020},
+  "use_cluster_gears": {CAR.ELANTRA, CAR.KONA,
+                        CAR.AVANTE_AD, CAR.I30_PD, CAR.K7_YG, CAR.GRANDEUR_IG, CAR.GRANDEUR_FL_IG},
+  "use_tcu_gears": {CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.SONATA_LF, CAR.VELOSTER, CAR.TUCSON,
+                    CAR.K5_JF,},
+  "use_elect_gears": {CAR.KIA_NIRO_EV, CAR.KIA_NIRO_PHEV, CAR.KIA_NIRO_HEV_2021, CAR.KIA_OPTIMA_H, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.IONIQ, CAR.IONIQ_EV_2020, CAR.IONIQ_PHEV, CAR.ELANTRA_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.IONIQ_HEV_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.IONIQ_PHEV_2019, CAR.KONA_EV_2022, CAR.KIA_K5_HEV_2020,
+                      CAR.GRANDEUR_HEV_IG, CAR.GRANDEUR_HEV_FL_IG, CAR.NEXO_FE, CAR.K5_HEV_JF, CAR.K7_HEV_YG, CAR.SOUL_EV_SK3, CAR.AVANTE_HEV_CN7},
 }
 
 CANFD_CAR = {CAR.KIA_EV6, CAR.IONIQ_5, CAR.TUCSON_4TH_GEN, CAR.TUCSON_HYBRID_4TH_GEN, CAR.KIA_SPORTAGE_HYBRID_5TH_GEN, CAR.SANTA_CRUZ_1ST_GEN, CAR.KIA_SPORTAGE_5TH_GEN, CAR.GENESIS_GV70_1ST_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, CAR.GENESIS_GV60_EV_1ST_GEN, CAR.KIA_SORENTO_4TH_GEN, CAR.KIA_NIRO_HEV_2ND_GEN, CAR.KIA_NIRO_EV_2ND_GEN, CAR.GENESIS_GV80}
@@ -1825,8 +1862,10 @@ CANFD_RADAR_SCC_CAR = {CAR.GENESIS_GV70_1ST_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, C
 # The camera does SCC on these cars, rather than the radar
 CAMERA_SCC_CAR = {CAR.KONA_EV_2022, }
 
-HYBRID_CAR = {CAR.IONIQ_PHEV, CAR.ELANTRA_HEV_2021, CAR.KIA_NIRO_PHEV, CAR.KIA_NIRO_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.IONIQ, CAR.IONIQ_HEV_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.IONIQ_PHEV_2019, CAR.TUCSON_HYBRID_4TH_GEN, CAR.KIA_SPORTAGE_HYBRID_5TH_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, CAR.KIA_K5_HEV_2020, CAR.KIA_NIRO_HEV_2ND_GEN}  # these cars use a different gas signal
-EV_CAR = {CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.KIA_NIRO_EV, CAR.KIA_NIRO_EV_2ND_GEN, CAR.KONA_EV_2022, CAR.KIA_EV6, CAR.IONIQ_5, CAR.GENESIS_GV60_EV_1ST_GEN}
+HYBRID_CAR = {CAR.IONIQ_PHEV, CAR.ELANTRA_HEV_2021, CAR.KIA_NIRO_PHEV, CAR.KIA_NIRO_HEV_2021, CAR.SONATA_HYBRID, CAR.KONA_HEV, CAR.IONIQ, CAR.IONIQ_HEV_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022, CAR.IONIQ_PHEV_2019, CAR.TUCSON_HYBRID_4TH_GEN, CAR.KIA_SPORTAGE_HYBRID_5TH_GEN, CAR.KIA_SORENTO_PHEV_4TH_GEN, CAR.KIA_K5_HEV_2020, CAR.KIA_NIRO_HEV_2ND_GEN,
+              CAR.K5_HEV_JF, CAR.K7_HEV_YG, CAR.GRANDEUR_HEV_IG, CAR.GRANDEUR_HEV_FL_IG, CAR.AVANTE_HEV_CN7}  # these cars use a different gas signal
+EV_CAR = {CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.KONA_EV, CAR.KIA_NIRO_EV, CAR.KIA_NIRO_EV_2ND_GEN, CAR.KONA_EV_2022, CAR.KIA_EV6, CAR.IONIQ_5, CAR.GENESIS_GV60_EV_1ST_GEN,
+          CAR.NEXO_FE, CAR.SOUL_EV_SK3}
 
 # these cars require a special panda safety mode due to missing counters and checksums in the messages
 LEGACY_SAFETY_MODE_CAR = {CAR.HYUNDAI_GENESIS, CAR.IONIQ_EV_2020, CAR.IONIQ_EV_LTD, CAR.IONIQ_PHEV, CAR.IONIQ, CAR.KONA_EV, CAR.KIA_SORENTO, CAR.SONATA_LF, CAR.KIA_OPTIMA_G4, CAR.KIA_OPTIMA_G4_FL, CAR.VELOSTER,
@@ -1891,4 +1930,22 @@ DBC = {
   CAR.KIA_NIRO_HEV_2ND_GEN: dbc_dict('hyundai_canfd', None),
   CAR.KIA_NIRO_EV_2ND_GEN: dbc_dict('hyundai_canfd', None),
   CAR.GENESIS_GV80: dbc_dict('hyundai_canfd', None),
+  CAR.GENESIS_DH: dbc_dict('hyundai_kia_generic', None),
+  CAR.GENESIS_EQ900_HI: dbc_dict('hyundai_kia_generic', None),
+  CAR.AVANTE_AD: dbc_dict('hyundai_kia_generic', None),
+  CAR.AVANTE_CN7: dbc_dict('hyundai_kia_generic', None),
+  CAR.AVANTE_HEV_CN7: dbc_dict('hyundai_kia_generic', None),
+  CAR.I30_PD: dbc_dict('hyundai_kia_generic', None),
+  CAR.GRANDEUR_IG: dbc_dict('hyundai_kia_generic', None),
+  CAR.GRANDEUR_HEV_IG: dbc_dict('hyundai_kia_generic', None),
+  CAR.GRANDEUR_FL_IG: dbc_dict('hyundai_kia_generic', None),
+  CAR.GRANDEUR_HEV_FL_IG: dbc_dict('hyundai_kia_generic', None),
+  CAR.NEXO_FE: dbc_dict('hyundai_kia_generic', None),
+  CAR.K3_BD: dbc_dict('hyundai_kia_generic', None),
+  CAR.K5_JF: dbc_dict('hyundai_kia_generic', None),
+  CAR.K5_HEV_JF: dbc_dict('hyundai_kia_generic', None),
+  CAR.K7_YG: dbc_dict('hyundai_kia_generic', None),
+  CAR.K7_HEV_YG: dbc_dict('hyundai_kia_generic', None),
+  CAR.SOUL_EV_SK3: dbc_dict('hyundai_kia_generic', None),
+  CAR.MOHAVE_HM: dbc_dict('hyundai_kia_generic', None),
 }

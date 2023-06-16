@@ -168,6 +168,7 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     sccDriverOverride @143;
     doNotDisturb @144;
     chimeAtResume @145;
+    autoHold @146;
   }
 }
 
@@ -254,7 +255,7 @@ struct CarState {
   cruiseButtons @52 :Float32;
   cruiseAccStatus @53 :Bool;
   driverAcc @54 :Bool;
-  brakeHold @55 :Bool;    # AutoHold
+  autoHold @55 :Bool;    # AutoHold
   cruiseGapSet @56 :UInt8;
 
   # opkr

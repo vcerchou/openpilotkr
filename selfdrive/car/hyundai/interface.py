@@ -9,6 +9,9 @@ from selfdrive.car import STD_CARGO_KG, create_button_event, scale_tire_stiffnes
 from selfdrive.car.interfaces import CarInterfaceBase
 from selfdrive.car.disable_ecu import disable_ecu
 
+from common.params import Params
+from decimal import Decimal
+
 Ecu = car.CarParams.Ecu
 ButtonType = car.CarState.ButtonEvent.Type
 EventName = car.CarEvent.EventName
@@ -26,7 +29,8 @@ class CarInterface(CarInterfaceBase):
     # These cars have been put into dashcam only due to both a lack of users and test coverage.
     # These cars likely still work fine. Once a user confirms each car works and a test route is
     # added to selfdrive/car/tests/routes.py, we can remove it from this list.
-    ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, }
+    # ret.dashcamOnly = candidate in {CAR.KIA_OPTIMA_H, }
+    ret.dashcamOnly = False
 
     hda2 = Ecu.adas in [fw.ecu for fw in car_fw]
     CAN = CanBus(None, hda2, fingerprint)
@@ -56,8 +60,14 @@ class CarInterface(CarInterfaceBase):
       if 0x38d in fingerprint[0] or 0x38d in fingerprint[2]:
         ret.flags |= HyundaiFlags.USE_FCA.value
 
+    params = Params()
+
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerLimitTimer = 0.4
+
+    ret.steerActuatorDelay = float(Decimal(params.get("SteerActuatorDelayAdj", encoding="utf8")) * Decimal('0.01'))
+    ret.steerLimitTimer = float(Decimal(params.get("SteerLimitTimerAdj", encoding="utf8")) * Decimal('0.01'))
+    
     tire_stiffness_factor = 1.
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
@@ -233,6 +243,66 @@ class CarInterface(CarInterfaceBase):
       ret.mass = 2258. + STD_CARGO_KG
       ret.wheelbase = 2.95
       ret.steerRatio = 14.14
+    else:
+      # genesis
+      if candidate == CAR.GENESIS_DH:
+        ret.mass = 1930. + STD_CARGO_KG
+        ret.wheelbase = 3.01
+      elif candidate == CAR.GENESIS_EQ900_HI:
+        ret.mass = 2130. + STD_CARGO_KG
+        ret.wheelbase = 3.16
+      # hyundai
+      elif candidate == CAR.AVANTE_AD:
+        ret.mass = 1250. + STD_CARGO_KG
+        ret.wheelbase = 2.7
+      elif candidate == CAR.AVANTE_CN7:
+        ret.mass = 1225. + STD_CARGO_KG
+        ret.wheelbase = 2.72
+      elif candidate == CAR.AVANTE_HEV_CN7:
+        ret.mass = 1335. + STD_CARGO_KG
+        ret.wheelbase = 2.72
+      elif candidate == CAR.I30_PD:
+        ret.mass = 1380. + STD_CARGO_KG
+        ret.wheelbase = 2.65
+      elif candidate == CAR.GRANDEUR_IG:
+        ret.mass = 1560. + STD_CARGO_KG
+        ret.wheelbase = 2.845
+      elif candidate == CAR.GRANDEUR_HEV_IG:
+        ret.mass = 1675. + STD_CARGO_KG
+        ret.wheelbase = 2.845
+      elif candidate == CAR.GRANDEUR_FL_IG:
+        ret.mass = 1625. + STD_CARGO_KG
+        ret.wheelbase = 2.885
+      elif candidate == CAR.GRANDEUR_HEV_FL_IG:
+        ret.mass = 1675. + STD_CARGO_KG
+        ret.wheelbase = 2.885
+      elif candidate == CAR.NEXO_FE:
+        ret.mass = 1885. + STD_CARGO_KG
+        ret.wheelbase = 2.79
+      # kia
+      elif candidate == CAR.K5_JF:
+        ret.wheelbase = 2.805
+        ret.mass = 1475. + STD_CARGO_KG
+      elif candidate == CAR.K5_HEV_JF:
+        ret.wheelbase = 2.805
+        ret.mass = 1600. + STD_CARGO_KG
+      elif candidate == CAR.K3_BD:
+        ret.mass = 1260. + STD_CARGO_KG
+        ret.wheelbase = 2.70
+      elif candidate == CAR.K7_YG:
+        ret.mass = 1565. + STD_CARGO_KG
+        ret.wheelbase = 2.855
+      elif candidate == CAR.K7_HEV_YG:
+        ret.mass = 1680. + STD_CARGO_KG
+        ret.wheelbase = 2.855
+      elif candidate == CAR.SOUL_EV_SK3:
+        ret.mass = 1695. + STD_CARGO_KG
+        ret.wheelbase = 2.6
+      elif candidate == CAR.MOHAVE_HM:
+        ret.mass = 2285. + STD_CARGO_KG
+        ret.wheelbase = 2.895
+      tire_stiffness_factor = float(Decimal(params.get("TireStiffnessFactorAdj", encoding="utf8")) * Decimal('0.01'))
+      ret.steerRatio = float(Decimal(params.get("SteerRatioAdj", encoding="utf8")) * Decimal('0.01'))
 
     # *** longitudinal control ***
     if candidate in CANFD_CAR:
@@ -243,8 +313,26 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kpV = [0.5]
       ret.longitudinalTuning.kiV = [0.0]
       ret.experimentalLongitudinalAvailable = candidate not in (LEGACY_SAFETY_MODE_CAR | CAMERA_SCC_CAR)
+      
+
+    ret.mdpsBus = 1 if 593 in fingerprint[1] and 1296 not in fingerprint[1] else 0
+    ret.sasBus = 1 if 688 in fingerprint[1] and 1296 not in fingerprint[1] else 0
+    ret.sccBus = 0 if 1056 in fingerprint[0] else 1 if 1056 in fingerprint[1] and 1296 not in fingerprint[1] else 2 if 1056 in fingerprint[2] else -1
+    ret.fcaBus = 0 if 909 in fingerprint[0] else 2 if 909 in fingerprint[2] else -1
+    ret.bsmAvailable = True if 1419 in fingerprint[0] else False
+    ret.lfaAvailable = True if 1157 in fingerprint[2] else False
+    ret.lvrAvailable = True if 871 in fingerprint[0] else False
+    ret.evgearAvailable = True if 882 in fingerprint[0] else False
+    ret.emsAvailable = True if 608 and 809 in fingerprint[0] else False
+
+    ret.radarOffCan = ret.sccBus == -1
+    ret.standStill = False
+    ret.openpilotLongitudinalControl = Params().get_bool("RadarDisable") or ret.sccBus == 2
+      
+      
     ret.openpilotLongitudinalControl = experimental_long and ret.experimentalLongitudinalAvailable
-    ret.pcmCruise = not ret.openpilotLongitudinalControl
+    #ret.pcmCruise = not ret.openpilotLongitudinalControl
+    ret.pcmCruise = not ret.radarOffCan
 
     ret.stoppingControl = True
     ret.startingState = True
@@ -252,6 +340,13 @@ class CarInterface(CarInterfaceBase):
     ret.startAccel = 1.0
     ret.longitudinalActuatorDelayLowerBound = 0.5
     ret.longitudinalActuatorDelayUpperBound = 0.5
+
+    ret.vCruisekph = 0
+    ret.resSpeed = 0
+    ret.vFuture = 0
+    ret.vFutureA = 0
+    ret.aqValue = 0
+    ret.aqValueRaw = 0
 
     # *** feature detection ***
     if candidate in CANFD_CAR:
@@ -276,6 +371,8 @@ class CarInterface(CarInterfaceBase):
       if candidate in LEGACY_SAFETY_MODE_CAR:
         # these cars require a special panda safety mode due to missing counters and checksums in the messages
         ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
+      if ret.mdpsBus == 2 or ret.openpilotLongitudinalControl or params.get_bool("UFCModeEnabled"):
+        ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity, 0)]
       else:
         ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundai, 0)]
 
@@ -303,7 +400,7 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def init(CP, logcan, sendcan):
-    if CP.openpilotLongitudinalControl and not (CP.flags & HyundaiFlags.CANFD_CAMERA_SCC.value):
+    if CP.openpilotLongitudinalControl and not (CP.flags & HyundaiFlags.CANFD_CAMERA_SCC.value) and Params().get_bool("RadarDisable"):
       addr, bus = 0x7d0, 0
       if CP.flags & HyundaiFlags.CANFD_HDA2.value:
         addr, bus = 0x730, CanBus(CP).ECAN
@@ -316,7 +413,7 @@ class CarInterface(CarInterfaceBase):
   def _update(self, c):
     ret = self.CS.update(self.cp, self.cp_cam)
 
-    if self.CS.CP.openpilotLongitudinalControl and self.CS.cruise_buttons[-1] != self.CS.prev_cruise_buttons:
+    if self.CS.cruise_buttons[-1] != self.CS.prev_cruise_buttons:
       buttonEvents = [create_button_event(self.CS.cruise_buttons[-1], self.CS.prev_cruise_buttons, BUTTONS_DICT)]
       # Handle CF_Clu_CruiseSwState changing buttons mid-press
       if self.CS.cruise_buttons[-1] != 0 and self.CS.prev_cruise_buttons != 0:
@@ -337,6 +434,85 @@ class CarInterface(CarInterfaceBase):
       self.low_speed_alert = False
     if self.low_speed_alert:
       events.add(car.CarEvent.EventName.belowSteerSpeed)
+
+    if self.CC.longcontrol and self.CS.brake_error:
+      events.add(EventName.brakeUnavailable)
+    #if abs(ret.steeringAngle) > 90. and EventName.steerTempUnavailable not in events.events:
+    #  events.add(EventName.steerTempUnavailable)
+    # if self.ufc_mode_enabled and EventName.pedalPressed in events.events:
+    #   events.events.remove(EventName.pedalPressed)
+    if ret.vEgo < self.CP.minSteerSpeed and self.no_mdps_mods:
+      events.add(car.CarEvent.EventName.belowSteerSpeed)
+    if self.CC.need_brake and not self.CC.longcontrol:
+      events.add(EventName.needBrake)
+    if not self.CC.lkas_temp_disabled:
+      if self.CC.lanechange_manual_timer and ret.vEgo > 0.3:
+        events.add(EventName.laneChangeManual)
+      if self.CC.emergency_manual_timer:
+        events.add(EventName.emgButtonManual)
+      #if self.CC.driver_steering_torque_above_timer:
+      #  events.add(EventName.driverSteering)
+      if self.CC.standstill_res_button:
+        events.add(EventName.standstillResButton)
+      if self.CC.cruise_gap_adjusting:
+        events.add(EventName.gapAdjusting)
+      if self.CC.on_speed_bump_control and ret.vEgo > 8.3:
+        events.add(EventName.speedBump)
+      if self.CC.on_speed_control and ret.vEgo > 0.3:
+        events.add(EventName.camSpeedDown)
+      if self.CC.curv_speed_control and ret.vEgo > 8.3:
+        events.add(EventName.curvSpeedDown)
+      if self.CC.cut_in_control and ret.vEgo > 8.3:
+        events.add(EventName.cutinDetection)
+      if self.CC.driver_scc_set_control:
+        events.add(EventName.sccDriverOverride)        
+      if self.CC.autohold_popup_timer:
+        events.add(EventName.brakeHold)
+      if self.CC.auto_res_starting:
+        events.add(EventName.resCruise)
+      if self.CC.e2e_standstill:
+        events.add(EventName.chimeAtResume)
+    if self.CS.cruiseState_standstill or self.CC.standstill_status == 1:
+      #events.add(EventName.standStill)
+      self.CP.standStill = True
+    else:
+      self.CP.standStill = False
+    if self.CC.v_cruise_kph_auto_res > (20 if self.CS.is_set_speed_in_mph else 30):
+      self.CP.vCruisekph = self.CC.v_cruise_kph_auto_res
+    else:
+      self.CP.vCruisekph = 0
+    if self.CC.res_speed != 0:
+      self.CP.resSpeed = self.CC.res_speed
+    else:
+      self.CP.resSpeed = 0
+    if self.CC.vFuture >= 1:
+      self.CP.vFuture = self.CC.vFuture
+    else:
+      self.CP.vFuture = 0
+    if self.CC.vFutureA >= 1:
+      self.CP.vFutureA = self.CC.vFutureA
+    else:
+      self.CP.vFutureA = 0
+    self.CP.aqValue = self.CC.aq_value
+    self.CP.aqValueRaw = self.CC.aq_value_raw
+
+    if self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 0:
+      events.add(EventName.modeChangeOpenpilot)
+    elif self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 1:
+      events.add(EventName.modeChangeDistcurv)
+    elif self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 2:
+      events.add(EventName.modeChangeDistance)
+    elif self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 3:
+      events.add(EventName.modeChangeCurv)
+    elif self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 4:
+      events.add(EventName.modeChangeOneway)
+    elif self.CC.mode_change_timer and self.CS.out.cruiseState.modeSel == 5:
+      events.add(EventName.modeChangeMaponly)
+
+    if self.CC.lkas_temp_disabled:
+      events.add(EventName.lkasDisabled)
+    elif self.CC.lkas_temp_disabled_timer:
+      events.add(EventName.lkasEnabled)
 
     ret.events = events.to_msg()
 

@@ -671,7 +671,7 @@ class Controls:
           else:
             self.state = State.enabled
           self.current_alert_types.append(ET.ENABLE)
-          self.v_cruise_helper.initialize_v_cruise(CS, self.experimental_mode)
+          #self.v_cruise_helper.initialize_v_cruise(CS, self.experimental_mode)
 
     # Check if openpilot is engaged and actuators are enabled
     self.enabled = self.state in ENABLED_STATES
@@ -807,6 +807,10 @@ class Controls:
   def publish_logs(self, CS, start_time, CC, lac_log):
     """Send actuators and hud commands to the car, send controlsstate and MPC logging"""
 
+    self.log_alertTextMsg1 = trace1.global_alertTextMsg1
+    self.log_alertTextMsg2 = trace1.global_alertTextMsg2
+    self.log_alertTextMsg3 = trace1.global_alertTextMsg3
+
     # Orientation and angle rates can be useful for carcontroller
     # Only calibrated (car) frame is relevant for the carcontroller
     orientation_value = list(self.sm['liveLocationKalman'].calibratedOrientationNED.value)
@@ -834,6 +838,16 @@ class Controls:
     hudControl.rightLaneVisible = True
     hudControl.leftLaneVisible = True
 
+    if len(speeds):
+      v_future = speeds[self.var_cruise_speed_factor]
+      v_future_a = speeds[-1]
+    else:
+      v_future = 100.0
+      v_future_a = 100.0
+    v_future_speed= float((v_future * CV.MS_TO_KPH) if IS_KPH else (v_future * CV.MS_TO_MPH))
+    v_future_speed_a= float((v_future_a * CV.MS_TO_KPH) if IS_KPH else (v_future_a * CV.MS_TO_MPH))
+    hudControl.vFuture = v_future_speed
+    hudControl.vFutureA = v_future_speed_a
     recent_blinker = (self.sm.frame - self.last_blinker_frame) * DT_CTRL < 5.0  # 5s blinker cooldown
     ldw_allowed = self.is_ldw_enabled and CS.vEgo > LDW_MIN_SPEED and not recent_blinker \
                   and not CC.latActive and self.sm['liveCalibration'].calStatus == log.LiveCalibrationData.Status.calibrated
@@ -847,8 +861,12 @@ class Controls:
       r_lane_change_prob = desire_prediction[Desire.laneChangeRight]
 
       lane_lines = model_v2.laneLines
-      l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
-      r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
+      if CS.cruiseState.modeSel == 4:
+        l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET_A))
+        r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET_A))
+      else:
+        l_lane_close = left_lane_visible and (lane_lines[1].y[0] > -(1.08 + CAMERA_OFFSET))
+        r_lane_close = right_lane_visible and (lane_lines[2].y[0] < (1.08 - CAMERA_OFFSET))
 
       hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)
@@ -868,17 +886,44 @@ class Controls:
     if current_alert:
       hudControl.visualAlert = current_alert.visual_alert
 
-    if not self.read_only and self.initialized:
-      # send car controls over can
-      now_nanos = self.can_log_mono_time if REPLAY else int(sec_since_boot() * 1e9)
-      self.last_actuators, can_sends = self.CI.apply(CC, now_nanos)
-      self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
-      CC.actuatorsOutput = self.last_actuators
-      if self.CP.steerControlType == car.CarParams.SteerControlType.angle:
-        self.steer_limited = abs(CC.actuators.steeringAngleDeg - CC.actuatorsOutput.steeringAngleDeg) > \
-                             STEER_ANGLE_SATURATION_THRESHOLD
-      else:
-        self.steer_limited = abs(CC.actuators.steer - CC.actuatorsOutput.steer) > 1e-2
+    if self.stock_lkas_on_disengaged_status and self.CP.carName == "hyundai":
+      if self.enabled:
+        self.hkg_stock_lkas = False
+        self.hkg_stock_lkas_timer = 0
+      elif not self.enabled and not self.hkg_stock_lkas:
+        self.hkg_stock_lkas_timer += 1
+        if self.hkg_stock_lkas_timer > 300:
+          self.hkg_stock_lkas = True
+          self.hkg_stock_lkas_timer = 0
+        elif CS.gearShifter != GearShifter.drive and self.hkg_stock_lkas_timer > 150:
+          self.hkg_stock_lkas = True
+          self.hkg_stock_lkas_timer = 0
+      if not self.hkg_stock_lkas:
+        # send car controls over can
+        now_nanos = self.can_log_mono_time if REPLAY else int(sec_since_boot() * 1e9)
+        self.last_actuators, can_sends, self.safety_speed, self.lkas_temporary_off, self.gap_by_spd_on_temp = self.CI.apply(CC, now_nanos)
+        self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
+        CC.actuatorsOutput = self.last_actuators
+        if self.CP.steerControlType == car.CarParams.SteerControlType.angle:
+          self.steer_limited = abs(CC.actuators.steeringAngleDeg - CC.actuatorsOutput.steeringAngleDeg) > \
+                              STEER_ANGLE_SATURATION_THRESHOLD
+        else:
+          self.steer_limited = abs(CC.actuators.steer - CC.actuatorsOutput.steer) > 1e-2
+    else:
+      if not self.read_only and self.initialized:
+        # send car controls over can
+        now_nanos = self.can_log_mono_time if REPLAY else int(sec_since_boot() * 1e9)
+        if self.CP.carName == "hyundai":
+          self.last_actuators, can_sends, self.safety_speed, self.lkas_temporary_off, self.gap_by_spd_on_temp = self.CI.apply(CC, now_nanos)
+        else:
+          self.last_actuators, can_sends = self.CI.apply(CC, now_nanos)
+        self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
+        CC.actuatorsOutput = self.last_actuators
+        if self.CP.steerControlType == car.CarParams.SteerControlType.angle:
+          self.steer_limited = abs(CC.actuators.steeringAngleDeg - CC.actuatorsOutput.steeringAngleDeg) > \
+                              STEER_ANGLE_SATURATION_THRESHOLD
+        else:
+          self.steer_limited = abs(CC.actuators.steer - CC.actuatorsOutput.steer) > 1e-2
 
     force_decel = (self.sm['driverMonitoringState'].awarenessStatus < 0.) or \
                   (self.state == State.softDisabling)
@@ -923,6 +968,37 @@ class Controls:
     controlsState.forceDecel = bool(force_decel)
     controlsState.canErrorCounter = self.can_rcv_cum_timeout_counter
     controlsState.experimentalMode = self.experimental_mode
+    controlsState.alertTextMsg1 = self.log_alertTextMsg1
+    controlsState.alertTextMsg2 = self.log_alertTextMsg2
+    controlsState.alertTextMsg3 = self.log_alertTextMsg3
+    controlsState.pauseSpdLimit = self.pause_spdlimit
+    if self.osm_speedlimit_enabled or self.navi_selection == 2:
+      if self.navi_selection == 2:
+        controlsState.limitSpeedCamera = int(round(self.sm['liveENaviData'].wazeRoadSpeedLimit))
+        controlsState.limitSpeedCameraDist = float(self.sm['liveENaviData'].wazeAlertDistance)
+      elif self.osm_speedlimit_enabled:
+        controlsState.limitSpeedCamera = int(round(self.sm['liveMapData'].speedLimit))
+        controlsState.limitSpeedCameraDist = float(self.sm['liveMapData'].speedLimitAheadDistance)
+      if self.sm['liveMapData'].currentRoadName in self.roadname_and_slc:
+        try:
+          r_index = self.roadname_and_slc.index(self.sm['liveMapData'].currentRoadName)
+          controlsState.limitSpeedCamera = float(self.roadname_and_slc[r_index+1])
+        except:
+          pass
+    elif self.navi_selection == 1:
+      controlsState.limitSpeedCamera = int(round(self.sm['liveENaviData'].speedLimit))
+      controlsState.limitSpeedCameraDist = float(self.sm['liveENaviData'].safetyDistance)
+      controlsState.mapSign = int(self.sm['liveENaviData'].safetySign)
+    else:
+      controlsState.limitSpeedCamera = 0
+      controlsState.limitSpeedCameraDist = 0
+    controlsState.lateralControlMethod = int(self.lateral_control_method)
+    controlsState.steerRatio = float(self.steerRatio_to_send)
+    controlsState.dynamicTRMode = int(self.sm['longitudinalPlan'].dynamicTRMode)
+    controlsState.dynamicTRValue = float(self.sm['longitudinalPlan'].dynamicTRValue)
+    controlsState.accel = float(self.last_actuators.accel)
+    controlsState.safetySpeed = float(self.safety_speed)
+    controlsState.gapBySpeedOn = bool(self.gap_by_spd_on_temp)
 
     lat_tuning = self.CP.lateralTuning.which()
     if self.joystick_mode:

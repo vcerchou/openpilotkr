@@ -9,6 +9,7 @@ from opendbc.can.can_define import CANDefine
 from selfdrive.car.hyundai.hyundaicanfd import CanBus
 from selfdrive.car.hyundai.values import HyundaiFlags, CAR, DBC, CAN_GEARS, CAMERA_SCC_CAR, CANFD_CAR, EV_CAR, HYBRID_CAR, Buttons, CarControllerParams
 from selfdrive.car.interfaces import CarStateBase
+GearShifter = car.CarState.GearShifter
 
 PREV_BUTTON_SAMPLES = 8
 CLUSTER_SAMPLE_RATE = 20  # frames
@@ -45,9 +46,140 @@ class CarState(CarStateBase):
 
     self.params = CarControllerParams(CP)
 
+
+    #Auto detection for setup
+    self.no_radar = CP.sccBus == -1
+    self.lkas_button_on = True
+    self.cruise_main_button = 0
+    self.mdps_error_cnt = 0
+    self.cruiseState_standstill = False
+
+    self.lfahda = None
+
+    self.driverAcc_time = 0
+
+    self.prev_cruise_buttons = 0
+    self.prev_gap_button = 0
+    
+    self.steer_anglecorrection = float(int(Params().get("OpkrSteerAngleCorrection", encoding="utf8")) * 0.1)
+    self.gear_correction = Params().get_bool("JustDoGearD")
+    self.fca11_message = Params().get_bool("FCA11Message")
+    self.rd_conf = Params().get_bool("RadarDisable")
+    self.brake_check = False
+    self.cancel_check = False
+    
+    self.cruise_gap = 4
+    self.safety_sign_check = 0
+    self.safety_sign = 0
+    self.safety_dist = 0
+    self.safety_block_sl = 150
+    self.is_highway = False
+    self.is_set_speed_in_mph = False
+    self.map_enabled = False
+    self.cs_timer = 0
+    self.cruise_active = False
+
+    # atom
+    self.cruise_buttons = 0
+    self.cruise_buttons_time = 0
+    self.time_delay_int = 0
+    self.VSetDis = 0
+    self.clu_Vanz = 0
+
+    # acc button 
+    self.prev_clu_CruiseSwState = 0
+    self.prev_acc_active = False
+    self.prev_acc_set_btn = False
+    self.acc_active = False
+    self.cruise_set_speed_kph = 0
+    self.cruise_set_mode = int(Params().get("CruiseStatemodeSelInit", encoding="utf8"))
+    self.gasPressed = False
+
+
+    self.sm = messaging.SubMaster(['controlsState'])
+
+  def set_cruise_speed(self, set_speed):
+    self.cruise_set_speed_kph = set_speed
+
+  #@staticmethod
+  def cruise_speed_button(self):
+    if self.prev_acc_active != self.acc_active:
+      self.prev_acc_active = self.acc_active
+      self.cruise_set_speed_kph = self.clu_Vanz
+
+    set_speed_kph = self.cruise_set_speed_kph
+    if not self.cruise_active:
+      if self.prev_clu_CruiseSwState != self.cruise_buttons:
+        self.prev_clu_CruiseSwState = self.cruise_buttons
+        if self.cruise_buttons == Buttons.GAP_DIST:  # mode change
+          self.cruise_set_mode += 1
+          if self.cruise_set_mode > 5:
+            self.cruise_set_mode = 0
+          return None
+      return self.cruise_set_speed_kph
+
+    if not self.prev_acc_set_btn:
+      self.prev_acc_set_btn = self.acc_active
+      if self.cruise_buttons == Buttons.RES_ACCEL:   # up 
+        self.cruise_set_speed_kph = self.VSetDis
+      else:
+        self.cruise_set_speed_kph = self.clu_Vanz
+      return self.cruise_set_speed_kph
+    elif self.prev_acc_set_btn != self.acc_active:
+      self.prev_acc_set_btn = self.acc_active
+
+    if self.cruise_buttons:
+      self.cruise_buttons_time += 1
+    else:
+      self.cruise_buttons_time = 0
+     
+    if self.cruise_buttons_time >= 60:
+      self.cruise_set_speed_kph = self.VSetDis
+
+    if self.prev_clu_CruiseSwState == self.cruise_buttons:
+      return set_speed_kph
+    self.prev_clu_CruiseSwState = self.cruise_buttons
+
+    if self.cruise_buttons == Buttons.RES_ACCEL:   # up 
+      set_speed_kph += 1
+    elif self.cruise_buttons == Buttons.SET_DECEL:  # dn
+      if self.gasPressed:
+        set_speed_kph = self.clu_Vanz + 1
+      else:
+        set_speed_kph -= 1
+
+    if set_speed_kph < 30 and not self.is_set_speed_in_mph:
+      set_speed_kph = 30
+    elif set_speed_kph < 20 and self.is_set_speed_in_mph:
+      set_speed_kph = 20
+
+    self.cruise_set_speed_kph = set_speed_kph
+    return  set_speed_kph
+
+  def get_tpms(self, unit, fl, fr, rl, rr):
+    factor = 0.72519 if unit == 1 else 0.1 if unit == 2 else 1 # 0:psi, 1:kpa, 2:bar
+    tpms = car.CarState.TPMS.new_message()
+    tpms.unit = unit
+    tpms.fl = fl * factor
+    tpms.fr = fr * factor
+    tpms.rl = rl * factor
+    tpms.rr = rr * factor
+    return tpms
+
   def update(self, cp, cp_cam):
     if self.CP.carFingerprint in CANFD_CAR:
       return self.update_canfd(cp, cp_cam)
+
+
+    cp_mdps = cp2 if self.CP.mdpsBus == 1 else cp
+    cp_sas = cp2 if self.CP.sasBus else cp
+    cp_scc = cp_cam if self.CP.sccBus == 2 else cp2 if self.CP.sccBus == 1 else cp
+    cp_fca = cp_cam if (self.CP.fcaBus == 2) else cp
+
+    self.prev_cruise_buttons = self.cruise_buttons
+    self.prev_cruise_main_button = self.cruise_main_button
+    self.prev_lkas_button_on = self.lkas_button_on
+
 
     ret = car.CarState.new_message()
     cp_cruise = cp_cam if self.CP.carFingerprint in CAMERA_SCC_CAR else cp

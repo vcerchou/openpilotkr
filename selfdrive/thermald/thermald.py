@@ -191,6 +191,8 @@ def thermald_thread(end_event, hw_queue):
   thermal_config = HARDWARE.get_thermal_config()
 
   fan_controller = None
+  is_openpilot_view_enabled = 0
+  onroadrefresh = False
 
   while not end_event.is_set():
     sm.update(PANDA_STATES_TIMEOUT)
@@ -213,11 +215,17 @@ def thermald_thread(end_event, hw_queue):
       if fan_controller is None and peripheralState.pandaType != log.PandaState.PandaType.unknown:
         if TICI:
           fan_controller = TiciFanController()
-
-    elif (sec_since_boot() - sm.rcv_time['pandaStates']) > DISCONNECT_TIMEOUT:
-      if onroad_conditions["ignition"]:
-        onroad_conditions["ignition"] = False
-        cloudlog.error("panda timed out onroad")
+    elif params.get_bool("IsOpenpilotViewEnabled") and not params.get_bool("IsDriverViewEnabled") and is_openpilot_view_enabled == 0:
+      is_openpilot_view_enabled = 1
+      onroad_conditions["ignition"] = True
+    elif not params.get_bool("IsOpenpilotViewEnabled") and not params.get_bool("IsDriverViewEnabled") and is_openpilot_view_enabled == 1:
+      is_openpilot_view_enabled = 0
+      onroad_conditions["ignition"] = False
+    elif not is_openpilot_view_enabled:
+      if (sec_since_boot() - sm.rcv_time['pandaStates']) > DISCONNECT_TIMEOUT:
+        if onroad_conditions["ignition"]:
+          onroad_conditions["ignition"] = False
+          cloudlog.error("panda timed out onroad")
 
     try:
       last_hw_state = hw_queue.get_nowait()
@@ -310,6 +318,13 @@ def thermald_thread(end_event, hw_queue):
               cloudlog.event("Unsupported NVMe", model=model, error=True)
           except Exception:
             pass
+
+    if params.get_bool("OnRoadRefresh"):
+      onroad_conditions["onroad_refresh"] = not params.get_bool("OnRoadRefresh")
+      onroadrefresh = True
+    elif onroadrefresh:
+       onroadrefresh = False
+       onroad_conditions["onroad_refresh"] = True
 
     # Handle offroad/onroad transition
     should_start = all(onroad_conditions.values())

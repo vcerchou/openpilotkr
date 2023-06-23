@@ -542,6 +542,11 @@ class Controls:
       if self.sm['liveLocationKalman'].excessiveResets:
         self.events.add(EventName.localizerMalfunction)
 
+    # atom
+    if self.auto_enabled and not self.no_mdps_mods:
+      self.ready_timer += 1 if self.ready_timer < 350 else 350
+      self.auto_enable( CS )
+
   def data_sample(self):
     """Receive data from sockets and update carState"""
 

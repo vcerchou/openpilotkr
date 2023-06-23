@@ -28,6 +28,12 @@ def ublox(started, params, CP: car.CarParams) -> bool:
 def qcomgps(started, params, CP: car.CarParams) -> bool:
   return started and not ublox_available()
 
+EnableLogger = Params().get_bool('OpkrEnableLogger')
+EnableUploader = Params().get_bool('OpkrEnableUploader')
+EnableOSM = Params().get_bool('OSMEnable') or Params().get_bool('OSMSpeedLimitEnable') or Params().get("CurvDecelOption", encoding="utf8") == "1" or Params().get("CurvDecelOption", encoding="utf8") == "3"
+EnableMapbox = Params().get_bool('MapboxEnabled')
+EnableExternalNavi = Params().get("OPKRNaviSelect", encoding="utf8") == "1" or Params().get("OPKRNaviSelect", encoding="utf8") == "2"
+
 procs = [
   # due to qualcomm kernel bugs SIGKILLing camerad sometimes causes page table corruption
   NativeProcess("camerad", "system/camerad", ["./camerad"], unkillable=True, callback=driverview),
@@ -41,9 +47,9 @@ procs = [
   DaemonProcess("manage_athenad", "selfdrive.athena.manage_athenad", "AthenadPid"),
   NativeProcess("dmonitoringmodeld", "selfdrive/modeld", ["./dmonitoringmodeld"], enabled=(not PC or WEBCAM), callback=driverview),
   NativeProcess("encoderd", "system/loggerd", ["./encoderd"]),
-  NativeProcess("loggerd", "system/loggerd", ["./loggerd"], onroad=False, callback=logging),
+  #NativeProcess("loggerd", "system/loggerd", ["./loggerd"], onroad=False, callback=logging),
   NativeProcess("modeld", "selfdrive/modeld", ["./modeld"]),
-  NativeProcess("mapsd", "selfdrive/navd", ["./map_renderer"], enabled=False),
+  #NativeProcess("mapsd", "selfdrive/navd", ["./map_renderer"], enabled=False),
   NativeProcess("navmodeld", "selfdrive/modeld", ["./navmodeld"], enabled=False),
   NativeProcess("sensord", "system/sensord", ["./sensord"], enabled=not PC),
   NativeProcess("ui", "selfdrive/ui", ["./ui"], offroad=True, watchdog_max_dt=(5 if not PC else None)),
@@ -53,11 +59,11 @@ procs = [
   PythonProcess("calibrationd", "selfdrive.locationd.calibrationd"),
   PythonProcess("torqued", "selfdrive.locationd.torqued"),
   PythonProcess("controlsd", "selfdrive.controls.controlsd"),
-  PythonProcess("deleter", "system.loggerd.deleter", offroad=True),
+  #PythonProcess("deleter", "system.loggerd.deleter", offroad=True),
   PythonProcess("dmonitoringd", "selfdrive.monitoring.dmonitoringd", enabled=(not PC or WEBCAM), callback=driverview),
   PythonProcess("laikad", "selfdrive.locationd.laikad"),
   PythonProcess("rawgpsd", "system.sensord.rawgps.rawgpsd", enabled=TICI, onroad=False, callback=qcomgps),
-  PythonProcess("navd", "selfdrive.navd.navd"),
+  #PythonProcess("navd", "selfdrive.navd.navd"),
   PythonProcess("pandad", "selfdrive.boardd.pandad", offroad=True),
   PythonProcess("paramsd", "selfdrive.locationd.paramsd"),
   NativeProcess("ubloxd", "system/ubloxd", ["./ubloxd"], enabled=TICI, onroad=False, callback=ublox),
@@ -74,5 +80,30 @@ procs = [
   NativeProcess("bridge", "cereal/messaging", ["./bridge"], onroad=False, callback=notcar),
   PythonProcess("webjoystick", "tools.joystick.web", onroad=False, callback=notcar),
 ]
+
+if EnableLogger:
+  procs += [
+    NativeProcess("logcatd", "system/logcatd", ["./logcatd"]),
+    PythonProcess("logmessaged", "system.logmessaged", offroad=True),
+    NativeProcess("loggerd", "system/loggerd", ["./loggerd"], onroad=False, callback=logging),
+  ]
+if EnableUploader:
+  procs += [
+    PythonProcess("deleter", "system.loggerd.deleter", offroad=True),
+    PythonProcess("uploader", "system.loggerd.uploader", offroad=True),
+  ]
+if EnableOSM:
+  procs += [
+    PythonProcess("mapd", "selfdrive.mapd.mapd", enabled=not PC, persistent=True),
+  ]
+if EnableMapbox:
+  procs += [
+  	NativeProcess("mapsd", "selfdrive/navd", ["./map_renderer"], enabled=False),
+    PythonProcess("navd", "selfdrive.navd.navd"),
+  ]
+if EnableExternalNavi:
+  procs += [
+    PythonProcess("navid", "selfdrive.enavi.navi_external", persistent=True),
+  ]
 
 managed_processes = {p.name: p for p in procs}

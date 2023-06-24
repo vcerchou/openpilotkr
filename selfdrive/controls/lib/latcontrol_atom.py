@@ -10,7 +10,7 @@ from common.params import Params
 from decimal import Decimal
 from common.conversions import Conversions as CV
 
-from selfdrive.controls.lib.latcontrol import LatControl, MIN_STEER_SPEED
+from selfdrive.controls.lib.latcontrol import LatControl, MIN_LATERAL_CONTROL_SPEED
 from selfdrive.controls.lib.pid import PIDController, LatPIDController
 
 from selfdrive.controls.lib.latcontrol_torque import LatControlTorque
@@ -250,7 +250,7 @@ class LatControlATOM(LatControl):
 
     desired_angle = 0
     output_torque = 0
-    if CS.vEgo < MIN_STEER_SPEED or not active:
+    if CS.vEgo < MIN_LATERAL_CONTROL_SPEED or not active:
       output_torque = 0.0
       lqr_desired_angle = 0.
       atom_log.active = False

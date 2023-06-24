@@ -18,8 +18,7 @@
 #include "selfdrive/ui/qt/widgets/input.h"
 
 const std::string USER_AGENT = "AGNOSSetup-";
-//const QString DASHCAM_URL = "https://dashcam.comma.ai";
-const QString DASHCAM_URL = "";
+const QString DASHCAM_URL = "https://dashcam.comma.ai";
 
 bool is_elf(char *fname) {
   FILE *fp = fopen(fname, "rb");

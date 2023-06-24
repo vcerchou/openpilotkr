@@ -161,14 +161,14 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     standstillResButton @135;
     routineDriveOn @136;
     lkasEnabled @137;
-    cutinDetection @139;
-    gearNotD @140;
-    unSleepMode @141;
-    speedBump @142;
-    sccDriverOverride @143;
-    doNotDisturb @144;
-    chimeAtResume @145;
-    autoHold @146;
+    cutinDetection @138;
+    gearNotD @139;
+    unSleepMode @140;
+    speedBump @141;
+    sccDriverOverride @142;
+    doNotDisturb @143;
+    chimeAtResume @144;
+    autoHold @145;
   }
 }
 

@@ -71,6 +71,9 @@ function launch {
   ln -sfn $(pwd) /data/pythonpath
   export PYTHONPATH="$PWD"
 
+  # dp - install default ssh key
+  python /data/openpilot/scripts/sshkey_installer.py
+
   # hardware specific init
   agnos_init
 

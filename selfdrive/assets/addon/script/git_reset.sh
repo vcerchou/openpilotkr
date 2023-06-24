@@ -19,9 +19,9 @@ if [ "$?" == "0" ]; then
   git pull origin $CURRENT_BRANCH
 
   if [ -f "/data/openpilot/prebuilt" ]; then
-    pkill -f thermald
+    sudo pkill -f thermald
     rm -f /data/openpilot/prebuilt
   fi
 
-  reboot
+  sudo reboot
 fi

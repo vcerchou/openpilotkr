@@ -14,7 +14,7 @@
 #include "selfdrive/ui/qt/qt_window.h"
 #include "selfdrive/ui/qt/widgets/scrollview.h"
 #include "selfdrive/ui/qt/widgets/input.h"
-#include "selfdrive/common/params.h"
+#include "common/params.h"
 
 int main(int argc, char *argv[]) {
   initApp(argc, argv);

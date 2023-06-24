@@ -52,29 +52,29 @@ int main(int argc, char *argv[]) {
   label2->setText(device_ip);
   label2->setStyleSheet("color: #e0e879");
   main_layout->addWidget(label2, 0, 0, 1, 4, Qt::AlignRight | Qt::AlignTop);
-  btn->setText(QObject::tr("Update"));
-  btn2->setText(QObject::tr("Restore"));
-  btn3->setText(QObject::tr("Reset"));
-  btn4->setText(QObject::tr("Reboot"));
+  btn->setText(QObject::tr("Reboot"));
+  btn2->setText(QObject::tr("Update"));
+  btn3->setText(QObject::tr("Restore"));
+  btn4->setText(QObject::tr("Reset"));
   QObject::connect(btn, &QPushButton::clicked, [=]() {
+    Hardware::reboot();
+  });
+  QObject::connect(btn2, &QPushButton::clicked, [=]() {
+    btn2->setEnabled(false);
     QProcess::execute("sudo pkill -f thermald");
     QProcess::execute("rm -f /data/openpilot/prebuilt");
     QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
     Hardware::reboot();
   });
-  QObject::connect(btn2, &QPushButton::clicked, [=]() {
-    btn2->setEnabled(false);
+  QObject::connect(btn3, &QPushButton::clicked, [=]() {
+    btn3->setEnabled(false);
     QString cmd = "git reset --hard " + QString::fromStdString(Params().get("GitCommit"));
     QProcess::execute(cmd);
     Hardware::reboot();
   });
-  QObject::connect(btn3, &QPushButton::clicked, [=]() {
-    btn3->setEnabled(false);
-    QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
-  });
   QObject::connect(btn4, &QPushButton::clicked, [=]() {
     btn4->setEnabled(false);
-    Hardware::reboot();
+    QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
   });
   btn2->setFixedSize(400, 150);
   btn3->setFixedSize(400, 150);

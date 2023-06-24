@@ -203,7 +203,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"Offroad_UpdateFailed", CLEAR_ON_MANAGER_START},
     {"Offroad_Recalibration", CLEAR_ON_MANAGER_START | CLEAR_ON_ONROAD_TRANSITION},
     
-    # opkr
+    // opkr
     {"IsOpenpilotViewEnabled", CLEAR_ON_MANAGER_START},
     {"OpkrAutoShutdown", PERSISTENT},
     {"OpkrForceShutdown", PERSISTENT},

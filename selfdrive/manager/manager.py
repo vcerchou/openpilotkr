@@ -47,7 +47,6 @@ def manager_init() -> None:
     ("OpenpilotEnabledToggle", "1"),
     ("LongitudinalPersonality", str(log.LongitudinalPersonality.standard)),
     ("IsMetric", "1"),
-    ("EndToEndToggle", "1"),
     ("IsOpenpilotViewEnabled", "0"),
     ("OpkrAutoShutdown", "2"),
     ("OpkrForceShutdown", "5"),

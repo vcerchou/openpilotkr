@@ -185,7 +185,6 @@ def manager_init() -> None:
     ("CurvDecelOption", "2"),
     ("FCA11Message", "0"),
     ("StandstillResumeAlt", "0"),
-    ("MapboxEnabled", "0"),
     ("AutoRESDelay", "1"),
     ("UseRadarTrack", "0"),
     ("RadarDisable", "0"),

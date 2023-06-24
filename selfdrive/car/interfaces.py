@@ -86,7 +86,7 @@ class CarInterfaceBase(ABC):
     if CarController is not None:
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
 
-	  self.ufc_mode = Params().get_bool('UFCModeEnabled')
+    self.ufc_mode = Params().get_bool("UFCModeEnabled")
     self.steer_warning_fix_enabled = Params().get_bool("SteerWarningFix")
     self.user_specific_feature = int(Params().get("UserSpecificFeature", encoding="utf8"))
 

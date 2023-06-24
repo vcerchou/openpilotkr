@@ -2292,8 +2292,8 @@ struct Event {
     errorLogMessage @85 :Text;
 
     # OPKR Navi
-    liveENaviData @117: LiveENaviData;
-    liveMapData @118: LiveMapData;
+    liveENaviData @120: LiveENaviData;
+    liveMapData @121: LiveMapData;
     # navigation
     navInstruction @82 :NavInstruction;
     navRoute @83 :NavRoute;

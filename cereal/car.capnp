@@ -587,6 +587,11 @@ struct CarParams {
   aqValue @85: Float32;
   aqValueRaw @86: Float32;
   vFutureA @87: Float32;
+  autoHoldAvailable @88 :Bool;
+  scc13Available @89 :Bool;
+  scc14Available @90 :Bool;
+  lfaHdaAvailable @91 :Bool;
+  navAvailable @92 :Bool;
 
   struct LateralParams {
     torqueBP @0 :List(Int32);

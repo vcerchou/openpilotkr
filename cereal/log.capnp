@@ -2291,9 +2291,6 @@ struct Event {
     logMessage @18 :Text;
     errorLogMessage @85 :Text;
 
-    # OPKR Navi
-    liveENaviData @120: LiveENaviData;
-    liveMapData @121: LiveMapData;
     # navigation
     navInstruction @82 :NavInstruction;
     navRoute @83 :NavRoute;
@@ -2314,6 +2311,10 @@ struct Event {
     livestreamRoadEncodeData @120 :EncodeData;
     livestreamWideRoadEncodeData @121 :EncodeData;
     livestreamDriverEncodeData @122 :EncodeData;
+
+    # OPKR Navi
+    liveENaviData @123: LiveENaviData;
+    liveMapData @124: LiveMapData;
 
     # *********** Custom: reserved for forks ***********
     customReserved0 @107 :Custom.CustomReserved0;

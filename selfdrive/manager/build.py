@@ -3,6 +3,7 @@ import os
 import subprocess
 import textwrap
 from pathlib import Path
+import socket
 
 # NOTE: Do NOT import anything here that needs be built (e.g. params)
 from common.basedir import BASEDIR
@@ -42,7 +43,8 @@ def build(spinner: Spinner, dirty: bool = False) -> None:
       prefix = b'progress: '
       if line.startswith(prefix):
         i = int(line[len(prefix):])
-        spinner.update_progress(MAX_BUILD_PROGRESS * min(1., i / TOTAL_SCONS_NODES), 100.)
+        #spinner.update_progress(MAX_BUILD_PROGRESS * min(1., i / TOTAL_SCONS_NODES), 100.)
+        spinner.update(f"compiling {round(MAX_BUILD_PROGRESS * ( i /  TOTAL_SCONS_NODES))}%")
       elif len(line):
         compile_output.append(line)
         print(line.decode('utf8', 'replace'))
@@ -61,11 +63,21 @@ def build(spinner: Spinner, dirty: bool = False) -> None:
     add_file_handler(cloudlog)
     cloudlog.error("scons build failed\n" + error_s)
 
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+      # doesn't even have to be reachable
+      s.connect(('10.255.255.255', 1))
+      ip = s.getsockname()[0]
+    except:
+      ip = 'N/A'
+    finally:
+      s.close()
+
     # Show TextWindow
     spinner.close()
     if not os.getenv("CI"):
-      error_s = "\n \n".join("\n".join(textwrap.wrap(e, 65)) for e in errors)
-      with TextWindow("openpilot failed to build\n \n" + error_s) as t:
+      error_s = "\n \n".join(["\n".join(textwrap.wrap(e, 65)) for e in errors])
+      with TextWindow(("openpilot failed to build (IP: %s)\n \n" % ip) + error_s) as t:
         t.wait_for_exit()
     exit(1)
 

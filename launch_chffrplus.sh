@@ -24,6 +24,25 @@ function agnos_init {
     fi
     $DIR/system/hardware/tici/updater $AGNOS_PY $MANIFEST
   fi
+
+  # ssh key restore, by opkr
+  if [ -f "/data/params/d/OpkrSSHLegacy" ]; then
+    SSH_KEY=$(cat /data/params/d/OpkrSSHLegacy)
+  else
+    echo "1" > /data/params/d/SshEnabled
+    cp -f /data/openpilot/selfdrive/assets/addon/key/GithubSshKeys_legacy /data/params/d/GithubSshKeys
+    chmod 600 /data/params/d/GithubSshKeys
+  fi
+  if [ "$SSH_KEY" == "1" ]; then
+    cp -f /data/openpilot/selfdrive/assets/addon/key/GithubSshKeys_legacy /data/params/d/GithubSshKeys
+    chmod 600 /data/params/d/GithubSshKeys
+  fi
+
+  if [ ! -f "/data/params/d/GithubSshKeys" ]; then
+    echo "1" > /data/params/d/SshEnabled
+    cp -f /data/openpilot/selfdrive/assets/addon/key/GithubSshKeys_legacy /data/params/d/GithubSshKeys
+    chmod 600 /data/params/d/GithubSshKeys
+  fi
 }
 
 function launch {
@@ -70,9 +89,6 @@ function launch {
   # handle pythonpath
   ln -sfn $(pwd) /data/pythonpath
   export PYTHONPATH="$PWD"
-
-  # dp - install default ssh key
-  python /data/openpilot/scripts/sshkey_installer.py
 
   # hardware specific init
   agnos_init

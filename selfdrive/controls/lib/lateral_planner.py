@@ -9,9 +9,14 @@ from selfdrive.controls.lib.desire_helper import DesireHelper
 import cereal.messaging as messaging
 from cereal import log
 
+from common.params import Params
+from decimal import Decimal
+
 TRAJECTORY_SIZE = 33
 CAMERA_OFFSET = 0.04
 
+CAMERA_OFFSET = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
+CAMERA_OFFSET_A = CAMERA_OFFSET + 0.15
 
 PATH_COST = 1.0
 LATERAL_MOTION_COST = 0.11

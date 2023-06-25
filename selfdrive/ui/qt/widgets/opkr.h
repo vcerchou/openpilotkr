@@ -997,8 +997,8 @@ public:
   CarSelectCombo();
 
 private:
-  QPushButton btn;
-  QComboBox combobox;
+  QPushButton btn1;
+  QPushButton btn2;
   Params params;
 
   void refresh();

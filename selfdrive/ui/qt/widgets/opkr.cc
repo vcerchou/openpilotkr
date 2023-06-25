@@ -599,8 +599,8 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
     background-color: #393939;
   )");
 
-  btn1.setFixedSize(1050, 100);
-  btn2.setFixedSize(250, 100);
+  btn1.setFixedSize(1250, 100);
+  btn2.setFixedSize(200, 100);
   hlayout->addWidget(&btn1);
   hlayout->addWidget(&btn2);
   btn1.setText(tr("Select Your Car"));
@@ -2976,9 +2976,9 @@ SRBaseControl::SRBaseControl() : AbstractControl(tr("SteerRatio"), tr("Sets the 
       background-color: #ababab;
     }
   )");
-  btndigit.setFixedSize(100, 100);
-  btnminus.setFixedSize(100, 100);
-  btnplus.setFixedSize(100, 100);
+  btndigit.setFixedSize(150, 100);
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
   hlayout->addWidget(&btndigit);
   hlayout->addWidget(&btnminus);
   hlayout->addWidget(&btnplus);
@@ -3074,9 +3074,9 @@ SRMaxControl::SRMaxControl() : AbstractControl(tr("SteerRatioMax"), tr("Sets the
       background-color: #ababab;
     }
   )");
-  btndigit.setFixedSize(100, 100);
-  btnminus.setFixedSize(100, 100);
-  btnplus.setFixedSize(100, 100);
+  btndigit.setFixedSize(150, 100);
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
   hlayout->addWidget(&btndigit);
   hlayout->addWidget(&btnminus);
   hlayout->addWidget(&btnplus);
@@ -3403,8 +3403,8 @@ SteerMax::SteerMax() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(100, 100);
-  btnplusl.setFixedSize(100, 100);
+  btnminusl.setFixedSize(150, 100);
+  btnplusl.setFixedSize(150, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -3430,8 +3430,8 @@ SteerMax::SteerMax() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(100, 100);
-  btnplusr.setFixedSize(100, 100);
+  btnminusr.setFixedSize(150, 100);
+  btnplusr.setFixedSize(150, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -3533,8 +3533,8 @@ SteerDeltaUp::SteerDeltaUp() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(100, 100);
-  btnplusl.setFixedSize(100, 100);
+  btnminusl.setFixedSize(150, 100);
+  btnplusl.setFixedSize(150, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -3560,8 +3560,8 @@ SteerDeltaUp::SteerDeltaUp() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(100, 100);
-  btnplusr.setFixedSize(100, 100);
+  btnminusr.setFixedSize(150, 100);
+  btnplusr.setFixedSize(150, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -3663,8 +3663,8 @@ SteerDeltaDown::SteerDeltaDown() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(100, 100);
-  btnplusl.setFixedSize(100, 100);
+  btnminusl.setFixedSize(150, 100);
+  btnplusl.setFixedSize(150, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -3690,8 +3690,8 @@ SteerDeltaDown::SteerDeltaDown() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(100, 100);
-  btnplusr.setFixedSize(100, 100);
+  btnminusr.setFixedSize(150, 100);
+  btnplusr.setFixedSize(150, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -5068,10 +5068,10 @@ CruiseGapTR::CruiseGapTR() : AbstractControl(tr("CruiseGap"), tr("Adjust the int
     hlayout->addWidget(&label1a);
     hlayout->addWidget(&label1);
     if (dtr == "0") {
-      btn1.setFixedSize(60, 100);
+      btn1.setFixedSize(110, 100);
       label1a.setText("1:");
     } else {
-      btn1.setFixedSize(100, 100);
+      btn1.setFixedSize(150, 100);
       label1a.setText("1S:");
     }
     hlayout->addWidget(&btn1);
@@ -5080,10 +5080,10 @@ CruiseGapTR::CruiseGapTR() : AbstractControl(tr("CruiseGap"), tr("Adjust the int
     hlayout->addWidget(&label2a);
     hlayout->addWidget(&label2);
     if (dtr == "0") {
-      btn2.setFixedSize(60, 100);
+      btn2.setFixedSize(110, 100);
       label2a.setText("2:");
     } else {
-      btn2.setFixedSize(100, 100);
+      btn2.setFixedSize(150, 100);
       label2a.setText("2S:");
     }
     hlayout->addWidget(&btn2);
@@ -5092,10 +5092,10 @@ CruiseGapTR::CruiseGapTR() : AbstractControl(tr("CruiseGap"), tr("Adjust the int
     hlayout->addWidget(&label3a);
     hlayout->addWidget(&label3);
     if (dtr == "0") {
-      btn3.setFixedSize(60, 100);
+      btn3.setFixedSize(110, 100);
       label3a.setText("3:");
     } else {
-      btn3.setFixedSize(100, 100);
+      btn3.setFixedSize(150, 100);
       label3a.setText("3S:");
     }
     hlayout->addWidget(&btn3);
@@ -5104,10 +5104,10 @@ CruiseGapTR::CruiseGapTR() : AbstractControl(tr("CruiseGap"), tr("Adjust the int
     hlayout->addWidget(&label4a);
     hlayout->addWidget(&label4);
     if (dtr == "0") {
-      btn4.setFixedSize(60, 100);
+      btn4.setFixedSize(110, 100);
       label4a.setText("4:");
     } else {
-      btn4.setFixedSize(100, 100);
+      btn4.setFixedSize(150, 100);
       label4a.setText("4S:");
     }
     hlayout->addWidget(&btn4);
@@ -6544,6 +6544,7 @@ OSMCustomSpeedLimit::OSMCustomSpeedLimit() : AbstractControl("", "", "") {
     background-color: grey;
     font-size: 55px;
     font-weight: 500;
+    height: 120px;
   )");
   btn.setFixedSize(150, 100);
   edit1.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
@@ -7000,8 +7001,8 @@ OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car t
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(200, 100);
-  btnplusl.setFixedSize(200, 100);
+  btnminusl.setFixedSize(190, 100);
+  btnplusl.setFixedSize(190, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -7027,8 +7028,8 @@ OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car t
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(200, 100);
-  btnplusr.setFixedSize(200, 100);
+  btnminusr.setFixedSize(190, 100);
+  btnplusr.setFixedSize(190, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -7127,8 +7128,8 @@ ToAvoidLKASFault::ToAvoidLKASFault() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(90, 100);
-  btnplusl.setFixedSize(90, 100);
+  btnminusl.setFixedSize(190, 100);
+  btnplusl.setFixedSize(190, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -7154,8 +7155,8 @@ ToAvoidLKASFault::ToAvoidLKASFault() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(90, 100);
-  btnplusr.setFixedSize(90, 100);
+  btnminusr.setFixedSize(190, 100);
+  btnplusr.setFixedSize(190, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -7225,10 +7226,12 @@ void ToAvoidLKASFault::refreshr() {
 
 RoutineDriveOption::RoutineDriveOption() : AbstractControl("", "", "") {
 
-  btn0.setFixedSize(125, 100);
-  btn1.setFixedSize(125, 100);
+  btn0.setFixedSize(150, 100);
+  btn1.setFixedSize(150, 100);
   btn0.setText("CO");
   btn1.setText("SL");
+  btn0.setAlignment(Qt::AlignHCenter);
+  btn1.setAlignment(Qt::AlignHCenter);
   hlayout->addWidget(&btn0);
   hlayout->addWidget(&btn1);
 
@@ -7375,9 +7378,7 @@ UserSpecificFeature::UserSpecificFeature() : AbstractControl(tr("FeatureNumber")
     font-weight: 500;
     height: 120px;
   )");
-  btn.setFixedSize(150, 100);
-  edit.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
-
+  btn.setFixedSize(200, 100);
   hlayout->addWidget(&edit);
   hlayout->addWidget(&btn);
 

@@ -614,7 +614,7 @@ TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
   layout->setSpacing(30);
 
   // OPKR
-  layout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓"), ""));
+  //layout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓〓〓〓〓"), ""));
   layout->addWidget(new CameraOffset());
   layout->addWidget(new PathOffset());
   layout->addWidget(horizontal_line());

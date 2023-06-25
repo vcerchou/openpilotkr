@@ -600,11 +600,10 @@ DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new JoystickModeToggle());
   layout->addWidget(new NoSmartMDPSToggle());
   layout->addWidget(new UserSpecificFeature());
-  layout->addWidget(new TimeZoneSelectCombo());
 
   layout->addWidget(horizontal_line());
   layout->addWidget(new CarSelectCombo());
-
+  layout->addWidget(horizontal_line());
   layout->addWidget(new CPandaGroup());
 }
 

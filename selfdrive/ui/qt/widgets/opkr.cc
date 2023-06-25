@@ -584,10 +584,9 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
   btn1.setStyleSheet(R"(
     padding: 0;
     border-radius: 0px;
-    font-size: 35px;
     font-weight: 500;
     color: #E4E4E4;
-    background-color: #000000;
+    background-color: #393939;
   )");
 
   btn2.setStyleSheet(R"(
@@ -599,7 +598,7 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
     background-color: #393939;
   )");
 
-  btn1.setFixedSize(1000, 100);
+  btn1.setFixedSize(1250, 100);
   btn2.setFixedSize(250, 100);
   hlayout->addWidget(&btn1);
   hlayout->addWidget(&btn2);

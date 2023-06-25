@@ -584,6 +584,7 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
   btn1.setStyleSheet(R"(
     padding: 0;
     border-radius: 0px;
+    font-size: 50px;
     font-weight: 500;
     color: #E4E4E4;
     background-color: #393939;

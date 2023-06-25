@@ -5,6 +5,10 @@
 #include <string>
 
 #include <QDebug>
+#include <QProcess> // opkr
+#include <QDateTime> // opkr
+#include <QTimer> // opkr
+#include <QFileInfo> // opkr
 
 #include "selfdrive/ui/qt/offroad/networking.h"
 
@@ -25,6 +29,9 @@
 #include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/qt_window.h"
 #include "selfdrive/ui/qt/widgets/input.h"
+
+#include "selfdrive/ui/qt/widgets/opkr.h"
+#include "selfdrive/ui/qt/widgets/steerWidget.h"
 
 TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // param, title, desc, icon
@@ -194,6 +201,8 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   addItem(new LabelControl(tr("Dongle ID"), getDongleId().value_or(tr("N/A"))));
   addItem(new LabelControl(tr("Serial"), params.get("HardwareSerial").c_str()));
 
+  addItem(new OpenpilotView());
+
   // offroad-only buttons
 
   auto dcamBtn = new ButtonControl(tr("Driver Camera"), tr("PREVIEW"),
@@ -207,6 +216,10 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
     if (ConfirmationDialog::confirm(tr("Are you sure you want to reset calibration?"), tr("Reset"), this)) {
       params.remove("CalibrationParams");
       params.remove("LiveTorqueParameters");
+      params.putBool("OnRoadRefresh", true);
+      QTimer::singleShot(3000, [this]() {
+        params.putBool("OnRoadRefresh", false);
+      });
     }
   });
   addItem(resetCalibBtn);
@@ -247,11 +260,18 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
     for (auto btn : findChildren<ButtonControl *>()) {
       btn->setEnabled(offroad);
     }
+    resetCalibBtn->setEnabled(true);
+    translateBtn->setEnabled(true);
   });
 
   // power buttons
   QHBoxLayout *power_layout = new QHBoxLayout();
   power_layout->setSpacing(30);
+
+  QPushButton *refresh_btn = new QPushButton(tr("Refresh"));
+  refresh_btn->setObjectName("refresh_btn");
+  power_layout->addWidget(refresh_btn);
+  QObject::connect(refresh_btn, &QPushButton::clicked, this, &DevicePanel::refresh);
 
   QPushButton *reboot_btn = new QPushButton(tr("Reboot"));
   reboot_btn->setObjectName("reboot_btn");
@@ -263,14 +283,16 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   power_layout->addWidget(poweroff_btn);
   QObject::connect(poweroff_btn, &QPushButton::clicked, this, &DevicePanel::poweroff);
 
-  if (!Hardware::PC()) {
-    connect(uiState(), &UIState::offroadTransition, poweroff_btn, &QPushButton::setVisible);
-  }
-
   setStyleSheet(R"(
-    #reboot_btn { height: 120px; border-radius: 15px; background-color: #393939; }
-    #reboot_btn:pressed { background-color: #4a4a4a; }
-    #poweroff_btn { height: 120px; border-radius: 15px; background-color: #E22C2C; }
+    QPushButton {
+      height: 120px;
+      border-radius: 15px;
+    }
+    #refresh_btn { background-color: #83c744; }
+    #refresh_btn:pressed { background-color: #c7deb1; }
+    #reboot_btn { background-color: #ed8e3b; }
+    #reboot_btn:pressed { background-color: #f0bf97; }
+    #poweroff_btn { background-color: #E22C2C; }
     #poweroff_btn:pressed { background-color: #FF2424; }
   )");
   addItem(power_layout);
@@ -298,6 +320,22 @@ void DevicePanel::updateCalibDescription() {
     }
   }
   qobject_cast<ButtonControl *>(sender())->setDescription(desc);
+}
+
+void DevicePanel::refresh() {
+  if (QUIState::ui_state.status == UIStatus::STATUS_DISENGAGED) {
+    if (ConfirmationDialog::confirm2(tr("Are you sure you want to refresh?"), this)) {
+      // Check engaged again in case it changed while the dialog was open
+      if (QUIState::ui_state.status == UIStatus::STATUS_DISENGAGED) {
+        Params().putBool("OnRoadRefresh", true);
+        QTimer::singleShot(3000, []() {
+          Params().putBool("OnRoadRefresh", false);
+        });
+      }
+    }
+  } else {
+    ConfirmationDialog::alert(tr("Disengage to Refresh"), this);
+  }
 }
 
 void DevicePanel::reboot() {

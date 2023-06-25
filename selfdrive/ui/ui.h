@@ -367,6 +367,8 @@ public:
   bool awake;
   QString language;
 
+  bool is_OpenpilotViewEnabled = false;
+
   QTransform car_space_transform;
 
 signals:

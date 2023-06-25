@@ -657,7 +657,7 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
     background-color: #393939;
   )");
 
-  btn1.setFixedSize(1050, 100);
+  btn1.setFixedSize(1000, 100);
   btn2.setFixedSize(250, 100);
   hlayout->addWidget(&btn1);
   hlayout->addWidget(&btn2);

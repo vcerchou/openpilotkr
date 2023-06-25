@@ -6539,13 +6539,11 @@ OSMCustomSpeedLimit::OSMCustomSpeedLimit() : AbstractControl("", "", "") {
     font-size: 55px;
     font-weight: 500;
     height: 120px;
-    width: 450px;
   )");
   edit2.setStyleSheet(R"(
     background-color: grey;
     font-size: 55px;
     font-weight: 500;
-    width: 450px;
   )");
   btn.setFixedSize(150, 100);
   edit1.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);

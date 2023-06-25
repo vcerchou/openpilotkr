@@ -323,10 +323,10 @@ void DevicePanel::updateCalibDescription() {
 }
 
 void DevicePanel::refresh() {
-  if (QUIState::ui_state.status == UIStatus::STATUS_DISENGAGED) {
-    if (ConfirmationDialog::confirm2(tr("Are you sure you want to refresh?"), this)) {
+  if (!uiState()->engaged()) {
+    if (ConfirmationDialog::confirm(tr("Are you sure you want to refresh?"), tr("Refresh"), this)) {
       // Check engaged again in case it changed while the dialog was open
-      if (QUIState::ui_state.status == UIStatus::STATUS_DISENGAGED) {
+      if (!uiState()->engaged()) {
         Params().putBool("OnRoadRefresh", true);
         QTimer::singleShot(3000, []() {
           Params().putBool("OnRoadRefresh", false);

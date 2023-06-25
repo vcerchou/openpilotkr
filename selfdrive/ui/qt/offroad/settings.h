@@ -47,6 +47,7 @@ private slots:
   void poweroff();
   void reboot();
   void updateCalibDescription();
+  void refresh();
 
 private:
   Params params;
@@ -82,11 +83,45 @@ private:
   bool is_onroad = false;
 
   QLabel *onroadLbl;
+  LabelControl *gitRemoteLbl;
+  LabelControl *gitBranchLbl;
+  LabelControl *gitCommitLbl;
+  LabelControl *lastUpdateLbl;
+
   LabelControl *versionLbl;
   ButtonControl *installBtn;
   ButtonControl *downloadBtn;
   ButtonControl *targetBranchBtn;
+  ButtonControl *updateBtn;
 
   Params params;
   QFileSystemWatcher *fs_watch;
+};
+
+class UIPanel : public QFrame {
+  Q_OBJECT
+
+public:
+  explicit UIPanel(QWidget *parent = nullptr);
+};
+
+class DrivingPanel : public QFrame {
+  Q_OBJECT
+
+public:
+  explicit DrivingPanel(QWidget *parent = nullptr);
+};
+
+class DeveloperPanel : public QFrame {
+  Q_OBJECT
+
+public:
+  explicit DeveloperPanel(QWidget *parent = nullptr);
+};
+
+class TuningPanel : public QFrame {
+  Q_OBJECT
+
+public:
+  explicit TuningPanel(QWidget *parent = nullptr);
 };

@@ -1017,14 +1017,15 @@ private slots:
   void processFinished1(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
-  QPushButton btn;
-  QComboBox combobox;
+  QPushButton btn1;
+  QPushButton btn2;
   Params params;
 
   QProcess *textMsgProcess1;
   QMessageBox *outbox1;
   QString outdata1;
-  QString branch_name1;
+  QString selection;
+  QStringList stringList;
 
   void refresh();
 };

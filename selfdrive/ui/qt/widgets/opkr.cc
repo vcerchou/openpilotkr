@@ -616,7 +616,7 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
   });
 
   QObject::connect(&btn2, &QPushButton::clicked, [=]() {
-    if (btn2.text() == "UNSET") {
+    if (btn2.text() == tr("UNSET")) {
       if (ConfirmationDialog::confirm2(tr("Do you want to unset?"), this)) {
         params.remove("CarModel");
         refresh();
@@ -637,23 +637,18 @@ void CarSelectCombo::refresh() {
 
 BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "") 
 {
-  combobox.setStyleSheet(R"(
-    subcontrol-origin: padding;
-    subcontrol-position: top left;
-    selection-background-color: #111;
-    selection-color: yellow;
-    color: white;
+  hlayout->addStretch(1);
+
+  btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 0px;
+    font-size: 50px;
+    font-weight: 500;
+    color: #E4E4E4;
     background-color: #393939;
-    border-style: solid;
-    border: 0px solid #1e1e1e;
-    border-radius: 0;
-    width: 100px;
-    height: 120px;
   )");
 
-  combobox.setFixedWidth(930);
-
-  btn.setStyleSheet(R"(
+  btn2.setStyleSheet(R"(
     padding: 0;
     border-radius: 50px;
     font-size: 35px;
@@ -662,39 +657,41 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
     background-color: #393939;
   )");
 
-  btn.setFixedSize(150, 100);
-  btn.setText(tr("RELOAD"));
+  btn1.setFixedSize(1050, 100);
+  btn2.setFixedSize(250, 100);
+  hlayout->addWidget(&btn1);
+  hlayout->addWidget(&btn2);
+  btn1.setText(QString::fromStdString(params.get("GitBranch")));
+  btn2.setText(tr("RELOAD"));
 
-  QObject::connect(&btn, &QPushButton::clicked, [=]() {
-    refresh();
+  QObject::connect(&btn1, &QPushButton::clicked, [=]() {
+    QString cur = QString::fromStdString(params.get("GitBranch"));
+    selection = MultiOptionDialog::getSelection(tr("Change Your Branch"), stringList, cur, this);
+    if (!selection.isEmpty()) {
+      if (selection != cur) {
+        if (ConfirmationDialog::confirm2(tr("Now will checkout the branch") +", <" + selection + ">. " + tr("The device will be rebooted if completed."), this)) {
+          QString cmd1 = "git -C /data/openpilot remote set-branches --add origin " + selection;
+          QString tcmd1 = "git -C /data/openpilot fetch --progress origin";
+          QProcess::execute("sudo pkill -f thermald");
+          QProcess::execute("git -C /data/openpilot clean -d -f -f");
+          QProcess::execute(cmd1);
+          QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
+          textMsgProcess1 = new QProcess(this);
+          outbox1 = new QMessageBox(this);
+          outbox1->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
+          QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg1()));
+          QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardError()), this, SLOT(printMsg1()));
+          QObject::connect(textMsgProcess1, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished1(int, QProcess::ExitStatus)));
+          executeProgram1(tcmd1);
+        }
+      }
+    }
   });
 
-  hlayout->addWidget(&combobox, Qt::AlignLeft);
-  hlayout->addWidget(&btn, Qt::AlignRight);
-
-  QObject::connect(&combobox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), [=](int index)
-  {
-    combobox.itemData(combobox.currentIndex());
-    branch_name1 = combobox.currentText();
-    QString current_branch1 = QString::fromStdString(params.get("GitBranch"));
-    if (combobox.currentIndex() != 0 && branch_name1 != current_branch1) {
-      if (ConfirmationDialog::confirm2(tr("Now will checkout the branch") +", <" + branch_name1 + ">. " + tr("The device will be rebooted if completed."), this)) {
-        QString cmd1 = "git -C /data/openpilot remote set-branches --add origin " + branch_name1;
-        QString tcmd1 = "git -C /data/openpilot fetch --progress origin";
-        QProcess::execute("sudo pkill -f thermald");
-        QProcess::execute("git -C /data/openpilot clean -d -f -f");
-        QProcess::execute(cmd1);
-        QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
-        textMsgProcess1 = new QProcess(this);
-        outbox1 = new QMessageBox(this);
-        outbox1->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
-        QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg1()));
-        QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardError()), this, SLOT(printMsg1()));
-        QObject::connect(textMsgProcess1, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished1(int, QProcess::ExitStatus)));
-        executeProgram1(tcmd1);
-      }
-    } else if (combobox.currentIndex() != 0 && branch_name1 == current_branch1) {
-      if (ConfirmationDialog::alert(tr("Your branch is already") + " <" + current_branch1 + ">.", this)) {combobox.setCurrentIndex(0);}
+  QObject::connect(&btn2, &QPushButton::clicked, [=]() {
+    if (btn2.text() == tr("RELOAD")) {
+      btn2.setText(tr("RUNNING"));
+      refresh();
     }
   });
 }
@@ -718,8 +715,8 @@ void BranchSelectCombo::executeProgram1(const QString &tcmd1) {
 }
 
 void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exitStatus) {
-  QString cmd2 = "git -C /data/openpilot checkout --track origin/" + branch_name1;
-  QString cmd3 = "git -C /data/openpilot checkout " + branch_name1;
+  QString cmd2 = "git -C /data/openpilot checkout --track origin/" + selection;
+  QString cmd3 = "git -C /data/openpilot checkout " + selection;
   if(exitStatus == QProcess::NormalExit) {
     QProcess::execute(cmd2);
     QProcess::execute(cmd3);
@@ -730,18 +727,17 @@ void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exit
 void BranchSelectCombo::refresh() {
   QProcess::execute("git -C /data/openpilot remote prune origin");
   QProcess::execute("git -C /data/openpilot fetch origin");
-  combobox.clear();
-  combobox.addItem(tr("Select Branch you want to change"));
   std::system("git -C /data/openpilot ls-remote --refs | grep refs/heads | awk -F '/' '{print $3}' > /data/branches");
   QFile branchlistfile("/data/branches");
   if (branchlistfile.open(QIODevice::ReadOnly)) {
-    QTextStream carname(&branchlistfile);
-    while (!carname.atEnd()) {
-      QString line = carname.readLine();
-      combobox.addItem(line);
+    QTextStream branchname(&branchlistfile);
+    while (!branchname.atEnd()) {
+      QString line = branchname.readLine();
+      stringList.append(line);
     }
     branchlistfile.close();
   }
+  btn2.setText(tr("RELOAD"));
 }
 
 TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("", "", "") 

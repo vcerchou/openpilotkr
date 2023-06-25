@@ -18,9 +18,10 @@ if [ "$?" == "0" ]; then
   git reset --hard origin/$CURRENT_BRANCH
   git pull origin $CURRENT_BRANCH
 
+  sudo pkill -f thermald
   if [ -f "/data/openpilot/prebuilt" ]; then
-    sudo pkill -f thermald
-    rm -f /data/openpilot/prebuilt
+    sleep 1
+    sudo rm -f /data/openpilot/prebuilt
   fi
 
   sudo reboot

@@ -2,6 +2,7 @@
 
 #include <QPushButton>
 #include <QButtonGroup>
+#include <QProcess>
 
 #include "system/hardware/hw.h"
 #include "selfdrive/ui/qt/util.h"
@@ -239,7 +240,7 @@ bool ConfirmationDialog::confirm(const QString &prompt_text, const QString &conf
 }
 
 bool ConfirmationDialog::confirm2(const QString &prompt_text, QWidget *parent) {
-  ConfirmationDialog d = ConfirmationDialog(prompt_text, tr("Ok"), tr("Cancel"), parent);
+  ConfirmationDialog d = ConfirmationDialog(prompt_text, tr("Ok"), tr("Cancel"), false, parent);
   return d.exec();
 }
 
@@ -461,13 +462,13 @@ GitPullCancel::GitPullCancel(const QString &confirm_text, const QString &cancel_
       if (num != -1) {
         QString str = listWidget->currentItem()->text();
         QStringList hash = str.split(",");
-        if (ConfirmationDialog::confirm(tr("This will run below command: git reset --hard ") + hash[0], this)) {
+        if (ConfirmationDialog::confirm2(tr("This will run below command: git reset --hard ") + hash[0], this)) {
           QString cmd0 = "git reset --hard " + hash[0];
-          QProcess::execute("pkill -f thermald");
+          QProcess::execute("sudo pkill -f thermald");
           QProcess::execute("rm -f /data/openpilot/prebuilt");
           QProcess::execute("git clean -d -f -f");
           QProcess::execute(cmd0);
-          QProcess::execute("reboot");
+          QProcess::execute("sudo reboot");
         }
       } else {
         ConfirmationDialog::alert(tr("No selection."), this);

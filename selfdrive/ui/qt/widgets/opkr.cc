@@ -245,33 +245,8 @@ CUtilWidget::CUtilWidget( void *p ) : CGroupWidget( tr("Util Program") )
     }
   });
 
-  const char* open_settings = "am start -a android.intent.action.MAIN -n com.android.settings/.Settings";
-  auto open_settings_btn = new ButtonControl(tr("Open Android Settings"), tr("RUN"));
-  QObject::connect(open_settings_btn, &ButtonControl::clicked, [=]() {
-    emit parent->closeSettings();
-    std::system(open_settings);
-  });
-  const char* softkey = "am start com.gmd.hidesoftkeys/com.gmd.hidesoftkeys.MainActivity";
-  auto softkey_btn = new ButtonControl(tr("SoftKey RUN/SET"), tr("RUN"));
-  QObject::connect(softkey_btn, &ButtonControl::clicked, [=]() {
-    emit parent->closeSettings();
-    std::system(softkey);
-  });
-  auto mixplorer_btn = new ButtonControl(tr("RUN Mixplorer"), tr("RUN"));
-  QObject::connect(mixplorer_btn, &ButtonControl::clicked, [=]() {
-	  emit parent->closeSettings();
-    std::system("/data/openpilot/selfdrive/assets/addon/script/run_mixplorer.sh");
-  });
-  auto harness_relay = new ButtonControl(tr("Remove Dash Err on Boot"), tr("RUN"));
-  QObject::connect(harness_relay, &ButtonControl::clicked, [=]() {if (ConfirmationDialog::confirm2(tr("Try to run this if you have dash errors on boot. This is caused by relay switch."), this)) {
-    std::system("cp -f /data/openpilot/panda/board/main_relay.c /data/openpilot/panda/board/main.c");
-    std::system("reboot");}});
   pBoxLayout->addWidget( pandaflashingtbtn );
   pBoxLayout->addWidget( pandaflashingtbtn_new );
-  pBoxLayout->addWidget( harness_relay );
-  pBoxLayout->addWidget( open_settings_btn );
-  pBoxLayout->addWidget( softkey_btn );
-  pBoxLayout->addWidget( mixplorer_btn );
 }
 CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") ) 
 {
@@ -378,7 +353,7 @@ SwitchOpenpilot::SwitchOpenpilot() : ButtonControl(tr("Change Repo/Branch"), "",
               QString cmd1 = "mv /data/openpilot /data/openpilot_" + as;
               QString tcmd = "git clone --progress -b " + githubbranch + " --single-branch https://github.com/" + githubid + "/" + githubrepo + ".git /data/openpilot";
               QString cmd3 = "rm -f /data/openpilot_" + as + "/prebuilt";
-              QProcess::execute("pkill -f thermald");
+              QProcess::execute("sudo pkill -f thermald");
               QProcess::execute(cmd1);
               QProcess::execute(cmd3);
               textMsgProcess = new QProcess(this);
@@ -423,7 +398,7 @@ void SwitchOpenpilot::processFinished(int exitCode, QProcess::ExitStatus exitSta
     QProcess::execute("chmod -R o-rwx /data/openpilot");
     QProcess::execute("chmod 755 /data/openpilot");
     QProcess::execute("chmod 755 /data/openpilot/cereal");
-    QProcess::execute("reboot");
+    QProcess::execute("sudo reboot");
   }
 }
 
@@ -726,7 +701,7 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
       if (ConfirmationDialog::confirm2(tr("Now will checkout the branch") +", <" + branch_name1 + ">. " + tr("The device will be rebooted if completed."), this)) {
         QString cmd1 = "git -C /data/openpilot remote set-branches --add origin " + branch_name1;
         QString tcmd1 = "git -C /data/openpilot fetch --progress origin";
-        QProcess::execute("pkill -f thermald");
+        QProcess::execute("sudo pkill -f thermald");
         QProcess::execute("git -C /data/openpilot clean -d -f -f");
         QProcess::execute(cmd1);
         QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
@@ -6090,7 +6065,7 @@ OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your 
           QProcess::execute("rm -f /data/params/d/DongleId");
           QProcess::execute("rm -f /data/params/d/IMEI");
           QProcess::execute("rm -f /data/params/d/HardwareSerial");
-          QProcess::execute("reboot");
+          QProcess::execute("sudo reboot");
         }
       }
     } else if (btn.text() == tr("UNSET")) {
@@ -6100,7 +6075,7 @@ OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your 
         QProcess::execute("rm -f /data/params/d/DongleId");
         QProcess::execute("rm -f /data/params/d/IMEI");
         QProcess::execute("rm -f /data/params/d/HardwareSerial");
-        QProcess::execute("reboot");
+        QProcess::execute("sudo reboot");
       }
     }
   });

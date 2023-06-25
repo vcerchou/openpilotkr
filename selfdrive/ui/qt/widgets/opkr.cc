@@ -5319,22 +5319,22 @@ LCTimingFactor::LCTimingFactor() : AbstractControl("", "", "") {
 
   hlayout->addWidget(&label1a);
   hlayout->addWidget(&label1);
-  btn1.setFixedSize(50, 100);
+  btn1.setFixedSize(150, 100);
   label1a.setText("30:");
   hlayout->addWidget(&btn1);
   hlayout->addWidget(&label2a);
   hlayout->addWidget(&label2);
-  btn2.setFixedSize(50, 100);
+  btn2.setFixedSize(150, 100);
   label2a.setText("60:");
   hlayout->addWidget(&btn2);
   hlayout->addWidget(&label3a);
   hlayout->addWidget(&label3);
-  btn3.setFixedSize(50, 100);
+  btn3.setFixedSize(150, 100);
   label3a.setText("80:");
   hlayout->addWidget(&btn3);
   hlayout->addWidget(&label4a);
   hlayout->addWidget(&label4);
-  btn4.setFixedSize(50, 100);
+  btn4.setFixedSize(150, 100);
   label4a.setText("110:");
   hlayout->addWidget(&btn4);
 
@@ -6539,12 +6539,13 @@ OSMCustomSpeedLimit::OSMCustomSpeedLimit() : AbstractControl("", "", "") {
     font-size: 55px;
     font-weight: 500;
     height: 120px;
+    width: 450px;
   )");
   edit2.setStyleSheet(R"(
     background-color: grey;
     font-size: 55px;
     font-weight: 500;
-    height: 120px;
+    width: 450px;
   )");
   btn.setFixedSize(150, 100);
   edit1.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
@@ -7001,8 +7002,8 @@ OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car t
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(80, 100);
-  btnplusl.setFixedSize(80, 100);
+  btnminusl.setFixedSize(200, 100);
+  btnplusl.setFixedSize(200, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -7028,8 +7029,8 @@ OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car t
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(80, 100);
-  btnplusr.setFixedSize(80, 100);
+  btnminusr.setFixedSize(200, 100);
+  btnplusr.setFixedSize(200, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -8276,16 +8277,16 @@ CruiseGapBySpd::CruiseGapBySpd() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminus1.setFixedSize(70, 100);
-  btnplus1.setFixedSize(70, 100);
-  btnminus2.setFixedSize(70, 100);
-  btnplus2.setFixedSize(70, 100);
-  btnminus3.setFixedSize(70, 100);
-  btnplus3.setFixedSize(70, 100);
-  btn1.setFixedSize(90, 100);
-  btn2.setFixedSize(90, 100);
-  btn3.setFixedSize(90, 100);
-  btn4.setFixedSize(90, 100);
+  btnminus1.setFixedSize(90, 100);
+  btnplus1.setFixedSize(90, 100);
+  btnminus2.setFixedSize(90, 100);
+  btnplus2.setFixedSize(90, 100);
+  btnminus3.setFixedSize(90, 100);
+  btnplus3.setFixedSize(90, 100);
+  btn1.setFixedSize(110, 100);
+  btn2.setFixedSize(110, 100);
+  btn3.setFixedSize(110, 100);
+  btn4.setFixedSize(110, 100);
 
   hlayout->addWidget(&btn1);
   hlayout->addWidget(&btnminus1);

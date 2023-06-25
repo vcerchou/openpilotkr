@@ -553,10 +553,10 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     bool stat = params.getBool("IsOpenpilotViewEnabled");
     if (stat) {
       params.putBool("IsOpenpilotViewEnabled", false);
-      QUIState::ui_state.scene.cal_view = false;
+      uiState()->.scene.cal_view = false;
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
-      QUIState::ui_state.scene.cal_view = false;
+      uiState()->.scene.cal_view = false;
     }
     refresh();
   });
@@ -564,10 +564,10 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     bool stat = params.getBool("IsOpenpilotViewEnabled");
     if (stat) {
       params.putBool("IsOpenpilotViewEnabled", false);
-      QUIState::ui_state.scene.cal_view = false;
+      uiState()->.scene.cal_view = false;
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
-      QUIState::ui_state.scene.cal_view = true;
+      uiState()->.scene.cal_view = true;
     }
     refresh();
   });
@@ -1064,7 +1064,7 @@ VolumeControl::VolumeControl() : AbstractControl(tr("EON Volume Control(%)"), tr
       value = -5;
     }
     QString values = QString::number(value);
-    QUIState::ui_state.scene.nVolumeBoost = value;
+    uiState()->.scene.nVolumeBoost = value;
     params.put("OpkrUIVolumeBoost", values.toStdString());
     playsound();
     refresh();
@@ -1078,7 +1078,7 @@ VolumeControl::VolumeControl() : AbstractControl(tr("EON Volume Control(%)"), tr
       value = 100;
     }
     QString values = QString::number(value);
-    QUIState::ui_state.scene.nVolumeBoost = value;
+    uiState()->.scene.nVolumeBoost = value;
     params.put("OpkrUIVolumeBoost", values.toStdString());
     playsound();
     refresh();
@@ -1098,7 +1098,7 @@ void VolumeControl::refresh() {
 }
 
 void VolumeControl::playsound() {
-  float value = QUIState::ui_state.scene.nVolumeBoost;
+  float value = uiState()->.scene.nVolumeBoost;
   if (value > 1) {
     effect.setVolume(value * 0.01);
     effect.play();
@@ -1144,7 +1144,7 @@ BrightnessControl::BrightnessControl() : AbstractControl(tr("EON Brightness Cont
     if (value <= 0) {
       value = 0;
     }
-    QUIState::ui_state.scene.brightness = value;
+    uiState()->.scene.brightness = value;
     QString values = QString::number(value);
     params.put("OpkrUIBrightness", values.toStdString());
     refresh();
@@ -1157,7 +1157,7 @@ BrightnessControl::BrightnessControl() : AbstractControl(tr("EON Brightness Cont
     if (value >= 100) {
       value = 100;
     }
-    QUIState::ui_state.scene.brightness = value;
+    uiState()->.scene.brightness = value;
     QString values = QString::number(value);
     params.put("OpkrUIBrightness", values.toStdString());
     refresh();
@@ -1210,7 +1210,7 @@ BrightnessOffControl::BrightnessOffControl() : AbstractControl(tr("Brightness at
     if (value <= 0) {
       value = 0;
     }
-    QUIState::ui_state.scene.brightness_off = value;
+    uiState()->.scene.brightness_off = value;
     QString values = QString::number(value);
     params.put("OpkrUIBrightnessOff", values.toStdString());
     refresh();
@@ -1223,7 +1223,7 @@ BrightnessOffControl::BrightnessOffControl() : AbstractControl(tr("Brightness at
     if (value >= 100) {
       value = 100;
     }
-    QUIState::ui_state.scene.brightness_off = value;
+    uiState()->.scene.brightness_off = value;
     QString values = QString::number(value);
     params.put("OpkrUIBrightnessOff", values.toStdString());
     refresh();
@@ -1277,7 +1277,7 @@ AutoScreenOff::AutoScreenOff() : AbstractControl(tr("EON SCR Off Timer"), tr("Tu
     if (value <= -3) {
       value = -3;
     }
-    QUIState::ui_state.scene.autoScreenOff = value;
+    uiState()->.scene.autoScreenOff = value;
     QString values = QString::number(value);
     params.put("OpkrAutoScreenOff", values.toStdString());
     refresh();
@@ -1290,7 +1290,7 @@ AutoScreenOff::AutoScreenOff() : AbstractControl(tr("EON SCR Off Timer"), tr("Tu
     if (value >= 10) {
       value = 10;
     }
-    QUIState::ui_state.scene.autoScreenOff = value;
+    uiState()->.scene.autoScreenOff = value;
     QString values = QString::number(value);
     params.put("OpkrAutoScreenOff", values.toStdString());
     refresh();
@@ -2260,7 +2260,7 @@ SpeedLimitOffset::SpeedLimitOffset() : AbstractControl(tr("SpeedLimit Offset"), 
       value = -30;
     }
     QString values = QString::number(value);
-    //QUIState::ui_state.speed_lim_off = value;
+    //uiState()->.speed_lim_off = value;
     params.put("OpkrSpeedLimitOffset", values.toStdString());
     refresh();
   });
@@ -2273,7 +2273,7 @@ SpeedLimitOffset::SpeedLimitOffset() : AbstractControl(tr("SpeedLimit Offset"), 
       value = 30;
     }
     QString values = QString::number(value);
-    //QUIState::ui_state.speed_lim_off = value;
+    //uiState()->.speed_lim_off = value;
     params.put("OpkrSpeedLimitOffset", values.toStdString());
     refresh();
   });
@@ -7001,28 +7001,28 @@ void OPKRTopTextView::refresh() {
   QString option = QString::fromStdString(params.get("TopTextView"));
   if (option == "0") {
     label.setText(tr("None"));
-    QUIState::ui_state.scene.top_text_view = 0;
+    uiState()->.scene.top_text_view = 0;
   } else if (option == "1") {
     label.setText(tr("Date+Time"));
-    QUIState::ui_state.scene.top_text_view = 1;
+    uiState()->.scene.top_text_view = 1;
   } else if (option == "2") {
     label.setText(tr("Date"));
-    QUIState::ui_state.scene.top_text_view = 2;
+    uiState()->.scene.top_text_view = 2;
   } else if (option == "3") {
     label.setText(tr("Time"));
-    QUIState::ui_state.scene.top_text_view = 3;
+    uiState()->.scene.top_text_view = 3;
   } else if (option == "4") {
     label.setText(tr("Date+Time+Str"));
-    QUIState::ui_state.scene.top_text_view = 4;
+    uiState()->.scene.top_text_view = 4;
   } else if (option == "5") {
     label.setText(tr("Date+Str"));
-    QUIState::ui_state.scene.top_text_view = 5;
+    uiState()->.scene.top_text_view = 5;
   } else if (option == "6") {
     label.setText(tr("Time+Str"));
-    QUIState::ui_state.scene.top_text_view = 6;
+    uiState()->.scene.top_text_view = 6;
   } else {
     label.setText(tr("StreetName"));
-    QUIState::ui_state.scene.top_text_view = 7;
+    uiState()->.scene.top_text_view = 7;
   }
 }
 
@@ -8225,16 +8225,16 @@ void DoNotDisturbMode::refresh() {
   QString option = QString::fromStdString(params.get("DoNotDisturbMode"));
   if (option == "0") {
     label.setText(tr("NotUse"));
-    QUIState::ui_state.scene.do_not_disturb_mode = 0;
+    uiState()->.scene.do_not_disturb_mode = 0;
   } else if (option == "1") {
     label.setText(tr("SCROffOnly"));
-    QUIState::ui_state.scene.do_not_disturb_mode = 1;
+    uiState()->.scene.do_not_disturb_mode = 1;
   } else if (option == "2") {
     label.setText(tr("SNDOffOnly"));
-    QUIState::ui_state.scene.do_not_disturb_mode = 2;
+    uiState()->.scene.do_not_disturb_mode = 2;
   } else {
     label.setText(tr("BothOff"));
-    QUIState::ui_state.scene.do_not_disturb_mode = 3;
+    uiState()->.scene.do_not_disturb_mode = 3;
   }
 }
 

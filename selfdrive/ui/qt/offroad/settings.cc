@@ -468,6 +468,188 @@ void SoftwarePanel::updateLabels() {
 }
 
 
+UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setContentsMargins(50, 0, 50, 0);
+  layout->setSpacing(30);
+
+  // OPKR
+  layout->addWidget(new AutoShutdown());
+  layout->addWidget(new ForceShutdown());
+  layout->addWidget(new VolumeControl());
+  layout->addWidget(new BrightnessControl());
+  layout->addWidget(new AutoScreenOff());
+  layout->addWidget(new BrightnessOffControl());
+  layout->addWidget(new DoNotDisturbMode());  
+  layout->addWidget(new GetOffAlert());
+  layout->addWidget(new DrivingRecordToggle());
+  layout->addWidget(new RecordCount());
+  layout->addWidget(new RecordQuality());
+  const char* record_del = "rm -f /data/media/videos/*";
+  auto recorddelbtn = new ButtonControl(tr("Delete All Recorded Files"), tr("RUN"));
+  QObject::connect(recorddelbtn, &ButtonControl::clicked, [=]() {
+    if (ConfirmationDialog::confirm2(tr("Delete all saved recorded files. Do you want to proceed?"), this)){
+      std::system(record_del);
+    }
+  });
+  layout->addWidget(recorddelbtn);
+  const char* realdata_del = "rm -rf /data/media/realdata/*";
+  auto realdatadelbtn = new ButtonControl(tr("Delete All Driving Logs"), tr("RUN"));
+  QObject::connect(realdatadelbtn, &ButtonControl::clicked, [=]() {
+    if (ConfirmationDialog::confirm2(tr("Delete all saved driving logs. Do you want to proceed?"), this)){
+      std::system(realdata_del);
+    }
+  });
+  layout->addWidget(realdatadelbtn);
+  layout->addWidget(new MonitoringMode());
+  layout->addWidget(new MonitorEyesThreshold());
+  layout->addWidget(new NormalEyesThreshold());
+  layout->addWidget(new BlinkThreshold());
+  layout->addWidget(new OPKRNaviSelect());
+  layout->addWidget(new ExternalDeviceIP());
+  layout->addWidget(new OPKRServerSelect());
+  layout->addWidget(new OPKRServerAPI());
+  layout->addWidget(new OPKRMapboxStyle());
+  layout->addWidget(new OPKRTopTextView());
+  layout->addWidget(new RPMAnimatedToggle());
+  layout->addWidget(new RPMAnimatedMaxValue());
+  layout->addWidget(new OSMOfflineUseToggle());
+}
+DrivingPanel::DrivingPanel(QWidget *parent) : QFrame(parent) {
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setContentsMargins(50, 0, 50, 0);
+  layout->setSpacing(30);
+  // OPKR
+  layout->addWidget(new AutoResumeToggle());
+  layout->addWidget(new RESCountatStandstill());
+  layout->addWidget(new CruiseGapAdjustToggle());
+  layout->addWidget(new CruiseGapBySpdOn());
+  layout->addWidget(new CruiseGapBySpd());
+  layout->addWidget(new StandstillResumeAltToggle());
+  layout->addWidget(new DepartChimeAtResume());
+  layout->addWidget(new VariableCruiseToggle());
+  layout->addWidget(new VariableCruiseLevel());
+  layout->addWidget(new CruiseSetwithRoadLimitSpeed());
+  layout->addWidget(new CruiseSetwithRoadLimitSpeedOffset());
+  layout->addWidget(new CruisemodeSelInit());
+  layout->addWidget(new LaneChangeSpeed());
+  layout->addWidget(new LaneChangeDelay());
+  layout->addWidget(new LCTimingFactorUD());
+  layout->addWidget(new LCTimingFactor());
+  layout->addWidget(new LeftCurvOffset());
+  layout->addWidget(new RightCurvOffset());
+  layout->addWidget(new BlindSpotDetectToggle());
+
+  layout->addWidget(new CSteerWidget());
+  layout->addWidget(new SteerAngleCorrection());
+  layout->addWidget(new TurnSteeringDisableToggle());
+  layout->addWidget(new CruiseOverMaxSpeedToggle());
+  layout->addWidget(new OSMEnabledToggle());
+  layout->addWidget(new OSMSpeedLimitEnabledToggle());
+  layout->addWidget(new SpeedLimitOffset());
+  layout->addWidget(new OSMCustomSpeedLimitUD());
+  layout->addWidget(new OSMCustomSpeedLimit());
+  layout->addWidget(new SpeedLimitSignType());
+  layout->addWidget(new CamDecelDistAdd());
+  layout->addWidget(new CurvDecelSelect());
+  layout->addWidget(new VCurvSpeedUD());
+  layout->addWidget(new VCurvSpeed());
+  layout->addWidget(new OCurvSpeedUD());
+  layout->addWidget(new OCurvSpeed());
+  layout->addWidget(new SpeedBumpDecelToggle());
+  layout->addWidget(new OPKREarlyStoppingToggle());
+  layout->addWidget(new AutoEnabledToggle());
+  layout->addWidget(new AutoEnableSpeed());
+  layout->addWidget(new CruiseAutoResToggle());
+  layout->addWidget(new RESChoice());
+  layout->addWidget(new AutoResCondition());
+  layout->addWidget(new AutoResLimitTime());
+  layout->addWidget(new AutoRESDelay());
+  layout->addWidget(new LaneWidth());
+  layout->addWidget(new SpeedLaneWidthUD());
+  layout->addWidget(new SpeedLaneWidth());
+  layout->addWidget(new RoutineDriveOnToggle());
+  layout->addWidget(new RoutineDriveOption());
+  layout->addWidget(new CloseToRoadEdgeToggle());
+  layout->addWidget(new OPKREdgeOffset());
+  layout->addWidget(new ToAvoidLKASFaultToggle());
+  layout->addWidget(new ToAvoidLKASFault());
+  layout->addWidget(new SpeedCameraOffsetToggle());
+}
+
+DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {
+  QVBoxLayout *layout = new QVBoxLayout(this);
+  layout->setContentsMargins(50, 0, 50, 0);
+  layout->setSpacing(30);
+
+  // OPKR
+  layout->addWidget(new DebugUiOneToggle());
+  layout->addWidget(new DebugUiTwoToggle());
+  layout->addWidget(new DebugUiThreeToggle());
+  layout->addWidget(new OPKRDebug());
+  layout->addWidget(new ShowErrorToggle());
+  layout->addWidget(new LongLogToggle());
+  layout->addWidget(new PrebuiltToggle());
+  layout->addWidget(new LDWSToggle());
+  layout->addWidget(new GearDToggle());
+  layout->addWidget(new SteerWarningFixToggle());
+  layout->addWidget(new IgnoreCanErroronISGToggle());
+  layout->addWidget(new FCA11MessageToggle());
+  layout->addWidget(new UFCModeEnabledToggle());
+  layout->addWidget(new StockLKASEnabledatDisenagedStatusToggle());
+  layout->addWidget(new JoystickModeToggle());
+  layout->addWidget(new NoSmartMDPSToggle());
+  layout->addWidget(new UserSpecificFeature());
+  layout->addWidget(new TimeZoneSelectCombo());
+
+  layout->addWidget(horizontal_line());
+  layout->addWidget(new CarSelectCombo());
+
+  layout->addWidget(new CPandaGroup());
+}
+
+TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
+  QVBoxLayout *layout = new QVBoxLayout(this);
+
+  layout->setContentsMargins(50, 0, 50, 0);
+  layout->setSpacing(30);
+
+  // OPKR
+  layout->addWidget(new LabelControl(tr("〓〓〓〓〓〓〓〓【 TUNING 】〓〓〓〓〓〓〓〓"), ""));
+  layout->addWidget(new CameraOffset());
+  layout->addWidget(new PathOffset());
+  layout->addWidget(horizontal_line());
+
+  layout->addWidget(new SteerActuatorDelay());
+
+  layout->addWidget(new TireStiffnessFactor());
+  layout->addWidget(new SteerThreshold());
+  layout->addWidget(new SteerLimitTimer());
+
+  layout->addWidget(new LiveSteerRatioToggle());
+  layout->addWidget(new LiveSRPercent());
+  layout->addWidget(new SRBaseControl());
+  layout->addWidget(new SRMaxControl());
+
+  layout->addWidget(horizontal_line());
+  layout->addWidget(new VariableSteerMaxToggle());
+  layout->addWidget(new SteerMax());
+  layout->addWidget(new VariableSteerDeltaToggle());
+  layout->addWidget(new SteerDeltaUp());
+  layout->addWidget(new SteerDeltaDown());
+
+  layout->addWidget(horizontal_line());
+
+  //layout->addWidget(new LabelControl("〓〓〓〓〓〓〓〓【 CONTROL 】〓〓〓〓〓〓〓〓", ""));
+ // layout->addWidget(new LateralControl());
+  layout->addWidget(new LiveTunePanelToggle());
+
+  layout->addWidget(new CLateralControlGroup());
+  layout->addWidget(horizontal_line());
+  layout->addWidget(new CLongControlGroup());
+
+}
+
 
 void SettingsWindow::showEvent(QShowEvent *event) {
   setCurrentPanel(0);
@@ -527,6 +709,10 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
     {tr("Software"), software},
+    {tr("UIMenu"), new UIPanel(this)},
+    {tr("Driving"), new DrivingPanel(this)},
+    {tr("Developer"), new DeveloperPanel(this)},
+    {tr("Tuning"), new TuningPanel(this)},
   };
 
 #ifdef ENABLE_MAPS

@@ -221,9 +221,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("OpkrBlindSpotDetect", status);
       if (state) {
-        uiState()->.scene.nOpkrBlindSpotDetect = true;
+        uiState()->scene.nOpkrBlindSpotDetect = true;
       } else {
-        uiState()->.scene.nOpkrBlindSpotDetect = false;
+        uiState()->scene.nOpkrBlindSpotDetect = false;
       }
     });
   }
@@ -310,9 +310,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("OpkrDrivingRecord", status);
       if (state) {
-        uiState()->.scene.driving_record = true;
+        uiState()->scene.driving_record = true;
       } else {
-        uiState()->.scene.driving_record = false;
+        uiState()->scene.driving_record = false;
       }
     });
   }
@@ -363,9 +363,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("DebugUi1", status);
       if (state) {
-        uiState()->.scene.nDebugUi1 = true;
+        uiState()->scene.nDebugUi1 = true;
       } else {
-        uiState()->.scene.nDebugUi1 = false;
+        uiState()->scene.nDebugUi1 = false;
       }
     });
   }
@@ -380,9 +380,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("DebugUi2", status);
       if (state) {
-        uiState()->.scene.nDebugUi2 = true;
+        uiState()->scene.nDebugUi2 = true;
       } else {
-        uiState()->.scene.nDebugUi2 = false;
+        uiState()->scene.nDebugUi2 = false;
       }
     });
   }
@@ -397,9 +397,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("DebugUi3", status);
       if (state) {
-        uiState()->.scene.nDebugUi3 = true;
+        uiState()->scene.nDebugUi3 = true;
       } else {
-        uiState()->.scene.nDebugUi3 = false;
+        uiState()->scene.nDebugUi3 = false;
       }
     });
   }
@@ -510,11 +510,11 @@ public:
       bool status = state ? true : false;
       Params().putBool("OpkrLiveTunePanelEnable", status);
       if (state) {
-        uiState()->.scene.live_tune_panel_enable = true;
-        uiState()->.scene.opkr_livetune_ui = true;
+        uiState()->scene.live_tune_panel_enable = true;
+        uiState()->scene.opkr_livetune_ui = true;
       } else {
-        uiState()->.scene.live_tune_panel_enable = false;
-        uiState()->.scene.opkr_livetune_ui = false;
+        uiState()->scene.live_tune_panel_enable = false;
+        uiState()->scene.opkr_livetune_ui = false;
       }
     });
   }
@@ -553,9 +553,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("ShowError", status);
       if (state) {
-        uiState()->.scene.show_error = true;
+        uiState()->scene.show_error = true;
       } else {
-        uiState()->.scene.show_error = false;
+        uiState()->scene.show_error = false;
       }
     });
   }
@@ -978,9 +978,9 @@ public:
       bool status = state ? true : false;
       Params().putBool("OPKRDebug", status);
       if (state) {
-        uiState()->.scene.OPKR_Debug = true;
+        uiState()->scene.OPKR_Debug = true;
       } else {
-        uiState()->.scene.OPKR_Debug = false;
+        uiState()->scene.OPKR_Debug = false;
       }
     });
   }

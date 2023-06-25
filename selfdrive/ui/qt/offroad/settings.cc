@@ -397,7 +397,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
         QFileInfo fileInfo;
         fileInfo.setFile("/data/OPKR_Updates.txt");
         const std::string txt = util::read_file("/data/OPKR_Updates.txt");
-        if (UpdateInfoDialog::confirm2(desc + "\n" + QString::fromStdString(txt), this)) {
+        if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
           if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");}
         }
       } else {
@@ -408,7 +408,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
           QFileInfo fileInfo;
           fileInfo.setFile("/data/OPKR_Updates.txt");
           const std::string txt = util::read_file("/data/OPKR_Updates.txt");
-          if (UpdateInfoDialog::confirm2(desc + "\n" + QString::fromStdString(txt), this)) {
+          if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
             if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");}
           }
         }
@@ -510,7 +510,7 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   const char* record_del = "rm -f /data/media/videos/*";
   auto recorddelbtn = new ButtonControl(tr("Delete All Recorded Files"), tr("RUN"));
   QObject::connect(recorddelbtn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Delete all saved recorded files. Do you want to proceed?"), this)){
+    if (ConfirmationDialog::confirm2(tr("Delete all saved recorded files. Do you want to proceed?"), this)){
       std::system(record_del);
     }
   });
@@ -518,7 +518,7 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   const char* realdata_del = "rm -rf /data/media/realdata/*";
   auto realdatadelbtn = new ButtonControl(tr("Delete All Driving Logs"), tr("RUN"));
   QObject::connect(realdatadelbtn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Delete all saved driving logs. Do you want to proceed?"), this)){
+    if (ConfirmationDialog::confirm2(tr("Delete all saved driving logs. Do you want to proceed?"), this)){
       std::system(realdata_del);
     }
   });
@@ -677,10 +677,6 @@ TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
 
 }
 
-void SettingsWindow::showEvent(QShowEvent *event) {
-  panel_widget->setCurrentIndex(0);
-  nav_btns->buttons()[0]->setChecked(true);
-}
 
 
 SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {

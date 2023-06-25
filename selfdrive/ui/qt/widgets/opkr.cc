@@ -569,7 +569,7 @@ void OpenpilotView::refresh() {
 CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "") 
 {
   QStringList stringList;
-  QFile carlistfile("/data/params/d/CarList");
+  QFile carlistfile("/data/CarList");
   if (carlistfile.open(QIODevice::ReadOnly)) {
     QTextStream carname(&carlistfile);
     while (!carname.atEnd()) {

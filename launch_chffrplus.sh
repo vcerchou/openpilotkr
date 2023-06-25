@@ -45,7 +45,7 @@ function agnos_init {
   fi
 
   # opkr car list
-  cat /data/openpilot/selfdrive/car/hyundai/values.py | grep ' = "' | grep -v "Smart" | awk -F'"' '{print $2}' > /data/params/d/CarList
+  cat /data/openpilot/selfdrive/car/hyundai/values.py | grep ' = "' | grep -v "Smart" | awk -F'"' '{print $2}' > /data/CarList
 }
 
 function launch {

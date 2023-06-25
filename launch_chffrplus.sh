@@ -96,6 +96,9 @@ function launch {
   # write tmux scrollback to a file
   tmux capture-pane -pq -S-1000 > /tmp/launch_log
 
+  # opkr car list
+  cat /data/openpilot/selfdrive/car/hyundai/values.py | grep ' = "' | grep -v "Smart" | awk -F'"' '{print $2}' > /data/params/d/CarList
+
   # start manager
   cd selfdrive/manager
   ./build.py && ./manager.py

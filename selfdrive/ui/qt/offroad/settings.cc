@@ -364,6 +364,111 @@ void DevicePanel::poweroff() {
   }
 }
 
+
+SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
+  gitRemoteLbl = new LabelControl(tr("Git Remote"));
+  gitBranchLbl = new LabelControl(tr("Git Branch"));
+  gitCommitLbl = new LabelControl(tr("Git Commit"));
+  versionLbl = new LabelControl(tr("Fork"));
+  lastUpdateLbl = new LabelControl(tr("Last Update Check"), "", "");
+  updateBtn = new ButtonControl(tr("Check for Updates"), "");
+  connect(updateBtn, &ButtonControl::clicked, [=]() {
+    if (params.getBool("IsOffroad")) {
+      fs_watch->addPath(QString::fromStdString(params.getParamPath("LastUpdateTime")));
+      fs_watch->addPath(QString::fromStdString(params.getParamPath("UpdateFailedCount")));
+    }
+    std::system("/data/openpilot/selfdrive/assets/addon/script/gitcommit.sh");
+    std::system("date '+%F %T' > /data/params/d/LastUpdateTime");
+    QString last_ping = QString::fromStdString(params.get("LastAthenaPingTime"));
+    QString desc = "";
+    QString commit_local = QString::fromStdString(Params().get("GitCommit").substr(0, 10));
+    QString commit_remote = QString::fromStdString(Params().get("GitCommitRemote").substr(0, 10));
+    QString empty = "";
+    desc += tr("LOCAL: %1  REMOTE: %2%3%4 ").arg(commit_local, commit_remote, empty, empty);
+    if (!last_ping.length()) {
+      desc += tr("Network connection is missing or unstable. Check the connection.");
+      ConfirmationDialog::alert(desc, this);
+    } else if (commit_local == commit_remote) {
+      desc += tr("Local and remote match. No update required.");
+      ConfirmationDialog::alert(desc, this);
+    } else {
+      if (QFileInfo::exists("/data/OPKR_Updates.txt")) {
+        QFileInfo fileInfo;
+        fileInfo.setFile("/data/OPKR_Updates.txt");
+        const std::string txt = util::read_file("/data/OPKR_Updates.txt");
+        if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
+          if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");}
+        }
+      } else {
+        QString cmd1 = "wget https://raw.githubusercontent.com/openpilotkr/openpilot/"+QString::fromStdString(params.get("GitBranch"))+"/OPKR_Updates.txt -O /data/OPKR_Updates.txt";
+        QProcess::execute(cmd1);
+        QTimer::singleShot(2000, []() {});
+        if (QFileInfo::exists("/data/OPKR_Updates.txt")) {
+          QFileInfo fileInfo;
+          fileInfo.setFile("/data/OPKR_Updates.txt");
+          const std::string txt = util::read_file("/data/OPKR_Updates.txt");
+          if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
+            if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");}
+          }
+        }
+      }
+    }
+  });
+
+
+  auto uninstallBtn = new ButtonControl(tr("Uninstall %1").arg(getBrand()), tr("UNINSTALL"));
+  connect(uninstallBtn, &ButtonControl::clicked, [&]() {
+    if (ConfirmationDialog::confirm2(tr("Are you sure you want to uninstall?"), this)) {
+      params.putBool("DoUninstall", true);
+    }
+  });
+  connect(parent, SIGNAL(offroadTransition(bool)), uninstallBtn, SLOT(setEnabled(bool)));
+
+  QWidget *widgets[] = {versionLbl, gitRemoteLbl, gitBranchLbl, lastUpdateLbl, updateBtn};
+  for (QWidget* w : widgets) {
+    addItem(w);
+  }
+
+  addItem(new GitHash());
+  addItem(new CPresetWidget());
+  addItem(new CGitGroup());
+  addItem(new CUtilWidget(this));
+
+  addItem(uninstallBtn);
+  fs_watch = new QFileSystemWatcher(this);
+  QObject::connect(fs_watch, &QFileSystemWatcher::fileChanged, [=](const QString path) {
+    if (path.contains("UpdateFailedCount") && std::atoi(params.get("UpdateFailedCount").c_str()) > 0) {
+      lastUpdateLbl->setText(tr("failed to fetch update"));
+      updateBtn->setText(tr("CHECK"));
+      updateBtn->setEnabled(true);
+    } else if (path.contains("LastUpdateTime")) {
+      updateLabels();
+    }
+  });
+}
+
+void SoftwarePanel::showEvent(QShowEvent *event) {
+  updateLabels();
+}
+
+void SoftwarePanel::updateLabels() {
+  QString lastUpdate = "";
+  QString tm = QString::fromStdString(params.get("LastUpdateTime").substr(0, 19));
+  if (tm != "") {
+    lastUpdate = timeAgo(QDateTime::fromString(tm, "yyyy-MM-dd HH:mm:ss"));
+  }
+
+  versionLbl->setText("OPKR");
+  lastUpdateLbl->setText(lastUpdate);
+  updateBtn->setText(tr("CHECK"));
+  updateBtn->setEnabled(true);
+  gitRemoteLbl->setText(QString::fromStdString(params.get("GitRemote").substr(19)));
+  gitBranchLbl->setText(QString::fromStdString(params.get("GitBranch")));
+  gitCommitLbl->setText(QString::fromStdString(params.get("GitCommit")).left(10));
+}
+
+
+
 void SettingsWindow::showEvent(QShowEvent *event) {
   setCurrentPanel(0);
 }
@@ -410,6 +515,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
 
   // setup panels
   DevicePanel *device = new DevicePanel(this);
+  SoftwarePanel *software = new SoftwarePanel(this);
   QObject::connect(device, &DevicePanel::reviewTrainingGuide, this, &SettingsWindow::reviewTrainingGuide);
   QObject::connect(device, &DevicePanel::showDriverView, this, &SettingsWindow::showDriverView);
 
@@ -420,7 +526,7 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
     {tr("Device"), device},
     {tr("Network"), new Networking(this)},
     {tr("Toggles"), toggles},
-    {tr("Software"), new SoftwarePanel(this)},
+    {tr("Software"), software},
   };
 
 #ifdef ENABLE_MAPS

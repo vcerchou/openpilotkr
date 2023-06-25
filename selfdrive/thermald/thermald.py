@@ -195,6 +195,7 @@ def thermald_thread(end_event, hw_queue):
 
   fan_controller = None
   is_openpilot_view_enabled = 0
+  is_openpilot_dir = True
   onroadrefresh = False
 
   while not end_event.is_set():
@@ -368,7 +369,9 @@ def thermald_thread(end_event, hw_queue):
 
     # opkr
     prebuiltlet = params.get_bool("PutPrebuiltOn")
-    if not os.path.isfile(prebuiltfile) and prebuiltlet and is_openpilot_dir:
+    if not os.path.isdir("/data/openpilot"):
+      is_openpilot_dir = False
+    elif not os.path.isfile(prebuiltfile) and prebuiltlet and is_openpilot_dir:
       os.system("cd /data/openpilot; touch prebuilt")
     elif os.path.isfile(prebuiltfile) and not prebuiltlet:
       os.system("cd /data/openpilot; rm -f prebuilt")

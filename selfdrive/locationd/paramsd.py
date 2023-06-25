@@ -11,6 +11,7 @@ from common.numpy_fast import clip
 from selfdrive.locationd.models.car_kf import CarKalman, ObservationKind, States
 from selfdrive.locationd.models.constants import GENERATED_DIR
 from system.swaglog import cloudlog
+from decimal import Decimal
 
 STIFFNESS_FACTOR = float(Decimal(Params().get("TireStiffnessFactorAdj", encoding="utf8")) * Decimal('0.01'))
 

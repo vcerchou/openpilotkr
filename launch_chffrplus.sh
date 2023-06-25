@@ -43,6 +43,9 @@ function agnos_init {
     cp -f /data/openpilot/selfdrive/assets/addon/key/GithubSshKeys_legacy /data/params/d/GithubSshKeys
     chmod 600 /data/params/d/GithubSshKeys
   fi
+
+  # opkr car list
+  cat /data/openpilot/selfdrive/car/hyundai/values.py | grep ' = "' | grep -v "Smart" | awk -F'"' '{print $2}' > /data/params/d/CarList
 }
 
 function launch {
@@ -95,9 +98,6 @@ function launch {
 
   # write tmux scrollback to a file
   tmux capture-pane -pq -S-1000 > /tmp/launch_log
-
-  # opkr car list
-  cat /data/openpilot/selfdrive/car/hyundai/values.py | grep ' = "' | grep -v "Smart" | awk -F'"' '{print $2}' > /data/params/d/CarList
 
   # start manager
   cd selfdrive/manager

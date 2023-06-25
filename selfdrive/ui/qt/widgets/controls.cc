@@ -103,7 +103,7 @@ MenuControl::MenuControl( const QString &str_param, const QString &title, const 
   )");
 
   btnminus.setFixedSize(150, 100);
-  btnminus.setText("гн");
+  btnminus.setText("-");
   hlayout->addWidget(&btnminus);
   
   QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
@@ -127,7 +127,7 @@ MenuControl::MenuControl( const QString &str_param, const QString &title, const 
     background-color: #393939;
   )");
   btnplus.setFixedSize(150, 100);
-  btnplus.setText("гл");
+  btnplus.setText("+");
   hlayout->addWidget(&btnplus);
 
   QObject::connect(&btnplus, &QPushButton::clicked, [=]() {

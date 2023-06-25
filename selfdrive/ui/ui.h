@@ -103,6 +103,222 @@ typedef struct UIScene {
   mat3 view_from_wide_calib = DEFAULT_CALIBRATION;
   cereal::PandaState::PandaType pandaType;
 
+  std::string alertTextMsg1;
+  std::string alertTextMsg2;
+  std::string alertTextMsg3;
+  float alert_blinking_rate;
+
+  bool brakePress;
+  bool gasPress;
+  bool brakeHold;
+  bool touched = false;
+  bool map_on_top = false;
+  bool map_on_overlay = false;
+  bool map_is_running = false;
+  bool move_to_background = false;
+  bool navi_on_boot = false;
+
+  float gpsAccuracyUblox;
+  float altitudeUblox;
+  float bearingUblox;
+
+  int cpuPerc;
+  float cpuTemp;
+  float batTemp;
+  float ambientTemp;
+  float batPercent;
+  bool rightblindspot;
+  bool leftblindspot;
+  bool leftBlinker;
+  bool rightBlinker;
+  int blinker_blinkingrate;
+  int tpms_blinkingrate = 120;
+  int blindspot_blinkingrate = 120;
+  int car_valid_status_changed = 0;
+  float angleSteers;
+  float desired_angle_steers;
+  bool gap_by_speed_on;
+  float steerRatio;
+  bool brakeLights;
+  bool steerOverride;
+  float output_scale;
+  int batteryPercent;
+  bool batteryCharging;
+  char batteryStatus[64];
+  int fanSpeed;
+  int tpmsUnit;
+  float tpmsPressureFl;
+  float tpmsPressureFr;
+  float tpmsPressureRl;
+  float tpmsPressureRr;
+  int lateralControlMethod;
+  float radarDistance;
+  bool standStill;
+  int limitSpeedCamera = 0;
+  float limitSpeedCameraDist = 0;
+  int mapSign;
+  int mapSignCam;
+  float vSetDis;
+  bool cruiseAccStatus;
+  bool driverAcc;
+  int laneless_mode;
+  int recording_count;
+  int recording_quality;
+  bool monitoring_mode;
+  bool forceGearD;
+  bool opkr_livetune_ui;
+  bool driving_record;
+  float steer_actuator_delay;
+  bool batt_less;
+  int cruise_gap;
+  int dynamic_tr_mode;
+  float dynamic_tr_value;
+  bool touched2 = false;
+  int brightness_off;
+  int cameraOffset, pathOffset;
+  int pidKp, pidKi, pidKd, pidKf;
+  int indiInnerLoopGain, indiOuterLoopGain, indiTimeConstant, indiActuatorEffectiveness;
+  int lqrScale, lqrKi, lqrDcGain;
+  int torqueKp, torqueKf, torqueKi, torqueFriction, torqueMaxLatAccel;
+  bool live_tune_panel_enable;
+  int top_text_view;
+  int live_tune_panel_list = 0;
+  int list_count = 2;
+  int nTime, autoScreenOff, brightness, awake;
+  int nVolumeBoost = 0;
+  bool read_params_once = false;
+  bool nDebugUi1;
+  bool nDebugUi2;
+  bool nDebugUi3;
+  bool nOpkrBlindSpotDetect;
+  bool auto_gitpull = false;
+  bool is_speed_over_limit = false;
+  bool controlAllowed;
+  bool steer_warning;
+  bool stand_still;
+  bool show_error;
+  int display_maxspeed_time = 0;
+  bool mapbox_running;
+  int navi_select;
+  bool tmux_error_check = false;
+  bool speedlimit_signtype;
+  bool sl_decel_off;
+  bool pause_spdlimit;
+  float a_req_value;
+  bool osm_enabled;
+  int radar_long_helper;
+  float engine_rpm;
+  bool cal_view = false;
+  float ctrl_speed;
+  float accel;
+  bool animated_rpm;
+  int max_animated_rpm;
+  bool stop_line;
+  int gear_step;
+  float charge_meter;
+  float multi_lat_selected;
+  int do_not_disturb_mode;
+  bool depart_chime_at_resume;
+  int comma_stock_ui;
+  bool OPKR_Debug;
+  // gps
+  int satelliteCount;
+  float gpsAccuracy;
+
+  cereal::DeviceState::Reader deviceState;
+  cereal::CarState::Reader car_state;
+  cereal::ControlsState::Reader controls_state;
+  cereal::CarState::GearShifter getGearShifter;
+  cereal::LateralPlan::Reader lateral_plan;
+  cereal::LiveENaviData::Reader live_enavi_data;
+  cereal::LiveMapData::Reader live_map_data;
+  cereal::LongitudinalPlan::Reader longitudinal_plan;
+
+
+  // atom
+  struct _LiveParams
+  {
+    float angleOffset;
+    float angleOffsetAverage;
+    float stiffnessFactor;
+    float steerRatio;
+  } liveParams;
+
+  struct _LateralPlan
+  {
+    float laneWidth;
+    int standstillElapsedTime = 0;
+
+    float dProb;
+    float lProb;
+    float rProb;
+
+    float angleOffset;
+    bool lanelessModeStatus;
+    float totalCameraOffset;
+  } lateralPlan;
+
+  struct _LiveENaviData
+  {
+    int eopkrspeedlimit;
+    float eopkrsafetydist;
+    int eopkrsafetysign;
+    int eopkrturninfo;
+    float eopkrdisttoturn;
+    bool eopkrconalive;
+    int eopkrroadlimitspeed;
+    int eopkrlinklength;
+    int eopkrcurrentlinkangle;
+    int eopkrnextlinkangle;
+    std::string eopkrroadname;
+    bool eopkrishighway;
+    bool eopkristunnel;
+    std::string eopkr0;
+    std::string eopkr1;
+    std::string eopkr2;
+    std::string eopkr3;
+    std::string eopkr4;
+    std::string eopkr5;
+    std::string eopkr6;
+    std::string eopkr7;
+    std::string eopkr8;
+    std::string eopkr9;
+    int ewazealertid;
+    int ewazealertdistance;
+    int ewazeroadspeedlimit;
+    int ewazecurrentspeed;
+    std::string ewazeroadname;
+    int ewazenavsign;
+    int ewazenavdistance;
+    std::string ewazealerttype;
+  } liveENaviData;
+
+  struct _LiveMapData
+  {
+    float ospeedLimit;
+    float ospeedLimitAhead;
+    float ospeedLimitAheadDistance;
+    float oturnSpeedLimit;
+    float oturnSpeedLimitEndDistance;
+    int oturnSpeedLimitSign;
+    std::string ocurrentRoadName;
+    std::string oref;
+    //float turnSpeedLimitsAhead[16]; // List
+    //float turnSpeedLimitsAheadDistances[16]; // List
+    //int turnSpeedLimitsAheadSigns[16]; // List
+  } liveMapData;
+
+  struct _LongitudinalPlan
+  {
+    float e2ex[13] = {0};
+    float lead0[13] = {0};
+    float lead1[13] = {0};
+    float cruisetg[13] = {0};
+    float stopline[13] = {0};
+    float stopprob;
+  } longitudinalPlan;
+
+
   // modelV2
   float lane_line_probs[4];
   float road_edge_stds[2];

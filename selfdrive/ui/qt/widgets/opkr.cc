@@ -227,8 +227,6 @@ CUtilWidget::CUtilWidget( void *p ) : CGroupWidget( tr("Util Program") )
 {
    QVBoxLayout *pBoxLayout = CreateBoxLayout();
 
-   SoftwarePanel *parent = (SoftwarePanel*)p;
-
   const char* panda_flashing = "/data/openpilot/selfdrive/assets/addon/script/panda_flashing.sh";
   auto pandaflashingtbtn = new ButtonControl(tr("Panda Flashing(OLD)"), tr("RUN"));
   QObject::connect(pandaflashingtbtn, &ButtonControl::clicked, [=]() {

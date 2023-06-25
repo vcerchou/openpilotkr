@@ -4,6 +4,8 @@ from cereal import log
 from selfdrive.controls.lib.latcontrol import LatControl
 from selfdrive.controls.lib.pid import PIDController
 
+from common.params import Params
+from decimal import Decimal
 
 class LatControlPID(LatControl):
   def __init__(self, CP, CI):

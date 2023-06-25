@@ -86,7 +86,7 @@ class LongitudinalPlanner:
       j = np.zeros(len(T_IDXS_MPC))
     return x, v, a, j
 
-  def update(self, sm):
+  def update(self, sm, CP):
     if self.param_read_counter % 50 == 0:
       self.read_param()
     self.param_read_counter += 1
@@ -94,6 +94,12 @@ class LongitudinalPlanner:
 
     v_ego = sm['carState'].vEgo
     v_cruise_kph = sm['controlsState'].vCruise
+
+    if CP.sccBus != 0:
+      v_cruise_kph = sm['carState'].vSetDis
+    else:
+      v_cruise_kph = sm['controlsState'].vCruise
+
     v_cruise_kph = min(v_cruise_kph, V_CRUISE_MAX)
     v_cruise = v_cruise_kph * CV.KPH_TO_MS
 

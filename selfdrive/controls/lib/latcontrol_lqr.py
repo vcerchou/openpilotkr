@@ -4,7 +4,7 @@ import numpy as np
 from common.numpy_fast import clip
 from common.realtime import DT_CTRL
 from cereal import log
-from selfdrive.controls.lib.latcontrol import LatControl, MIN_LATERAL_CONTROL_SPEED
+from selfdrive.controls.lib.latcontrol import LatControl
 
 from common.params import Params
 from decimal import Decimal
@@ -39,7 +39,7 @@ class LatControlLQR(LatControl):
     super().reset()
     self.i_lqr = 0.0
 
-  def live_tune(self, CP):
+  def live_tune(self):
     self.mpc_frame += 1
     if self.mpc_frame % 300 == 0:
       self.scale_ = float(Decimal(self.params.get("Scale", encoding="utf8")) * Decimal('1.0'))
@@ -51,13 +51,13 @@ class LatControlLQR(LatControl):
         
       self.mpc_frame = 0
 
-  def update(self, active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk):
+  def update(self, active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk):
     self.ll_timer += 1
     if self.ll_timer > 100:
       self.ll_timer = 0
       self.live_tune_enabled = self.params.get_bool("OpkrLiveTunePanelEnable")
     if self.live_tune_enabled:
-      self.live_tune(CP)
+      self.live_tune()
 
     lqr_log = log.ControlsState.LateralLQRState.new_message()
 
@@ -77,7 +77,7 @@ class LatControlLQR(LatControl):
     e = steering_angle_no_offset - angle_steers_k
     self.x_hat = self.A.dot(self.x_hat) + self.B.dot(CS.steeringTorqueEps / torque_scale) + self.L.dot(e)
 
-    if CS.vEgo < MIN_LATERAL_CONTROL_SPEED or not active:
+    if not active:
       lqr_log.active = False
       lqr_output = 0.
       output_steer = 0.
@@ -108,5 +108,5 @@ class LatControlLQR(LatControl):
     lqr_log.i = self.i_lqr
     lqr_log.output = output_steer
     lqr_log.lqrOutput = lqr_output
-    lqr_log.saturated = self._check_saturation(self.steer_max - abs(output_steer) < 1e-3, CS)
+    lqr_log.saturated = self._check_saturation(self.steer_max - abs(output_steer) < 1e-3, CS, steer_limited)
     return output_steer, desired_angle, lqr_log

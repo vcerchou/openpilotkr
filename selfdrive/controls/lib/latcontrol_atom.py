@@ -10,7 +10,7 @@ from common.params import Params
 from decimal import Decimal
 from common.conversions import Conversions as CV
 
-from selfdrive.controls.lib.latcontrol import LatControl, MIN_LATERAL_CONTROL_SPEED
+from selfdrive.controls.lib.latcontrol import LatControl
 from selfdrive.controls.lib.pid import PIDController, LatPIDController
 
 from selfdrive.controls.lib.latcontrol_torque import LatControlTorque
@@ -211,7 +211,7 @@ class LatControlATOM(LatControl):
     self.LaInd.speed = 0.
     self.LaPid.reset()
 
-  def method_angle(self, active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk):  # angle
+  def method_angle(self, active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk):  # angle
     steer_ang = abs(CS.steeringAngleDeg)
     output_torque0, desired_angle0, log0  = self.lat_fun0( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
     output_torque1, desired_angle1, log1  = self.lat_fun1( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
@@ -222,7 +222,7 @@ class LatControlATOM(LatControl):
 
     return output_torque, desired_angle
 
-  def method_speed(self, active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk):  # speed
+  def method_speed(self, active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk):  # speed
     speed = CS.vEgo * (CV.MS_TO_MPH if CS.isMph else CV.MS_TO_KPH)
     output_torque0, desired_angle0, log0  = self.lat_fun0( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
     output_torque1, desired_angle1, log1  = self.lat_fun1( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
@@ -234,7 +234,7 @@ class LatControlATOM(LatControl):
     return output_torque, desired_angle
 
 
-  def update(self, active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk):
+  def update(self, active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk):
     atom_log = log.ControlsState.LateralATOMState.new_message()
 
     selected = 3
@@ -250,22 +250,21 @@ class LatControlATOM(LatControl):
 
     desired_angle = 0
     output_torque = 0
-    if CS.vEgo < MIN_LATERAL_CONTROL_SPEED or not active:
+    if not active:
       output_torque = 0.0
       lqr_desired_angle = 0.
       atom_log.active = False
-      if not active:
-        self.reset()
+      self.reset()
     else:
       if self.multi_lateral_method == LaMethod.SPEED_LOWDT:
         if 2 in self.multi_lat_spdMethod:
-          lqr_output_torque, lqr_desired_angle, lqr_log  = self.LaLqr.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          lqr_output_torque, lqr_desired_angle, lqr_log  = self.LaLqr.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         if 3 in self.multi_lat_spdMethod:
-          toq_output_torque, toq_desired_angle, toq_log  = self.LaToq.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          toq_output_torque, toq_desired_angle, toq_log  = self.LaToq.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         if 1 in self.multi_lat_spdMethod:
-          ind_output_torque, ind_desired_angle, ind_log  = self.LaInd.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          ind_output_torque, ind_desired_angle, ind_log  = self.LaInd.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         if 0 in self.multi_lat_spdMethod:
-          pid_output_torque, pid_desired_angle, pid_log  = self.LaPid.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          pid_output_torque, pid_desired_angle, pid_log  = self.LaPid.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
 
         speed1 = (self.multi_lat_spdBP[0] * (CV.MPH_TO_MS if CS.isMph else CV.KPH_TO_MS))
         speed2 = (self.multi_lat_spdBP[1] * (CV.MPH_TO_MS if CS.isMph else CV.KPH_TO_MS))
@@ -283,13 +282,13 @@ class LatControlATOM(LatControl):
         output_torque = interp( selected, [0, 1, 2, 3], [pid_output_torque, ind_output_torque, lqr_output_torque, toq_output_torque] )
       elif self.multi_lateral_method == LaMethod.ANGLE_LOWDT:
         if 2 in self.multi_lat_angMethod:
-          lqr_output_torque, lqr_desired_angle, lqr_log  = self.LaLqr.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          lqr_output_torque, lqr_desired_angle, lqr_log  = self.LaLqr.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         if 3 in self.multi_lat_angMethod:
-          toq_output_torque, toq_desired_angle, toq_log  = self.LaToq.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          toq_output_torque, toq_desired_angle, toq_log  = self.LaToq.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         if 1 in self.multi_lat_angMethod:
-          ind_output_torque, ind_desired_angle, ind_log  = self.LaInd.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          ind_output_torque, ind_desired_angle, ind_log  = self.LaInd.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         if 0 in self.multi_lat_angMethod:
-          pid_output_torque, pid_desired_angle, pid_log  = self.LaPid.update( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+          pid_output_torque, pid_desired_angle, pid_log  = self.LaPid.update( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
         ang1 = self.multi_lat_angBP[0]
         ang2 = self.multi_lat_angBP[1]
         self.lat_atom_timer += 1
@@ -306,10 +305,10 @@ class LatControlATOM(LatControl):
         output_torque = interp( selected, [0, 1, 2, 3], [pid_output_torque, ind_output_torque, lqr_output_torque, toq_output_torque] )
       elif self.multi_lateral_method == LaMethod.ANGLE_INTERP:
         selected = 4
-        output_torque, desired_angle  =  self.method_angle( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+        output_torque, desired_angle  =  self.method_angle( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
       elif self.multi_lateral_method == LaMethod.SPEED_INTERP:
         selected = 4
-        output_torque, desired_angle  =  self.method_speed( active, CS, CP, VM, params, last_actuators, desired_curvature, desired_curvature_rate, llk )
+        output_torque, desired_angle  =  self.method_speed( active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk )
 
 
       output_torque = clip( output_torque, -self.steer_max, self.steer_max )

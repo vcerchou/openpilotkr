@@ -7230,8 +7230,6 @@ RoutineDriveOption::RoutineDriveOption() : AbstractControl("", "", "") {
   btn1.setFixedSize(150, 100);
   btn0.setText("CO");
   btn1.setText("SL");
-  btn0.setAlignment(Qt::AlignHCenter);
-  btn1.setAlignment(Qt::AlignHCenter);
   hlayout->addWidget(&btn0);
   hlayout->addWidget(&btn1);
 

@@ -569,8 +569,6 @@ void OpenpilotView::refresh() {
 CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "") 
 {
   combobox.setStyleSheet(R"(
-    subcontrol-origin: padding;
-    subcontrol-position: top left;
     selection-background-color: #111;
     selection-color: yellow;
     color: white;

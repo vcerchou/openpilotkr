@@ -7001,8 +7001,8 @@ OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car t
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(190, 100);
-  btnplusl.setFixedSize(190, 100);
+  btnminusl.setFixedSize(170, 100);
+  btnplusl.setFixedSize(170, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -7028,8 +7028,8 @@ OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car t
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(190, 100);
-  btnplusr.setFixedSize(190, 100);
+  btnminusr.setFixedSize(170, 100);
+  btnplusr.setFixedSize(170, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 
@@ -7128,8 +7128,8 @@ ToAvoidLKASFault::ToAvoidLKASFault() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusl.setFixedSize(190, 100);
-  btnplusl.setFixedSize(190, 100);
+  btnminusl.setFixedSize(170, 100);
+  btnplusl.setFixedSize(170, 100);
   hlayout->addWidget(&btnminusl);
   hlayout->addWidget(&btnplusl);
 
@@ -7155,8 +7155,8 @@ ToAvoidLKASFault::ToAvoidLKASFault() : AbstractControl("", "", "") {
     color: #E4E4E4;
     background-color: #393939;
   )");
-  btnminusr.setFixedSize(190, 100);
-  btnplusr.setFixedSize(190, 100);
+  btnminusr.setFixedSize(170, 100);
+  btnplusr.setFixedSize(170, 100);
   hlayout->addWidget(&btnminusr);
   hlayout->addWidget(&btnplusr);
 

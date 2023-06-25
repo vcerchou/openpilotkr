@@ -32,3 +32,16 @@ private:
   void refresh();
   void getUserKeys(const QString &username);
 };
+
+// SSH legacy toggle
+class SshLegacyToggle : public ToggleControl {
+  Q_OBJECT
+
+public:
+  SshLegacyToggle() : ToggleControl(tr("Use Legacy SSH Key"), tr("Public KEY (0.8.2 or less) is used when accessing SSH."), "", Params().getBool("OpkrSSHLegacy")) {
+    QObject::connect(this, &SshLegacyToggle::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OpkrSSHLegacy", status);
+    });
+  }
+};

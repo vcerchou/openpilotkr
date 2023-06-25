@@ -568,31 +568,29 @@ void OpenpilotView::refresh() {
 
 CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "") 
 {
-  combobox.setStyleSheet(R"(
-    selection-background-color: #111;
-    selection-color: yellow;
-    color: white;
-    background-color: #393939;
-    border-style: solid;
-    border: 0px solid #1e1e1e;
-    border-radius: 0;
-    width: 100px;
-  )");
-
-  combobox.addItem(tr("Select Your Car"));
+  QStringList stringList;
   QFile carlistfile("/data/params/d/CarList");
   if (carlistfile.open(QIODevice::ReadOnly)) {
     QTextStream carname(&carlistfile);
     while (!carname.atEnd()) {
       QString line = carname.readLine();
-      combobox.addItem(line);
+      stringList.append(line);
     }
     carlistfile.close();
   }
 
-  combobox.setFixedWidth(1055);
+  hlayout->addStretch(1);
 
-  btn.setStyleSheet(R"(
+  btn1.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 0px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #000000;
+  )");
+
+  btn2.setStyleSheet(R"(
     padding: 0;
     border-radius: 50px;
     font-size: 35px;
@@ -601,53 +599,39 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
     background-color: #393939;
   )");
 
-  btn.setFixedSize(150, 100);
+  btn1.setFixedSize(1000, 100);
+  btn2.setFixedSize(250, 100);
+  hlayout->addWidget(&btn1);
+  hlayout->addWidget(&btn2);
+  btn1.setText(tr("Select Your Car"));
+  btn2.setText(tr("UNSET"));
 
-  QObject::connect(&btn, &QPushButton::clicked, [=]() {
-    if (btn.text() == "UNSET") {
+  QObject::connect(&btn1, &QPushButton::clicked, [=]() {
+    QString cur = QString::fromStdString(params.get("CarModel"));
+    QString selection = MultiOptionDialog::getSelection(tr("Select Your Car"), stringList, cur, this);
+    if (!selection.isEmpty()) {
+      params.put("CarModel", selection.toStdString());
+    }
+    refresh();
+  });
+
+  QObject::connect(&btn2, &QPushButton::clicked, [=]() {
+    if (btn2.text() == "UNSET") {
       if (ConfirmationDialog::confirm2(tr("Do you want to unset?"), this)) {
         params.remove("CarModel");
-        combobox.setCurrentIndex(0);
         refresh();
       }
     }
-  });
-
-  //combobox.view()->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
-  hlayout->addWidget(&combobox, Qt::AlignLeft);
-  hlayout->addWidget(&btn, Qt::AlignRight);
-
-  QObject::connect(&combobox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), [=](int index)
-  {
-    combobox.itemData(combobox.currentIndex());
-    QString str = combobox.currentText();
-    if (combobox.currentIndex() != 0) {
-      if (ConfirmationDialog::confirm2(tr("Press OK to set your car as") + "\n" + str, this)) {
-        params.put("CarModel", str.toStdString());
-        int indi_cars[] = {8, 32, 39, 40, 41, 42, 43, 44, 45}; //R-MDPS type such as Genesis, Sonata Turbo, Sorento, Mohave
-        int selected_car = combobox.currentIndex();
-        bool go_indi = std::find(std::begin(indi_cars), std::end(indi_cars), selected_car) != std::end(indi_cars);
-        if (go_indi) {
-          params.put("LateralControlMethod", "1");
-        }
-      }
-    }
-    refresh();
   });
   refresh();
 }
 
 void CarSelectCombo::refresh() {
   QString selected_carname = QString::fromStdString(params.get("CarModel"));
-  int index = combobox.findText(selected_carname);
-  if (index >= 0) combobox.setCurrentIndex(index);
   if (selected_carname.length()) {
-    btn.setEnabled(true);
-    btn.setText(tr("UNSET"));
+    btn1.setText(selected_carname);
   } else {
-    btn.setEnabled(false);
-    btn.setText(tr("SET"));
+    btn1.setText(tr("Select Your Car"));
   }
 }
 

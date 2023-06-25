@@ -58,6 +58,8 @@ public:
   QLabel *icon_label;
   QPixmap icon_pixmap;
 
+  AbstractControl(const QString &title, const QString &desc = "", const QString &icon = "", QWidget *parent = nullptr);
+
 public slots:
   void showDescription() {
     description->setVisible(true);
@@ -67,7 +69,7 @@ signals:
   void showDescriptionEvent();
 
 protected:
-  AbstractControl(const QString &title, const QString &desc = "", const QString &icon = "", QWidget *parent = nullptr);
+  //AbstractControl(const QString &title, const QString &desc = "", const QString &icon = "", QWidget *parent = nullptr);
   void hideEvent(QHideEvent *e) override;
 
   QHBoxLayout *hlayout;

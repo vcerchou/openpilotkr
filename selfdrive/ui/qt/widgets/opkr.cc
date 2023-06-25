@@ -180,7 +180,7 @@ CPandaGroup::CPandaGroup() : CGroupWidget( tr("Panda Values") )
   const char* p_edit_go = "/data/openpilot/selfdrive/assets/addon/script/p_edit.sh ''";
   auto peditbtn = new ButtonControl(tr("Change Panda Values"), tr("RUN"));
   QObject::connect(peditbtn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Apply the changed panda value. Do you want to proceed? It automatically reboots."), this)){
+    if (ConfirmationDialog::confirm2(tr("Apply the changed panda value. Do you want to proceed? It automatically reboots."), this)){
       std::system(p_edit_go);
     }
   });
@@ -197,7 +197,7 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Branch Change") )
   const char* git_reset = "/data/openpilot/selfdrive/assets/addon/script/git_reset.sh ''";
   auto gitresetbtn = new ButtonControl(tr("Git Reset"), tr("RUN"));
   QObject::connect(gitresetbtn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Apply the latest commitment details of Remote Git after forced initialization of local changes. Do you want to proceed?"), this)){
+    if (ConfirmationDialog::confirm2(tr("Apply the latest commitment details of Remote Git after forced initialization of local changes. Do you want to proceed?"), this)){
       std::system(git_reset);
     }
   });
@@ -232,7 +232,7 @@ CUtilWidget::CUtilWidget( void *p ) : CGroupWidget( tr("Util Program") )
   const char* panda_flashing = "/data/openpilot/selfdrive/assets/addon/script/panda_flashing.sh";
   auto pandaflashingtbtn = new ButtonControl(tr("Panda Flashing(OLD)"), tr("RUN"));
   QObject::connect(pandaflashingtbtn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Panda's green LED blinks quickly during panda flashing. Never turn off or disconnect the device arbitrarily. Do you want to proceed?"), this)) {
+    if (ConfirmationDialog::confirm2(tr("Panda's green LED blinks quickly during panda flashing. Never turn off or disconnect the device arbitrarily. Do you want to proceed?"), this)) {
       std::system(panda_flashing);
     }
   });
@@ -240,7 +240,7 @@ CUtilWidget::CUtilWidget( void *p ) : CGroupWidget( tr("Util Program") )
   const char* panda_flashing_new = "/data/openpilot/panda/board/recover.sh";
   auto pandaflashingtbtn_new = new ButtonControl(tr("Panda Flashing(NEW)"), tr("RUN"));
   QObject::connect(pandaflashingtbtn_new, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Panda's green LED blinks quickly during panda flashing. Never turn off or disconnect the device arbitrarily. Do you want to proceed?"), this)) {
+    if (ConfirmationDialog::confirm2(tr("Panda's green LED blinks quickly during panda flashing. Never turn off or disconnect the device arbitrarily. Do you want to proceed?"), this)) {
       std::system(panda_flashing_new);
     }
   });
@@ -263,7 +263,7 @@ CUtilWidget::CUtilWidget( void *p ) : CGroupWidget( tr("Util Program") )
     std::system("/data/openpilot/selfdrive/assets/addon/script/run_mixplorer.sh");
   });
   auto harness_relay = new ButtonControl(tr("Remove Dash Err on Boot"), tr("RUN"));
-  QObject::connect(harness_relay, &ButtonControl::clicked, [=]() {if (ConfirmationDialog::confirm(tr("Try to run this if you have dash errors on boot. This is caused by relay switch."), this)) {
+  QObject::connect(harness_relay, &ButtonControl::clicked, [=]() {if (ConfirmationDialog::confirm2(tr("Try to run this if you have dash errors on boot. This is caused by relay switch."), this)) {
     std::system("cp -f /data/openpilot/panda/board/main_relay.c /data/openpilot/panda/board/main.c");
     std::system("reboot");}});
   pBoxLayout->addWidget( pandaflashingtbtn );
@@ -294,7 +294,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presetoneload_btn->setStyleSheet("height: 120px;border-radius: 15px;background-color: #393939;");
   presetone_layout->addWidget(presetoneload_btn);
   QObject::connect(presetoneload_btn, &QPushButton::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Do you want to load Preset1?"), this)) {
+    if (ConfirmationDialog::confirm2(tr("Do you want to load Preset1?"), this)) {
       QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/load_preset1.sh");
     }
   });
@@ -303,7 +303,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presetonesave_btn->setStyleSheet("height: 120px;border-radius: 15px;background-color: #393939;");
   presetone_layout->addWidget(presetonesave_btn);
   QObject::connect(presetonesave_btn, &QPushButton::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Do you want to save Preset1?"), this)) {
+    if (ConfirmationDialog::confirm2(tr("Do you want to save Preset1?"), this)) {
       QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/save_preset1.sh");
     }
   });
@@ -316,7 +316,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presettwoload_btn->setStyleSheet("height: 120px;border-radius: 15px;background-color: #393939;");
   presettwo_layout->addWidget(presettwoload_btn);
   QObject::connect(presettwoload_btn, &QPushButton::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Do you want to load Preset2?"), this)) {
+    if (ConfirmationDialog::confirm2(tr("Do you want to load Preset2?"), this)) {
       QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/load_preset2.sh");
     }
   });
@@ -325,14 +325,14 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presettwosave_btn->setStyleSheet("height: 120px;border-radius: 15px;background-color: #393939;");
   presettwo_layout->addWidget(presettwosave_btn);
   QObject::connect(presettwosave_btn, &QPushButton::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Do you want to save Preset2?"), this)) {
+    if (ConfirmationDialog::confirm2(tr("Do you want to save Preset2?"), this)) {
       QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/save_preset2.sh");
     }
   });
 
   auto paraminit_btn = new ButtonControl(tr("Parameters Init"), tr("RUN"));
   QObject::connect(paraminit_btn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm(tr("Initialize parameters. Changes in the EON menu are changed to the initial set value. Do you want to proceed?"), this)){
+    if (ConfirmationDialog::confirm2(tr("Initialize parameters. Changes in the EON menu are changed to the initial set value. Do you want to proceed?"), this)){
       QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/init_param.sh");
     }
   });
@@ -369,7 +369,7 @@ SwitchOpenpilot::SwitchOpenpilot() : ButtonControl(tr("Change Repo/Branch"), "",
             getBranchID(branchid);
             githubbranch = branchid;
             QString cmd0 = tr("This will download the branch and takes a little time.") + "\n" + QString::fromStdString("https://github.com/") + githubid + QString::fromStdString("/") + githubrepo + QString::fromStdString(".git\n") + tr("Branch: ") + githubbranch;
-            if (ConfirmationDialog::confirm(cmd0, this)) {
+            if (ConfirmationDialog::confirm2(cmd0, this)) {
               setText(tr("DONE"));
               setEnabled(true);
               QString time_format = "yyyyMMddHHmmss";
@@ -634,7 +634,7 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
 
   QObject::connect(&btn, &QPushButton::clicked, [=]() {
     if (btn.text() == "UNSET") {
-      if (ConfirmationDialog::confirm(tr("Do you want to unset?"), this)) {
+      if (ConfirmationDialog::confirm2(tr("Do you want to unset?"), this)) {
         params.remove("CarModel");
         combobox.setCurrentIndex(0);
         refresh();
@@ -652,7 +652,7 @@ CarSelectCombo::CarSelectCombo() : AbstractControl("", "", "")
     combobox.itemData(combobox.currentIndex());
     QString str = combobox.currentText();
     if (combobox.currentIndex() != 0) {
-      if (ConfirmationDialog::confirm(tr("Press OK to set your car as") + "\n" + str, this)) {
+      if (ConfirmationDialog::confirm2(tr("Press OK to set your car as") + "\n" + str, this)) {
         params.put("CarModel", str.toStdString());
         int indi_cars[] = {8, 32, 39, 40, 41, 42, 43, 44, 45}; //R-MDPS type such as Genesis, Sonata Turbo, Sorento, Mohave
         int selected_car = combobox.currentIndex();
@@ -723,7 +723,7 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
     branch_name1 = combobox.currentText();
     QString current_branch1 = QString::fromStdString(params.get("GitBranch"));
     if (combobox.currentIndex() != 0 && branch_name1 != current_branch1) {
-      if (ConfirmationDialog::confirm(tr("Now will checkout the branch") +", <" + branch_name1 + ">. " + tr("The device will be rebooted if completed."), this)) {
+      if (ConfirmationDialog::confirm2(tr("Now will checkout the branch") +", <" + branch_name1 + ">. " + tr("The device will be rebooted if completed."), this)) {
         QString cmd1 = "git -C /data/openpilot remote set-branches --add origin " + branch_name1;
         QString tcmd1 = "git -C /data/openpilot fetch --progress origin";
         QProcess::execute("pkill -f thermald");
@@ -830,7 +830,7 @@ TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("", "", "")
 
   QObject::connect(&btn, &QPushButton::clicked, [=]() {
     if (btn.text() == tr("UNSET")) {
-      if (ConfirmationDialog::confirm(tr("Do you want to set default?"), this)) {
+      if (ConfirmationDialog::confirm2(tr("Do you want to set default?"), this)) {
         params.put("OPKRTimeZone", "UTC");
         combobox.setCurrentIndex(0);
         refresh();
@@ -848,7 +848,7 @@ TimeZoneSelectCombo::TimeZoneSelectCombo() : AbstractControl("", "", "")
     combobox.itemData(combobox.currentIndex());
     QString str = combobox.currentText();
     if (combobox.currentIndex() != 0) {
-      if (ConfirmationDialog::confirm(tr("Press OK to set your timezone as") + "\n" + str, this)) {
+      if (ConfirmationDialog::confirm2(tr("Press OK to set your timezone as") + "\n" + str, this)) {
         params.put("OPKRTimeZone", str.toStdString());
       }
     }
@@ -6084,7 +6084,7 @@ OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your 
       QString users_api_host = InputDialog::getText(tr("Input Your API without http://"), this);
       if (users_api_host.length() > 0) {
         QString cmd0 = tr("Your Input is") + "\n" + users_api_host + "\n" + tr("Press OK to apply&reboot");
-        if (ConfirmationDialog::confirm(cmd0, this)) {
+        if (ConfirmationDialog::confirm2(cmd0, this)) {
           params.put("OPKRServerAPI", users_api_host.toStdString());
           params.put("OPKRServer", "2");
           QProcess::execute("rm -f /data/params/d/DongleId");
@@ -6094,7 +6094,7 @@ OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your 
         }
       }
     } else if (btn.text() == tr("UNSET")) {
-      if (ConfirmationDialog::confirm(tr("Do you want to unset? the API server gets back to OPKR server and Device will be rebooted now."), this)) {
+      if (ConfirmationDialog::confirm2(tr("Do you want to unset? the API server gets back to OPKR server and Device will be rebooted now."), this)) {
         params.remove("OPKRServerAPI");
         params.put("OPKRServer", "0");
         QProcess::execute("rm -f /data/params/d/DongleId");

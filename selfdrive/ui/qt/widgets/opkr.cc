@@ -12,7 +12,7 @@
 #include <QDateTime>
 #include <QVBoxLayout>
 
-#include "selfdrive/common/params.h"
+#include "common/params.h"
 
 #include "selfdrive/ui/qt/api.h"
 #include "selfdrive/ui/qt/offroad/settings.h"

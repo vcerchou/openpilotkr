@@ -76,7 +76,7 @@ void OnroadWindow::updateState(const UIState &s) {
       }
     alerts->updateAlert(alert, bgColor);
     }
-    printf("OPVIEW: %s\n", uiState()->is_OpenpilotViewEnabled ? "true" : "false");
+    //printf("OPVIEW: %s\n", uiState()->is_OpenpilotViewEnabled ? "true" : "false");
   }
 
   if (s.scene.map_on_left) {

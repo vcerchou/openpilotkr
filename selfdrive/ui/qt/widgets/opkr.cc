@@ -530,6 +530,7 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
       uiState()->scene.cal_view = false;
+      QProcess::execute("sudo pkill -f selfdrive.boardd.pandad");
     }
     refresh();
   });
@@ -541,6 +542,7 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
       uiState()->scene.cal_view = true;
+      QProcess::execute("sudo pkill -f selfdrive.boardd.pandad");
     }
     refresh();
   });

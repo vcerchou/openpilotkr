@@ -8,13 +8,13 @@ from selfdrive.manager.process_config import managed_processes
 if __name__ == "__main__":
   CP = car.CarParams(notCar=True)
 
-  procs = ['camerad', 'modeld']
+  procs = ['camerad']
   for p in procs:
     managed_processes[p].start()
 
-  pm = messaging.PubMaster(['controlsState', 'deviceState', 'pandaStates'])
+  pm = messaging.PubMaster(['deviceState', 'pandaStates'])
 
-  msgs = {s: messaging.new_message(s) for s in ['controlsState', 'deviceState']}
+  msgs = {s: messaging.new_message(s) for s in ['deviceState']}
   msgs['deviceState'].deviceState.started = True
 
   msgs['pandaStates'] = messaging.new_message('pandaStates', 1)

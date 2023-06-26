@@ -62,7 +62,7 @@ void OnroadWindow::updateState(const UIState &s) {
     } else if (alert.type == "controlsUnresponsivePermanent") {
       bgColor = bg_colors[STATUS_DISENGAGED];
     }
-    if (uiState()->is_OpenpilotViewEnabled) {
+    if (!uiState()->is_OpenpilotViewEnabled) {
       // opkr
       if (QFileInfo::exists("/data/log/error.txt") && uiState()->scene.show_error && !uiState()->scene.tmux_error_check) {
         QFileInfo fileInfo;

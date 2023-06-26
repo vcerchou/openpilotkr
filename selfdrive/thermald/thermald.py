@@ -220,6 +220,7 @@ def thermald_thread(end_event, hw_queue):
         if TICI:
           fan_controller = TiciFanController()
     elif params.get_bool("IsOpenpilotViewEnabled") and not params.get_bool("IsDriverViewEnabled") and is_openpilot_view_enabled == 0:
+      os.system("sudo pkill -f selfdrive.boardd.pandad")
       is_openpilot_view_enabled = 1
       onroad_conditions["ignition"] = True
     elif not params.get_bool("IsOpenpilotViewEnabled") and not params.get_bool("IsDriverViewEnabled") and is_openpilot_view_enabled == 1:
@@ -332,7 +333,6 @@ def thermald_thread(end_event, hw_queue):
 
     # Handle offroad/onroad transition
     should_start = all(onroad_conditions.values())
-    print(should_start)
     if started_ts is None:
       should_start = should_start and all(startup_conditions.values())
 

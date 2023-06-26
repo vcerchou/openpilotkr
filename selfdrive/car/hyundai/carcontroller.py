@@ -121,8 +121,8 @@ class CarController:
     self.stoppingdist = float(Decimal(self.c_params.get("StoppingDist", encoding="utf8"))*Decimal('0.1'))
 
     self.longcontrol = self.CP.openpilotLongitudinalControl and not self.c_params.get_bool("RadarDisable")
-    #self.scc_live is true because CP.radarUnavailable is False
-    self.scc_live = not self.CP.radarUnavailable
+    #self.scc_live is true because CP.radarOffCan is False
+    self.scc_live = not self.CP.radarOffCan
 
     self.NC = NaviControl()
 

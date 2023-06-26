@@ -696,12 +696,12 @@ struct ControlsState @0x97ff69c53601abf1 {
   lateralControlState :union {
     indiState @52 :LateralINDIState;
     pidState @53 :LateralPIDState;
-    lqrState @55 :LateralLQRState;
     angleState @58 :LateralAngleState;
     debugState @59 :LateralDebugState;
     torqueState @60 :LateralTorqueState;
-    atomState @82  :LateralATOMState;
     curvatureState @65 :LateralCurvatureState;
+
+    lqrStateDEPRECATED @55 :LateralLQRState;
   }
 
   enum OpenpilotState @0xdbe58b96d2d1ac61 {
@@ -767,37 +767,6 @@ struct ControlsState @0x97ff69c53601abf1 {
     actualLateralAccel @9 :Float32;
     desiredLateralAccel @10 :Float32;
    }
-
-  struct LateralATOMState {
-    active @0 :Bool;
-    steeringAngleDeg @1 :Float32;
-    i @2 :Float32;
-    output @3 :Float32;
-    lqrOutput @4 :Float32;
-    saturated @5 :Bool;
-    steeringAngleDesiredDeg @6 :Float32;
-    error @7 :Float32;
-    errorRate @8 :Float32;
-    p1 @9 :Float32;
-    i1 @10 :Float32;
-    d1 @11 :Float32;
-    f1 @12 :Float32;
-    selected @13 :Float32;
-    steeringRateDeg @14 :Float32;
-    angleError @15 :Float32;
-    p2 @16 :Float32;
-    i2 @17 :Float32;
-    f2 @18 :Float32;
-    steeringAccelDeg @19 :Float32;
-    rateSetPoint @20 :Float32;
-    accelSetPoint @21 :Float32;
-    accelError @22 :Float32;
-    delayedOutput @23 :Float32;
-    delta @24 :Float32;
-    steeringRateDesiredDeg @25 :Float32;
-    actualLateralAccel @26 :Float32;
-    desiredLateralAccel @27 :Float32;
-  }
 
   struct LateralLQRState {
     active @0 :Bool;
@@ -912,19 +881,6 @@ struct ModelDataV2 {
   # Model perceived motion
   temporalPose @21 :Pose;
 
-  # predicted stop line
-  stopLine @22 :StopLineData;
-
-  # All SI units and in device frame
-  struct XYZTData {
-    x @0 :List(Float32);
-    y @1 :List(Float32);
-    z @2 :List(Float32);
-    t @3 :List(Float32);
-    xStd @4 :List(Float32);
-    yStd @5 :List(Float32);
-    zStd @6 :List(Float32);
-  }
 
   struct LeadDataV2 {
     prob @0 :Float32; # probability that car is your lead at time t
@@ -955,28 +911,6 @@ struct ModelDataV2 {
     aStd @10 :List(Float32);
   }
 
-  struct StopLineData {
-    prob @0 :Float32;
-
-    x @1 :Float32;
-    xStd @2 :Float32;
-    y @3 :Float32;
-    yStd @4 :Float32;
-    z @5 :Float32;
-    zStd @6 :Float32;
-
-    roll @7 :Float32;
-    rollStd @8 :Float32;
-    pitch @9 :Float32;
-    pitchStd @10 :Float32;
-    yaw @11 :Float32;
-    yawStd @12 :Float32;
-
-    speedAtLine @13 :Float32;
-    speedAtLineStd @14 :Float32;
-    secondsUntilLine @15 :Float32;
-    secondsUntilLineStd @16 :Float32;
-  }
 
   struct MetaData {
     engagedProb @0 :Float32;
@@ -1068,24 +1002,12 @@ struct LongitudinalPlan @0xe00b5b3eba12876c {
   solverExecutionTime @35 :Float32;
   personality @36 :LongitudinalPersonality;
 
-  # opkr
-  dynamicTRMode @37 :UInt8;
-  dynamicTRValue @38 :Float32;
-
-  e2eX @39 :List(Float64) = [0.];
-  lead0Obstacle @40 :List(Float64) = [0.];
-  lead1Obstacle @41 :List(Float64) = [0.];
-  cruiseTarget @42 :List(Float64) = [0.];
-  stopLine @43 :List(Float64) = [0.];
-  stoplineProb @44 :Float32;
-
   enum LongitudinalPlanSource {
     cruise @0;
     lead0 @1;
     lead1 @2;
     lead2 @3;
     e2e @4;
-    stop @5;
   }
 
   # deprecated
@@ -1130,11 +1052,11 @@ struct UiPlan {
 
 struct LateralPlan @0xe1e9318e2ae8b51e {
   modelMonoTime @31 :UInt64;
-  laneWidth @0 :Float32;
-  lProb @5 :Float32;
-  rProb @7 :Float32;
+  laneWidthDEPRECATED @0 :Float32;
+  lProbDEPRECATED @5 :Float32;
+  rProbDEPRECATED @7 :Float32;
   dPathPoints @20 :List(Float32);
-  dProb @21 :Float32;
+  dProbDEPRECATED @21 :Float32;
 
   mpcSolutionValid @9 :Bool;
   desire @17 :Desire;

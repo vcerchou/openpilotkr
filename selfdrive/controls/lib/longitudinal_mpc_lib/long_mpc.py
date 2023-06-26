@@ -25,7 +25,7 @@ LONG_MPC_DIR = os.path.dirname(os.path.abspath(__file__))
 EXPORT_DIR = os.path.join(LONG_MPC_DIR, "c_generated_code")
 JSON_FILE = os.path.join(LONG_MPC_DIR, "acados_ocp_long.json")
 
-SOURCES = ['lead0', 'lead1', 'cruise', 'e2e']
+SOURCES = ['lead0', 'lead1', 'cruise', 'e2e', 'stop']
 
 X_DIM = 3
 U_DIM = 1
@@ -229,6 +229,32 @@ class LongitudinalMpc:
     self.v_ego = 0.
     self.reset()
     self.source = SOURCES[2]
+
+    self.TR = 1.45
+    self.dynamic_TR = 0
+    self.cruise_gap1 = float(Decimal(Params().get("CruiseGap1", encoding="utf8")) * Decimal('0.1'))
+    self.cruise_gap2 = float(Decimal(Params().get("CruiseGap2", encoding="utf8")) * Decimal('0.1'))
+    self.cruise_gap3 = float(Decimal(Params().get("CruiseGap3", encoding="utf8")) * Decimal('0.1'))
+    self.cruise_gap4 = float(Decimal(Params().get("CruiseGap4", encoding="utf8")) * Decimal('0.1'))
+
+    self.dynamic_tr_spd = list(map(float, Params().get("DynamicTRSpd", encoding="utf8").split(',')))
+    self.dynamic_tr_set = list(map(float, Params().get("DynamicTRSet", encoding="utf8").split(',')))
+    self.dynamic_TR_mode = int(Params().get("DynamicTRGap", encoding="utf8"))
+    self.custom_tr_enabled = Params().get_bool("CustomTREnabled")
+
+    self.ms_to_spd = CV.MS_TO_KPH if Params().get_bool("IsMetric") else CV.MS_TO_MPH
+
+    self.lo_timer = 0 
+
+    self.lead_0_obstacle = np.zeros(13, dtype=np.float64)
+    self.lead_1_obstacle = np.zeros(13, dtype=np.float64)
+    self.e2e_x = np.zeros(13, dtype=np.float64)
+    self.cruise_target = np.zeros(13, dtype=np.float64)
+    self.stopline = np.zeros(13, dtype=np.float64)
+    self.stop_prob = 0.0
+
+    self.on_stopping = False
+    self.on_stopping_timer = 0
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)

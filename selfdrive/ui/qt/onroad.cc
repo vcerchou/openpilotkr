@@ -3,9 +3,12 @@
 #include <cmath>
 
 #include <QDebug>
+#include <QFileInfo>
+#include <QDateTime>
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
+#include "selfdrive/ui/qt/widgets/input.h"
 #ifdef ENABLE_MAPS
 #include "selfdrive/ui/qt/maps/map.h"
 #include "selfdrive/ui/qt/maps/map_helpers.h"
@@ -61,7 +64,7 @@ void OnroadWindow::updateState(const UIState &s) {
     }
     if (uiState()->is_OpenpilotViewEnabled) {
       // opkr
-      if (QFileInfo::exists("/data/log/error.txt") && s.scene.show_error && !s.scene.tmux_error_check) {
+      if (QFileInfo::exists("/data/log/error.txt") && uiState()->scene.show_error && !uiState()->scene.tmux_error_check) {
         QFileInfo fileInfo;
         fileInfo.setFile("/data/log/error.txt");
         QDateTime modifiedtime = fileInfo.lastModified();

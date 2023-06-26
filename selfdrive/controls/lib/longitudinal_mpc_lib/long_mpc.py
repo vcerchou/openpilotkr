@@ -244,8 +244,6 @@ class LongitudinalMpc:
 
     self.ms_to_spd = CV.MS_TO_KPH if Params().get_bool("IsMetric") else CV.MS_TO_MPH
 
-    self.stop_line = Params().get_bool("ShowStopLine")
-
     self.lo_timer = 0 
 
     self.lead_0_obstacle = np.zeros(13, dtype=np.float64)
@@ -362,39 +360,13 @@ class LongitudinalMpc:
     self.cruise_min_a = min_a
     self.max_a = max_a
 
-  def update(self, radarstate, v_cruise, x, v, a, j, personality=log.LongitudinalPersonality.standard, carstate, model):
-    self.v_ego = carstate.vEgo
+  def update(self, radarstate, v_cruise, x, v, a, j, personality=log.LongitudinalPersonality.standard):
     t_follow = get_T_FOLLOW(personality)
     v_ego = self.x0[1]
-
-    stopping = model.stopLine.prob > 0.5 if self.stop_line else False
-
-    # opkr
-    self.lo_timer += 1
-    if self.lo_timer > 200:
-      self.lo_timer = 0
-      self.e2e = Params().get_bool("E2ELong")
-      self.dynamic_TR_mode = int(Params().get("DynamicTRGap", encoding="utf8"))
-      self.custom_tr_enabled = Params().get_bool("CustomTREnabled")
-
     self.status = radarstate.leadOne.status or radarstate.leadTwo.status
 
     lead_xv_0 = self.process_lead(radarstate.leadOne)
     lead_xv_1 = self.process_lead(radarstate.leadTwo)
-
-    if self.custom_tr_enabled:
-      cruise_gap = int(clip(carstate.cruiseGapSet, 1., 4.))
-      t_follow_d = interp(self.v_ego*self.ms_to_spd, self.dynamic_tr_spd, self.dynamic_tr_set)
-      if self.dynamic_TR_mode == 1:
-        t_follow = interp(float(cruise_gap), [1., 2., 3., 4.], [t_follow_d, self.cruise_gap2, self.cruise_gap3, self.cruise_gap4])
-      elif self.dynamic_TR_mode == 2:
-        t_follow = interp(float(cruise_gap), [1., 2., 3., 4.], [self.cruise_gap1, t_follow_d, self.cruise_gap3, self.cruise_gap4])
-      elif self.dynamic_TR_mode == 3:
-        t_follow = interp(float(cruise_gap), [1., 2., 3., 4.], [self.cruise_gap1, self.cruise_gap2, t_follow_d, self.cruise_gap4])
-      elif self.dynamic_TR_mode == 4:
-        t_follow = interp(float(cruise_gap), [1., 2., 3., 4.], [self.cruise_gap1, self.cruise_gap2, self.cruise_gap3, t_follow_d])
-      else:
-        t_follow = interp(float(cruise_gap), [1., 2., 3., 4.], [self.cruise_gap1, self.cruise_gap2, self.cruise_gap3, self.cruise_gap4])
 
     # To estimate a safe distance from a moving lead, we calculate how much stopping
     # distance that lead needs as a minimum. We can add that to the current distance
@@ -404,8 +376,6 @@ class LongitudinalMpc:
 
     self.params[:,0] = MIN_ACCEL
     self.params[:,1] = self.max_a
-
-    stopline = (model.stopLine.x + 5.0) * np.ones(N+1) if stopping else 400 * np.ones(N+1)
 
     # Update in ACC mode or ACC/e2e blend
     if self.mode == 'acc':
@@ -418,7 +388,7 @@ class LongitudinalMpc:
       v_cruise_clipped = np.clip(v_cruise * np.ones(N+1),
                                  v_lower,
                                  v_upper)
-      cruise_obstacle = np.cumsum(T_DIFFS * v_cruise_clipped) + get_safe_obstacle_distance(v_cruise_clipped, get_T_FOLLOW() if not self.custom_tr_enabled else t_follow)
+      cruise_obstacle = np.cumsum(T_DIFFS * v_cruise_clipped) + get_safe_obstacle_distance(v_cruise_clipped, get_T_FOLLOW())
       x_obstacles = np.column_stack([lead_0_obstacle, lead_1_obstacle, cruise_obstacle])
       self.source = SOURCES[np.argmin(x_obstacles[0])]
 
@@ -453,15 +423,6 @@ class LongitudinalMpc:
     self.params[:,2] = np.min(x_obstacles, axis=1)
     self.params[:,3] = np.copy(self.prev_a)
     self.params[:,4] = t_follow
-
-
-    self.e2e_x = x[:]
-    self.lead_0_obstacle = lead_0_obstacle[:]
-    self.lead_1_obstacle = lead_1_obstacle[:]
-    self.cruise_target = cruise_obstacle[:]
-    self.stopline = stopline[:]
-    self.stop_prob = model.stopLine.prob
-
 
     self.run()
     if (np.any(lead_xv_0[FCW_IDXS,0] - self.x_sol[FCW_IDXS,0] < CRASH_DISTANCE) and

@@ -59,7 +59,20 @@ void OnroadWindow::updateState(const UIState &s) {
     } else if (alert.type == "controlsUnresponsivePermanent") {
       bgColor = bg_colors[STATUS_DISENGAGED];
     }
+    if (uiState()->is_OpenpilotViewEnabled) {
+      // opkr
+      if (QFileInfo::exists("/data/log/error.txt") && s.scene.show_error && !s.scene.tmux_error_check) {
+        QFileInfo fileInfo;
+        fileInfo.setFile("/data/log/error.txt");
+        QDateTime modifiedtime = fileInfo.lastModified();
+        QString modified_time = modifiedtime.toString("yyyy-MM-dd hh:mm:ss ");
+        const std::string txt = util::read_file("/data/log/error.txt");
+        if (RichTextDialog::alert(modified_time + QString::fromStdString(txt), this)) {
+          uiState()->scene.tmux_error_check = true;
+        }
+      }
     alerts->updateAlert(alert, bgColor);
+    }
   }
 
   if (s.scene.map_on_left) {

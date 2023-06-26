@@ -485,7 +485,7 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new DrivingRecordToggle());
   layout->addWidget(new RecordCount());
   layout->addWidget(new RecordQuality());
-  const char* record_del = "rm -f /data/media/videos/*";
+  const char* record_del = "rm -f /data/media/0/videos/*";
   auto recorddelbtn = new ButtonControl(tr("Delete All Recorded Files"), tr("RUN"));
   QObject::connect(recorddelbtn, &ButtonControl::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Delete all saved recorded files. Do you want to proceed?"), this)){
@@ -493,7 +493,7 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
     }
   });
   layout->addWidget(recorddelbtn);
-  const char* realdata_del = "rm -rf /data/media/realdata/*";
+  const char* realdata_del = "rm -rf /data/media/0/realdata/*";
   auto realdatadelbtn = new ButtonControl(tr("Delete All Driving Logs"), tr("RUN"));
   QObject::connect(realdatadelbtn, &ButtonControl::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Delete all saved driving logs. Do you want to proceed?"), this)){

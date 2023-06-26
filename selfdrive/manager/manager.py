@@ -292,6 +292,9 @@ def manager_init() -> None:
                        dirty=is_dirty(),
                        device=HARDWARE.get_device_type())
 
+  # opkr
+  if os.path.isfile('/data/log/error.txt'):
+    os.remove('/data/log/error.txt')
 
 def manager_prepare() -> None:
   for p in managed_processes.values():

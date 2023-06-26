@@ -506,7 +506,7 @@ struct CarParams {
 
   minEnableSpeed @7 :Float32;
   minSteerSpeed @8 :Float32;
-  smoothSteer @94 :SmoothSteerData;
+  smoothSteer @93 :SmoothSteerData;
   safetyConfigs @62 :List(SafetyConfig);
   alternativeExperience @65 :Int16;      # panda flag for features like no disengage on gas
 
@@ -533,7 +533,7 @@ struct CarParams {
     indi @27 :LateralINDITuning;
     lqr @40 :LateralLQRTuning;
     torque @67 :LateralTorqueTuning;
-    atom @93 :LateralATOMTuning;
+    atom @94 :LateralATOMTuning;
   }
 
   steerLimitAlert @28 :Bool;

@@ -506,6 +506,7 @@ struct CarParams {
 
   minEnableSpeed @7 :Float32;
   minSteerSpeed @8 :Float32;
+  smoothSteer @94 :SmoothSteerData;
   safetyConfigs @62 :List(SafetyConfig);
   alternativeExperience @65 :Int16;      # panda flag for features like no disengage on gas
 
@@ -532,6 +533,7 @@ struct CarParams {
     indi @27 :LateralINDITuning;
     lqr @40 :LateralLQRTuning;
     torque @67 :LateralTorqueTuning;
+    atom @93 :LateralATOMTuning;
   }
 
   steerLimitAlert @28 :Bool;
@@ -592,9 +594,25 @@ struct CarParams {
   lfaHdaAvailable @91 :Bool;
   navAvailable @92 :Bool;
 
+  struct SmoothSteerData
+  {
+    method @0: Int8;
+    maxSteeringAngle @1 :Float32;
+    maxDriverAngleWait @2 :Float32;
+    maxSteerAngleWait @3 :Float32;
+    driverAngleWait @4 :Float32;
+  }
+
   struct LateralParams {
     torqueBP @0 :List(Int32);
     torqueV @1 :List(Int32);
+  }
+
+  struct LateralATOMTuning {
+    lqr @0 :LateralLQRTuning;
+    torque @1 :LateralTorqueTuning;
+    indi @2 :LateralINDITuning;
+    pid @3 :LateralPIDTuning;
   }
 
   struct LateralPIDTuning {
@@ -602,7 +620,9 @@ struct CarParams {
     kpV @1 :List(Float32);
     kiBP @2 :List(Float32);
     kiV @3 :List(Float32);
-    kf @4 :Float32;
+    kdBP @4 :List(Float32) = [0.];
+    kdV @5 :List(Float32) = [0.];
+    kf @6 :Float32;
   }
 
   struct LateralTorqueTuning {
@@ -624,6 +644,10 @@ struct CarParams {
     kf @6 :Float32;
     deadzoneBP @4 :List(Float32);
     deadzoneV @5 :List(Float32);
+    kdBP @7 :List(Float32) = [0.];
+    kdV @8 :List(Float32) = [0.];
+    kfBP @9 :List(Float32);
+    kfV @10 :List(Float32);
   }
 
   struct LateralINDITuning {

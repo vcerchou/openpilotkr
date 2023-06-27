@@ -431,7 +431,7 @@ void UIState::updateStatus() {
     emit offroadTransition(!scene.started);
   }
 
-  if (!scene.read_params_once) {
+  //if (!scene.read_params_once) {
   if (false) {
     Params params;
     // user param value init

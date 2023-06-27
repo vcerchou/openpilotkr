@@ -431,8 +431,7 @@ void UIState::updateStatus() {
     emit offroadTransition(!scene.started);
   }
 
-  //if (!scene.read_params_once) {
-  if (false) {
+  if (!scene.read_params_once) {
     Params params;
     // user param value init
     scene.driving_record = params.getBool("OpkrDrivingRecord");
@@ -504,6 +503,8 @@ UIState::UIState(QObject *parent) : QObject(parent) {
     "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "roadCameraState",
     "pandaStates", "carParams", "driverMonitoringState", "carState", "liveLocationKalman", "driverStateV2",
     "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "uiPlan",
+    "liveParameters", "deviceState", "gpsLocationExternal", "lateralPlan", "longitudinalPlan",
+    "liveENaviData", "liveMapData",
   });
 
   Params params;

@@ -6895,7 +6895,7 @@ void SpeedLaneWidth::refresh() {
   btn.setText(tr("EDIT"));
 }
 
-OPKRTopTextView::OPKRTopTextView() : AbstractControl(tr("Bottom Text View"), tr("Date/Time/StreetName"), "../assets/offroad/icon_shell.png") {
+OPKRBottomTextView::OPKRBottomTextView() : AbstractControl(tr("Bottom Text View"), tr("Date/Time/StreetName"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -6925,57 +6925,57 @@ OPKRTopTextView::OPKRTopTextView() : AbstractControl(tr("Bottom Text View"), tr(
   hlayout->addWidget(&btnplus);
 
   QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
-    auto str = QString::fromStdString(params.get("TopTextView"));
+    auto str = QString::fromStdString(params.get("BottomTextView"));
     int value = str.toInt();
     value = value - 1;
     if (value <= -1) {
       value = 7;
     }
     QString values = QString::number(value);
-    params.put("TopTextView", values.toStdString());
+    params.put("BottomTextView", values.toStdString());
     refresh();
   });
   
   QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
-    auto str = QString::fromStdString(params.get("TopTextView"));
+    auto str = QString::fromStdString(params.get("BottomTextView"));
     int value = str.toInt();
     value = value + 1;
     if (value >= 8) {
       value = 0;
     }
     QString values = QString::number(value);
-    params.put("TopTextView", values.toStdString());
+    params.put("BottomTextView", values.toStdString());
     refresh();
   });
   refresh();
 }
 
-void OPKRTopTextView::refresh() {
-  QString option = QString::fromStdString(params.get("TopTextView"));
+void OPKRBottomTextView::refresh() {
+  QString option = QString::fromStdString(params.get("BottomTextView"));
   if (option == "0") {
     label.setText(tr("None"));
-    uiState()->scene.top_text_view = 0;
+    uiState()->scene.bottom_text_view = 0;
   } else if (option == "1") {
     label.setText(tr("Date+Time"));
-    uiState()->scene.top_text_view = 1;
+    uiState()->scene.bottom_text_view = 1;
   } else if (option == "2") {
     label.setText(tr("Date"));
-    uiState()->scene.top_text_view = 2;
+    uiState()->scene.bottom_text_view = 2;
   } else if (option == "3") {
     label.setText(tr("Time"));
-    uiState()->scene.top_text_view = 3;
+    uiState()->scene.bottom_text_view = 3;
   } else if (option == "4") {
     label.setText(tr("Date+Time+Str"));
-    uiState()->scene.top_text_view = 4;
+    uiState()->scene.bottom_text_view = 4;
   } else if (option == "5") {
     label.setText(tr("Date+Str"));
-    uiState()->scene.top_text_view = 5;
+    uiState()->scene.bottom_text_view = 5;
   } else if (option == "6") {
     label.setText(tr("Time+Str"));
-    uiState()->scene.top_text_view = 6;
+    uiState()->scene.bottom_text_view = 6;
   } else {
     label.setText(tr("StreetName"));
-    uiState()->scene.top_text_view = 7;
+    uiState()->scene.bottom_text_view = 7;
   }
 }
 

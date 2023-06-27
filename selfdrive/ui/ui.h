@@ -16,7 +16,7 @@
 #include "common/params.h"
 #include "common/timing.h"
 
-const int bdr_s = 30;
+const int bdr_s = 15;
 const int header_h = 420;
 const int footer_h = 280;
 
@@ -34,6 +34,17 @@ const vec3 default_face_kpts_3d[] = {
   {36.53, -21.03, 8.00}, {34.47, -32.00, 8.00}, {32.42, -37.49, 8.00}, {30.36, -40.91, 8.00}, {24.19, -46.40, 8.00},
   {18.02, -49.14, 8.00}, {6.36, -51.20, 8.00}, {-5.98, -51.20, 8.00},
 };
+
+const Rect rec_btn = {1745, 905, 140, 140};
+const Rect laneless_btn = {1585, 905, 140, 140};
+const Rect monitoring_btn = {50, 770, 140, 150};
+const Rect stockui_btn = {15, 15, 184, 202};
+const Rect tuneui_btn = {1720, 15, 184, 202};
+const Rect livetunepanel_left_above_btn = {470, 570, 210, 170};
+const Rect livetunepanel_right_above_btn = {1240, 570, 210, 170};
+const Rect livetunepanel_left_btn = {470, 745, 210, 170};
+const Rect livetunepanel_right_btn = {1240, 745, 210, 170};
+const Rect speedlimit_btn = {220, 15, 190, 190};
 
 struct Alert {
   QString text1;
@@ -89,10 +100,11 @@ typedef enum UIStatus {
 
 const QColor bg_colors [] = {
   [STATUS_DISENGAGED] = QColor(0x17, 0x33, 0x49, 0xc8),
-  [STATUS_OVERRIDE] = QColor(0x91, 0x9b, 0x95, 0xf1),
-  [STATUS_ENGAGED] = QColor(0x17, 0x86, 0x44, 0xf1),
-  [STATUS_WARNING] = QColor(0xDA, 0x6F, 0x25, 0xf1),
-  [STATUS_ALERT] = QColor(0xC9, 0x22, 0x31, 0xf1),
+  [STATUS_OVERRIDE] = QColor(0x91, 0x9b, 0x95, 0x96),
+  [STATUS_ENGAGED] = QColor(0x17, 0x86, 0x44, 0x96),
+  [STATUS_WARNING] = QColor(0xDA, 0x6F, 0x25, 0x96),
+  [STATUS_ALERT] = QColor(0xC9, 0x22, 0x31, 0x96),
+  [STATUS_DND] = QColor(0x32, 0x32, 0x32, 0x96),
 };
 
 typedef struct UIScene {
@@ -110,13 +122,8 @@ typedef struct UIScene {
 
   bool brakePress;
   bool gasPress;
-  bool brakeHold;
+  bool autoHold;
   bool touched = false;
-  bool map_on_top = false;
-  bool map_on_overlay = false;
-  bool map_is_running = false;
-  bool move_to_background = false;
-  bool navi_on_boot = false;
 
   float gpsAccuracyUblox;
   float altitudeUblox;
@@ -124,9 +131,7 @@ typedef struct UIScene {
 
   int cpuPerc;
   float cpuTemp;
-  float batTemp;
   float ambientTemp;
-  float batPercent;
   bool rightblindspot;
   bool leftblindspot;
   bool leftBlinker;
@@ -142,9 +147,6 @@ typedef struct UIScene {
   bool brakeLights;
   bool steerOverride;
   float output_scale;
-  int batteryPercent;
-  bool batteryCharging;
-  char batteryStatus[64];
   int fanSpeed;
   int tpmsUnit;
   float tpmsPressureFl;
@@ -169,7 +171,6 @@ typedef struct UIScene {
   bool opkr_livetune_ui;
   bool driving_record;
   float steer_actuator_delay;
-  bool batt_less;
   int cruise_gap;
   int dynamic_tr_mode;
   float dynamic_tr_value;
@@ -181,7 +182,7 @@ typedef struct UIScene {
   int lqrScale, lqrKi, lqrDcGain;
   int torqueKp, torqueKf, torqueKi, torqueFriction, torqueMaxLatAccel;
   bool live_tune_panel_enable;
-  int top_text_view;
+  int bottom_text_view;
   int live_tune_panel_list = 0;
   int list_count = 2;
   int nTime, autoScreenOff, brightness, awake;
@@ -198,7 +199,6 @@ typedef struct UIScene {
   bool stand_still;
   bool show_error;
   int display_maxspeed_time = 0;
-  bool mapbox_running;
   int navi_select;
   bool tmux_error_check = false;
   bool speedlimit_signtype;
@@ -326,6 +326,10 @@ typedef struct UIScene {
   QPolygonF lane_line_vertices[4];
   QPolygonF road_edge_vertices[2];
 
+  float lane_blindspot_probs[2];
+  line_vertices_data lane_blindspot_vertices[2];
+  line_vertices_data stop_line_vertices;
+
   // lead
   QPointF lead_vertices[2];
 
@@ -401,6 +405,8 @@ private:
   int last_brightness = 0;
   FirstOrderFilter brightness_filter;
   QFuture<void> brightness_future;
+
+  int sleep_time = -1;
 
   void updateBrightness(const UIState &s);
   void updateWakefulness(const UIState &s);

@@ -320,7 +320,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"LCTimingFactorEnable", PERSISTENT},
     {"SafetyCamDecelDistGain", PERSISTENT},
     {"OpkrLiveTunePanelEnable", PERSISTENT},
-    {"TopTextView", PERSISTENT},
+    {"BottomTextView", PERSISTENT},
     {"RadarLongHelper", PERSISTENT},
     {"GitPullOnBoot", PERSISTENT},
     {"LiveSteerRatioPercent", PERSISTENT},

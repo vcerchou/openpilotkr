@@ -2427,11 +2427,11 @@ private:
   void refresh();
 };
 
-class OPKRTopTextView : public AbstractControl {
+class OPKRBottomTextView : public AbstractControl {
   Q_OBJECT
 
 public:
-  OPKRTopTextView();
+  OPKRBottomTextView();
 
 private:
   QPushButton btnplus;

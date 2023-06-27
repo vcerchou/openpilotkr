@@ -432,6 +432,7 @@ void UIState::updateStatus() {
   }
 
   if (!scene.read_params_once) {
+  if (false) {
     Params params;
     // user param value init
     scene.driving_record = params.getBool("OpkrDrivingRecord");

@@ -35,6 +35,17 @@ const vec3 default_face_kpts_3d[] = {
   {18.02, -49.14, 8.00}, {6.36, -51.20, 8.00}, {-5.98, -51.20, 8.00},
 };
 
+typedef struct Rect {
+  int x, y, w, h;
+  int centerX() const { return x + w / 2; }
+  int centerY() const { return y + h / 2; }
+  int right() const { return x + w; }
+  int bottom() const { return y + h; }
+  bool ptInRect(int px, int py) const {
+    return px >= x && px < (x + w) && py >= y && py < (y + h);
+  }
+} Rect;
+
 const Rect rec_btn = {1745, 905, 140, 140};
 const Rect laneless_btn = {1585, 905, 140, 140};
 const Rect monitoring_btn = {50, 770, 140, 150};
@@ -106,6 +117,15 @@ const QColor bg_colors [] = {
   [STATUS_ALERT] = QColor(0xC9, 0x22, 0x31, 0x96),
   [STATUS_DND] = QColor(0x32, 0x32, 0x32, 0x96),
 };
+
+typedef struct {
+  float x, y;
+} vertex_data;
+
+typedef struct {
+  vertex_data v[TRAJECTORY_SIZE * 2];
+  int cnt;
+} line_vertices_data;
 
 typedef struct UIScene {
   bool calibration_valid = false;

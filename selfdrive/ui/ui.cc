@@ -296,7 +296,7 @@ static void update_state(UIState *s) {
   if (sm.updated("deviceState")) {
     scene.deviceState = sm["deviceState"].getDeviceState();
     scene.cpuPerc = scene.deviceState.getCpuUsagePercent()[0];
-    scene.cpuTemp = (scene.deviceState.getCpuTempC()[0];
+    scene.cpuTemp = scene.deviceState.getCpuTempC()[0];
     scene.ambientTemp = scene.deviceState.getAmbientTempC();
     scene.fanSpeed = scene.deviceState.getFanSpeedPercentDesired();
   }

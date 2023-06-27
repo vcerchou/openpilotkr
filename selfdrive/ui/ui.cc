@@ -79,20 +79,6 @@ void update_line_data(const UIState *s, const cereal::XYZTData::Reader &line,
   *pvd = left_points + right_points;
 }
 
-
-static void update_stop_line_data(const UIState *s, const cereal::ModelDataV2::StopLineData::Reader &line,
-                                  float x_off, float y_off, float z_off, line_vertices_data *pvd) {
-  const auto line_x = line.getX(), line_y = line.getY(), line_z = line.getZ();
-  vertex_data *v = &pvd->v[0];
-  v += calib_frame_to_full_frame(s, line_x + x_off, line_y - y_off, line_z + z_off, v);
-  v += calib_frame_to_full_frame(s, line_x + x_off, line_y + y_off, line_z + z_off, v);
-  v += calib_frame_to_full_frame(s, line_x - x_off, line_y + y_off, line_z + z_off, v);
-  v += calib_frame_to_full_frame(s, line_x - x_off, line_y - y_off, line_z + z_off, v);
-  pvd->cnt = v - pvd->v;
-  assert(pvd->cnt <= std::size(pvd->v));
-}
-
-
 void update_model(UIState *s, 
                   const cereal::ModelDataV2::Reader &model,
                   const cereal::UiPlan::Reader &plan) {
@@ -129,23 +115,6 @@ void update_model(UIState *s,
   }
   max_idx = get_path_length_idx(plan_position, max_distance);
   update_line_data(s, plan_position, 0.9, 1.22, &scene.track_vertices, max_idx, false);
-
-
-   // update blindspot line
-  for (int i = 0; i < std::size(scene.lane_blindspot_vertices); i++) {
-    scene.lane_blindspot_probs[i] = lane_line_probs[i];
-    update_blindspot_data(s, i, lane_lines[i+1], 2.8, 0, &scene.lane_blindspot_vertices[i], max_idx);
-  }   
-
-
-  // update stop lines
-  if (scene.stop_line) {
-    const auto stop_line = model.getStopLine();
-    if (stop_line.getProb() > .5) {
-      update_stop_line_data(s, stop_line, .5, 2, 1.22, &scene.stop_line_vertices);
-    }
-  }
-
 }
 
 void update_dmonitoring(UIState *s, const cereal::DriverStateV2::Reader &driverstate, float dm_fade_state, bool is_rhd) {
@@ -506,7 +475,6 @@ void UIState::updateStatus() {
     s->scene.sl_decel_off = params.getBool("SpeedLimitDecelOff");
     s->scene.osm_enabled = params.getBool("OSMEnable") || params.getBool("OSMSpeedLimitEnable") || std::stoi(params.get("CurvDecelOption")) == 1 || std::stoi(params.get("CurvDecelOption")) == 3;
     s->scene.animated_rpm = params.getBool("AnimatedRPM");
-    s->scene.stop_line = params.getBool("ShowStopLine");
     s->scene.lateralControlMethod = std::stoi(params.get("LateralControlMethod"));
     s->scene.do_not_disturb_mode = std::stoi(params.get("DoNotDisturbMode"));
     s->scene.depart_chime_at_resume = params.getBool("DepartChimeAtResume");

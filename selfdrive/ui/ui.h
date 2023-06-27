@@ -119,15 +119,6 @@ const QColor bg_colors [] = {
   [STATUS_DND] = QColor(0x32, 0x32, 0x32, 0x96),
 };
 
-typedef struct {
-  float x, y;
-} vertex_data;
-
-typedef struct {
-  vertex_data v[TRAJECTORY_SIZE * 2];
-  int cnt;
-} line_vertices_data;
-
 typedef struct UIScene {
   bool calibration_valid = false;
   bool calibration_wide_valid  = false;
@@ -234,7 +225,6 @@ typedef struct UIScene {
   float accel;
   bool animated_rpm;
   int max_animated_rpm;
-  bool stop_line;
   int gear_step;
   float charge_meter;
   float multi_lat_selected;
@@ -346,10 +336,6 @@ typedef struct UIScene {
   QPolygonF track_vertices;
   QPolygonF lane_line_vertices[4];
   QPolygonF road_edge_vertices[2];
-
-  float lane_blindspot_probs[2];
-  line_vertices_data lane_blindspot_vertices[2];
-  line_vertices_data stop_line_vertices;
 
   // lead
   QPointF lead_vertices[2];

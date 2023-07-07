@@ -120,13 +120,13 @@ class Controls:
     openpilot_enabled_toggle = self.params.get_bool("OpenpilotEnabledToggle")
     passive = self.params.get_bool("Passive") or not openpilot_enabled_toggle
 
-    self.auto_enabled = params.get_bool("AutoEnable") and params.get_bool("UFCModeEnabled")
-    self.variable_cruise = params.get_bool('OpkrVariableCruise')
-    self.cruise_over_maxspeed = params.get_bool('CruiseOverMaxSpeed')
-    self.cruise_road_limit_spd_enabled = params.get_bool('CruiseSetwithRoadLimitSpeedEnabled')
-    self.cruise_road_limit_spd_offset = int(params.get("CruiseSetwithRoadLimitSpeedOffset", encoding="utf8"))
-    self.stock_lkas_on_disengaged_status = params.get_bool('StockLKASEnabled')
-    self.no_mdps_mods = params.get_bool('NoSmartMDPS')
+    self.auto_enabled = self.params.get_bool("AutoEnable") and self.params.get_bool("UFCModeEnabled")
+    self.variable_cruise = self.params.get_bool('OpkrVariableCruise')
+    self.cruise_over_maxspeed = self.params.get_bool('CruiseOverMaxSpeed')
+    self.cruise_road_limit_spd_enabled = self.params.get_bool('CruiseSetwithRoadLimitSpeedEnabled')
+    self.cruise_road_limit_spd_offset = int(self.params.get("CruiseSetwithRoadLimitSpeedOffset", encoding="utf8"))
+    self.stock_lkas_on_disengaged_status = self.params.get_bool('StockLKASEnabled')
+    self.no_mdps_mods = self.params.get_bool('NoSmartMDPS')
 
     self.cruise_road_limit_spd_switch = True
     self.cruise_road_limit_spd_switch_prev = 0
@@ -238,29 +238,29 @@ class Controls:
     self.mpc_frame = 0
     self.mpc_frame_sr = 0
 
-    self.steerRatio_Max = float(Decimal(params.get("SteerRatioMaxAdj", encoding="utf8")) * Decimal('0.01'))
+    self.steerRatio_Max = float(Decimal(self.params.get("SteerRatioMaxAdj", encoding="utf8")) * Decimal('0.01'))
     self.steer_angle_range = [5, 30]
     self.steerRatio_range = [self.CP.steerRatio, self.steerRatio_Max]
     self.new_steerRatio = self.CP.steerRatio
     self.new_steerRatio_prev = self.CP.steerRatio
     self.steerRatio_to_send = 0
-    self.live_sr = params.get_bool("OpkrLiveSteerRatio")
-    self.live_sr_percent = int(Params().get("LiveSteerRatioPercent", encoding="utf8"))
+    self.live_sr = self.params.get_bool("OpkrLiveSteerRatio")
+    self.live_sr_percent = int(self.params.get("LiveSteerRatioPercent", encoding="utf8"))
 
     self.second = 0.0
     self.second2 = 0.0
     self.map_enabled = False
-    self.lane_change_delay = int(Params().get("OpkrAutoLaneChangeDelay", encoding="utf8"))
-    self.auto_enable_speed = max(1, int(Params().get("AutoEnableSpeed", encoding="utf8"))) if int(Params().get("AutoEnableSpeed", encoding="utf8")) > -1 else int(Params().get("AutoEnableSpeed", encoding="utf8"))
+    self.lane_change_delay = int(self.params.get("OpkrAutoLaneChangeDelay", encoding="utf8"))
+    self.auto_enable_speed = max(1, int(self.params.get("AutoEnableSpeed", encoding="utf8"))) if int(self.params.get("AutoEnableSpeed", encoding="utf8")) > -1 else int(self.params.get("AutoEnableSpeed", encoding="utf8"))
     self.e2e_long_alert_prev = True
     self.unsleep_mode_alert_prev = True
     self.donotdisturb_mode_alert_prev = True
-    self.stock_navi_info_enabled = Params().get_bool("StockNaviSpeedEnabled")
-    self.ignore_can_error_on_isg = Params().get_bool("IgnoreCANErroronISG")
+    self.stock_navi_info_enabled = self.params.get_bool("StockNaviSpeedEnabled")
+    self.ignore_can_error_on_isg = self.params.get_bool("IgnoreCANErroronISG")
     self.ready_timer = 0
-    self.osm_waze_spdlimit_offset = int(Params().get("OpkrSpeedLimitOffset", encoding="utf8"))
-    self.osm_waze_spdlimit_offset_option = int(Params().get("OpkrSpeedLimitOffsetOption", encoding="utf8"))
-    self.osm_speedlimit_enabled = Params().get_bool("OSMSpeedLimitEnable")
+    self.osm_waze_spdlimit_offset = int(self.params.get("OpkrSpeedLimitOffset", encoding="utf8"))
+    self.osm_waze_spdlimit_offset_option = int(self.params.get("OpkrSpeedLimitOffsetOption", encoding="utf8"))
+    self.osm_speedlimit_enabled = self.params.get_bool("OSMSpeedLimitEnable")
     self.osm_waze_speedlimit = 255
     self.pause_spdlimit = False
     self.osm_waze_off_spdlimit_init = False
@@ -269,17 +269,17 @@ class Controls:
     self.lkas_temporary_off = False
     self.gap_by_spd_on_temp = True
     try:
-      self.roadname_and_slc = Params().get("RoadList", encoding="utf8").strip().splitlines()[1].split(',')
+      self.roadname_and_slc = self.params.get("RoadList", encoding="utf8").strip().splitlines()[1].split(',')
     except:
       self.roadname_and_slc = ""
       pass
 
-    self.var_cruise_speed_factor = int(Params().get("VarCruiseSpeedFactor", encoding="utf8"))
+    self.var_cruise_speed_factor = int(self.params.get("VarCruiseSpeedFactor", encoding="utf8"))
     self.desired_angle_deg = 0
-    self.navi_selection = int(Params().get("OPKRNaviSelect", encoding="utf8"))
+    self.navi_selection = int(self.params.get("OPKRNaviSelect", encoding="utf8"))
 
-    self.osm_waze_custom_spdlimit_c = list(map(int, Params().get("OSMCustomSpeedLimitC", encoding="utf8").split(',')))
-    self.osm_waze_custom_spdlimit_t = list(map(int, Params().get("OSMCustomSpeedLimitT", encoding="utf8").split(',')))
+    self.osm_waze_custom_spdlimit_c = list(map(int, self.params.get("OSMCustomSpeedLimitC", encoding="utf8").split(',')))
+    self.osm_waze_custom_spdlimit_t = list(map(int, self.params.get("OSMCustomSpeedLimitT", encoding="utf8").split(',')))
 
     self.pause_spdlimit_push = False
     self.pause_spdlimit_push_cnt = 0
@@ -292,7 +292,7 @@ class Controls:
 
   def set_initial_state(self):
     if REPLAY:
-      controls_state = Params().get("ReplayControlsState")
+      controls_state = self.params.get("ReplayControlsState")
       if controls_state is not None:
         controls_state = log.ControlsState.from_bytes(controls_state)
         self.v_cruise_helper.v_cruise_kph = controls_state.vCruise
@@ -418,26 +418,26 @@ class Controls:
 
     self.second += DT_CTRL
     if self.second > 1.0:
-      self.map_enabled = Params().get_bool("OpkrMapEnable")
-      self.live_sr = Params().get_bool("OpkrLiveSteerRatio")
-      self.live_sr_percent = int(Params().get("LiveSteerRatioPercent", encoding="utf8"))
+      self.map_enabled = self.params.get_bool("OpkrMapEnable")
+      self.live_sr = self.params.get_bool("OpkrLiveSteerRatio")
+      self.live_sr_percent = int(self.params.get("LiveSteerRatioPercent", encoding="utf8"))
       # E2ELongAlert
-      if Params().get_bool("E2ELong") and self.e2e_long_alert_prev:
+      if self.params.get_bool("E2ELong") and self.e2e_long_alert_prev:
         self.events.add(EventName.e2eLongAlert)
         self.e2e_long_alert_prev = not self.e2e_long_alert_prev
-      elif not Params().get_bool("E2ELong"):
+      elif not self.params.get_bool("E2ELong"):
         self.e2e_long_alert_prev = True
       # UnSleep Mode Alert
-      if Params().get_bool("OpkrMonitoringMode") and self.unsleep_mode_alert_prev:
+      if self.params.get_bool("OpkrMonitoringMode") and self.unsleep_mode_alert_prev:
         self.events.add(EventName.unSleepMode)
         self.unsleep_mode_alert_prev = not self.unsleep_mode_alert_prev
-      elif not Params().get_bool("OpkrMonitoringMode"):
+      elif not self.params.get_bool("OpkrMonitoringMode"):
         self.unsleep_mode_alert_prev = True
       # DoNotDisturb Mode Alert
-      if Params().get("CommaStockUI", encoding="utf8") == "2" and self.donotdisturb_mode_alert_prev:
+      if self.params.get("CommaStockUI", encoding="utf8") == "2" and self.donotdisturb_mode_alert_prev:
         self.events.add(EventName.doNotDisturb)
         self.donotdisturb_mode_alert_prev = not self.donotdisturb_mode_alert_prev
-      elif not Params().get("CommaStockUI", encoding="utf8") == "2":
+      elif not self.params.get("CommaStockUI", encoding="utf8") == "2":
         self.donotdisturb_mode_alert_prev = True
       self.second = 0.0
 
@@ -573,7 +573,7 @@ class Controls:
 
         self.initialized = True
         self.set_initial_state()
-        Params().put_bool("ControlsReady", True)
+        self.params.put_bool("ControlsReady", True)
 
     # Check for CAN timeout
     if not can_strs:

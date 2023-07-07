@@ -80,8 +80,8 @@ class LateralPlanner:
     self.spd_lane_width_spd = list(map(float, self.params.get("SpdLaneWidthSpd", encoding="utf8").split(',')))
     self.spd_lane_width_set = list(map(float, self.params.get("SpdLaneWidthSet", encoding="utf8").split(',')))
     self.lll_prob = self.rll_prob = self.d_prob = self.lll_std = self.rll_std = 0.
-    self.camera_offset = -CAMERA_OFFSET if wide_camera else CAMERA_OFFSET
-    self.path_offset = -PATH_OFFSET if wide_camera else PATH_OFFSET
+    self.camera_offset = -CAMERA_OFFSET
+    self.path_offset = -PATH_OFFSET
     self.left_curv_offset = int(self.params.get("LeftCurvOffsetAdj", encoding="utf8"))
     self.right_curv_offset = int(self.params.get("RightCurvOffsetAdj", encoding="utf8"))
     self.drive_routine_on_co = self.params.get_bool("RoutineDriveOn")

@@ -53,8 +53,9 @@ class VCruiseHelper:
 
     self.sm = messaging.SubMaster(['liveENaviData', 'liveMapData'])
 
-    self.is_kph = Params().get_bool("IsMetric")
-    self.variable_cruise = Params().get_bool("OpkrVariableCruise")
+    self.params = Params()
+    self.is_kph = self.params.get_bool("IsMetric")
+    self.variable_cruise = self.params.get_bool("OpkrVariableCruise")
 
     self.osm_waze_spdlimit_offset = int(self.params.get("OpkrSpeedLimitOffset", encoding="utf8"))
     self.osm_waze_spdlimit_offset_option = int(self.params.get("OpkrSpeedLimitOffsetOption", encoding="utf8"))

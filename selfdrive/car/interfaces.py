@@ -156,7 +156,10 @@ class CarInterfaceBase(ABC):
     ret.carFingerprint = candidate
 
     # Car docs fields
-    ret.maxLateralAccel = get_torque_params(candidate)['MAX_LAT_ACCEL_MEASURED']
+    if get_torque_params(candidate) is not None:
+      ret.maxLateralAccel = get_torque_params(candidate)['MAX_LAT_ACCEL_MEASURED']
+    else:
+      ret.maxLateralAccel = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
     ret.autoResumeSng = True  # describes whether car can resume from a stop automatically
 
     # standard ALC params

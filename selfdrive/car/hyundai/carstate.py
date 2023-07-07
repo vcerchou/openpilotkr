@@ -9,6 +9,8 @@ from opendbc.can.can_define import CANDefine
 from selfdrive.car.hyundai.hyundaicanfd import CanBus
 from selfdrive.car.hyundai.values import HyundaiFlags, CAR, DBC, CAN_GEARS, CAMERA_SCC_CAR, CANFD_CAR, EV_CAR, HYBRID_CAR, Buttons, CarControllerParams
 from selfdrive.car.interfaces import CarStateBase
+from common.params import Params
+
 GearShifter = car.CarState.GearShifter
 
 PREV_BUTTON_SAMPLES = 8

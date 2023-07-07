@@ -56,6 +56,24 @@ class VCruiseHelper:
     self.is_kph = Params().get_bool("IsMetric")
     self.variable_cruise = Params().get_bool("OpkrVariableCruise")
 
+    self.osm_waze_spdlimit_offset = int(self.params.get("OpkrSpeedLimitOffset", encoding="utf8"))
+    self.osm_waze_spdlimit_offset_option = int(self.params.get("OpkrSpeedLimitOffsetOption", encoding="utf8"))
+    self.osm_speedlimit_enabled = self.params.get_bool("OSMSpeedLimitEnable")
+    self.osm_waze_speedlimit = 255
+    self.pause_spdlimit = False
+    self.osm_waze_off_spdlimit_init = False
+    self.v_cruise_kph_set_timer = 0
+
+    self.navi_selection = int(self.params.get("OPKRNaviSelect", encoding="utf8"))
+
+    self.osm_waze_custom_spdlimit_c = list(map(int, self.params.get("OSMCustomSpeedLimitC", encoding="utf8").split(',')))
+    self.osm_waze_custom_spdlimit_t = list(map(int, self.params.get("OSMCustomSpeedLimitT", encoding="utf8").split(',')))
+
+    self.pause_spdlimit_push = False
+    self.pause_spdlimit_push_cnt = 0
+
+    self.second2 = 0.0
+
   @property
   def v_cruise_initialized(self):
     return self.v_cruise_kph != V_CRUISE_UNSET

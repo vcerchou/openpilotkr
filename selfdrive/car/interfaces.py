@@ -16,6 +16,7 @@ from selfdrive.controls.lib.events import Events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 
 from common.params import Params
+from decimal import Decimal
 
 ButtonType = car.CarState.ButtonEvent.Type
 GearShifter = car.CarState.GearShifter
@@ -52,7 +53,8 @@ def get_torque_params(candidate):
   elif candidate in params:
     out = params[candidate]
   else:
-    raise NotImplementedError(f"Did not find torque params for {candidate}")
+    return None
+    #raise NotImplementedError(f"Did not find torque params for {candidate}")
   return {key: out[i] for i, key in enumerate(params['legend'])}
 
 
@@ -196,16 +198,33 @@ class CarInterfaceBase(ABC):
   @staticmethod
   def configure_torque_tune(candidate, tune, steering_angle_deadzone_deg=0.0, use_steering_angle=True):
     params = get_torque_params(candidate)
-
     tune.init('torque')
-    tune.torque.useSteeringAngle = use_steering_angle
-    tune.torque.kp = 1.0
-    tune.torque.kf = 1.0
-    tune.torque.ki = 0.1
-    tune.torque.friction = params['FRICTION']
-    tune.torque.latAccelFactor = params['LAT_ACCEL_FACTOR']
-    tune.torque.latAccelOffset = 0.0
-    tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
+
+    if params is not None:
+      tune.torque.useSteeringAngle = use_steering_angle
+      tune.torque.kp = 1.0
+      tune.torque.kf = 1.0
+      tune.torque.ki = 0.1
+      tune.torque.friction = params['FRICTION']
+      tune.torque.latAccelFactor = params['LAT_ACCEL_FACTOR']
+      tune.torque.latAccelOffset = 0.0
+      tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
+    else:
+      TorqueKp = float(Decimal(Params().get("TorqueKp", encoding="utf8")) * Decimal('0.1'))
+      TorqueKf = float(Decimal(Params().get("TorqueKf", encoding="utf8")) * Decimal('0.1'))
+      TorqueKi = float(Decimal(Params().get("TorqueKi", encoding="utf8")) * Decimal('0.1'))
+      TorqueFriction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.01'))
+      TorqueUseAngle = Params().get_bool('TorqueUseAngle')
+      TorqueLatAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+
+      tune.torque.useSteeringAngle = TorqueUseAngle
+      tune.torque.kp = TorqueKp
+      tune.torque.kf = TorqueKf
+      tune.torque.ki = TorqueKi
+      tune.torque.friction = TorqueFriction
+      tune.torque.latAccelFactor = TorqueLatAccelFactor
+      tune.torque.latAccelOffset = 0.0
+      tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
 
   @abstractmethod
   def _update(self, c: car.CarControl) -> car.CarState:

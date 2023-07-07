@@ -70,7 +70,19 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = float(Decimal(params.get("SteerLimitTimerAdj", encoding="utf8")) * Decimal('0.01'))
     
     tire_stiffness_factor = 1.
-    CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
+
+    lat_control_method = int(params.get("LateralControlMethod", encoding="utf8"))
+    if lat_control_method == 0:
+      set_lat_tune(ret.lateralTuning, LatTunes.PID)
+    elif lat_control_method == 1:
+      set_lat_tune(ret.lateralTuning, LatTunes.INDI)
+    elif lat_control_method == 2:
+      set_lat_tune(ret.lateralTuning, LatTunes.LQR)
+    elif lat_control_method == 3:
+      #set_lat_tune(ret.lateralTuning, LatTunes.TORQUE)
+      CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
+    elif lat_control_method == 4:
+      set_lat_tune(ret.lateralTuning, LatTunes.ATOM)    # Hybrid tune
 
     if candidate in (CAR.SANTA_FE, CAR.SANTA_FE_2022, CAR.SANTA_FE_HEV_2022, CAR.SANTA_FE_PHEV_2022):
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG

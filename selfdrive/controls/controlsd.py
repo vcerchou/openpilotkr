@@ -418,7 +418,6 @@ class Controls:
 
     self.second += DT_CTRL
     if self.second > 1.0:
-      self.map_enabled = self.params.get_bool("OpkrMapEnable")
       self.live_sr = self.params.get_bool("OpkrLiveSteerRatio")
       self.live_sr_percent = int(self.params.get("LiveSteerRatioPercent", encoding="utf8"))
       # E2ELongAlert

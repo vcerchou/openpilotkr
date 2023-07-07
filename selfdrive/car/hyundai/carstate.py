@@ -388,7 +388,7 @@ class CarState(CarStateBase):
     if self.CP.carFingerprint in FEATURES["send_hda_mfa"]:
       self.lfahda = copy.copy(cp_cam.vl["LFAHDA_MFC"])
 
-    self.brakeHold = ret.brakeHoldActive
+    self.autoHold = ret.brakeHoldActive
     self.brake_error = cp.vl["TCS13"]["ACCEnable"] == 3 # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     self.steer_state = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiActive"] #0 NOT ACTIVE, 1 ACTIVE
     self.lead_distance = cp_scc.vl["SCC11"]["ACC_ObjDist"] if not self.no_radar else 0

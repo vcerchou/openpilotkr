@@ -475,7 +475,7 @@ class CarInterface(CarInterfaceBase):
       if self.CC.driver_scc_set_control:
         events.add(EventName.sccDriverOverride)        
       if self.CC.autohold_popup_timer:
-        events.add(EventName.brakeHold)
+        events.add(EventName.autoHold)
       if self.CC.auto_res_starting:
         events.add(EventName.resCruise)
       if self.CC.e2e_standstill:

@@ -65,7 +65,7 @@ class DesireHelper:
     self.output_scale = 0.0
     self.ready_to_change = False
 
-  def update(self, CP, carstate, lateral_active, lane_change_prob, md):
+  def update(self, CP, carstate, controlstate, lateral_active, lane_change_prob, md):
     try:
       if CP.lateralTuning.which() == 'pid':
         self.output_scale = controlstate.lateralControlState.pidState.output

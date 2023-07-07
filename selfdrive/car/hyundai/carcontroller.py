@@ -293,9 +293,9 @@ class CarController:
       self.model_speed = path_plan.modelSpeed
 
     self.sm.update(0)
-    self.dRel = self.sm['radarState'].leadOne.dRel #EON Lead
-    self.vRel = self.sm['radarState'].leadOne.vRel #EON Lead
-    self.yRel = self.sm['radarState'].leadOne.yRel #EON Lead
+    self.dRel = self.sm['radarState'].leadOne.dRel #Vision Lead
+    self.vRel = self.sm['radarState'].leadOne.vRel #Vision Lead
+    self.yRel = self.sm['radarState'].leadOne.yRel #Vision Lead
 
     # steering torque
     if self.CP.smoothSteer.method == 1:

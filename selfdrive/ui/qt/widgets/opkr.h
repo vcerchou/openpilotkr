@@ -481,7 +481,7 @@ class BattLessToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  BattLessToggle() : ToggleControl(tr("Set BatteryLess Eon"), tr("This is a toggle for batteryless EON. Related settings apply."), "../assets/offroad/icon_shell.png", Params().getBool("OpkrBattLess")) {
+  BattLessToggle() : ToggleControl(tr("Set BatteryLess Device"), tr("This is a toggle for batteryless Device. Related settings apply."), "../assets/offroad/icon_shell.png", Params().getBool("OpkrBattLess")) {
     QObject::connect(this, &BattLessToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("OpkrBattLess", status);
@@ -536,7 +536,7 @@ class ShowErrorToggle : public ToggleControl {
   Q_OBJECT
 
 public:
-  ShowErrorToggle() : ToggleControl(tr("Show TMUX Error"), tr("Display the error on the EON screen when a process error occurs while driving or off-road."), "../assets/offroad/icon_shell.png", Params().getBool("ShowError")) {
+  ShowErrorToggle() : ToggleControl(tr("Show TMUX Error"), tr("Display the error on the Device screen when a process error occurs while driving or off-road."), "../assets/offroad/icon_shell.png", Params().getBool("ShowError")) {
     QObject::connect(this, &ShowErrorToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("ShowError", status);

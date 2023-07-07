@@ -305,7 +305,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
 
   auto paraminit_btn = new ButtonControl(tr("Parameters Init"), tr("RUN"));
   QObject::connect(paraminit_btn, &ButtonControl::clicked, [=]() {
-    if (ConfirmationDialog::confirm2(tr("Initialize parameters. Changes in the EON menu are changed to the initial set value. Do you want to proceed?"), this)){
+    if (ConfirmationDialog::confirm2(tr("Initialize parameters. Changes in the Device menu are changed to the initial set value. Do you want to proceed?"), this)){
       QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/init_param.sh");
     }
   });
@@ -824,7 +824,7 @@ void TimeZoneSelectCombo::refresh() {
 }
 
 //UI
-AutoShutdown::AutoShutdown() : AbstractControl(tr("EON AutoShutdown"), tr("EON is automatically turned off after the set time while the engine is turned off (offload) after driving (onload)."), "../assets/offroad/icon_shell.png") {
+AutoShutdown::AutoShutdown() : AbstractControl(tr("Device AutoShutdown"), tr("Device is automatically turned off after the set time while the engine is turned off (offload) after driving (onload)."), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -906,7 +906,7 @@ void AutoShutdown::refresh() {
   }
 }
 
-ForceShutdown::ForceShutdown() : AbstractControl(tr("EON ForceShutdown"), tr("If the screen is turned off while off-road without driving (on-road X), force it to turn off after a certain period of time. When a touch event occurs, the off time is reset."), "../assets/offroad/icon_shell.png") {
+ForceShutdown::ForceShutdown() : AbstractControl(tr("Device ForceShutdown"), tr("If the screen is turned off while off-road without driving (on-road X), force it to turn off after a certain period of time. When a touch event occurs, the off time is reset."), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -979,7 +979,7 @@ void ForceShutdown::refresh() {
 }
 
 
-VolumeControl::VolumeControl() : AbstractControl(tr("EON Volume Control(%)"), tr("Adjust the volume of EON. Android Default/Manual Settings"), "../assets/offroad/icon_shell.png") {
+VolumeControl::VolumeControl() : AbstractControl(tr("Device Volume Control(%)"), tr("Adjust the volume of Device. Android Default/Manual Settings"), "../assets/offroad/icon_shell.png") {
 
   effect.setSource(QUrl::fromLocalFile("/data/openpilot/selfdrive/assets/addon/sound/ding.wav"));
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
@@ -1061,7 +1061,7 @@ void VolumeControl::playsound() {
   }
 }
 
-BrightnessControl::BrightnessControl() : AbstractControl(tr("EON Brightness Control(%)"), tr("Manually adjust the brightness of the EON screen."), "../assets/offroad/icon_shell.png") {
+BrightnessControl::BrightnessControl() : AbstractControl(tr("Device Brightness Control(%)"), tr("Manually adjust the brightness of the Device screen."), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -1127,7 +1127,7 @@ void BrightnessControl::refresh() {
   }
 }
 
-BrightnessOffControl::BrightnessOffControl() : AbstractControl(tr("Brightness at SCR Off(%)"), tr("When using the EON screen off function, the brightness is reduced according to the automatic brightness ratio."), "../assets/offroad/icon_shell.png") {
+BrightnessOffControl::BrightnessOffControl() : AbstractControl(tr("Brightness at SCR Off(%)"), tr("When using the Device screen off function, the brightness is reduced according to the automatic brightness ratio."), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -1193,7 +1193,7 @@ void BrightnessOffControl::refresh() {
     label.setText(QString::fromStdString(params.get("OpkrUIBrightnessOff")));
   }
 }
-AutoScreenOff::AutoScreenOff() : AbstractControl(tr("EON SCR Off Timer"), tr("Turn off the EON screen or reduce brightness to protect the screen after driving starts. It automatically brightens or turns on when a touch or event occurs."), "../assets/offroad/icon_shell.png") 
+AutoScreenOff::AutoScreenOff() : AbstractControl(tr("Device SCR Off Timer"), tr("Turn off the Device screen or reduce brightness to protect the screen after driving starts. It automatically brightens or turns on when a touch or event occurs."), "../assets/offroad/icon_shell.png") 
 {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
@@ -5753,7 +5753,7 @@ void OCurvSpeed::refresh() {
   btn.setText(tr("EDIT"));
 }
 
-GetOffAlert::GetOffAlert() : AbstractControl(tr("EON Detach Alert Sound"), tr("Device alert you a alarm to detach the EON when ignition off.(NO Alert/KOR/ENG)"), "../assets/offroad/icon_shell.png") {
+GetOffAlert::GetOffAlert() : AbstractControl(tr("Device Detach Alert Sound"), tr("Device alert you a alarm to detach the Device when ignition off.(NO Alert/KOR/ENG)"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");

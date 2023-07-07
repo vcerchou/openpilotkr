@@ -23,8 +23,6 @@ class NaviControl():
     self.wait_timer2 = 0
     self.wait_timer3 = 0
 
-    self.moveAvg = mvAvg.MoveAvg()
-
     self.gasPressed_old = 0
 
     self.map_spdlimit_offset = int(Params().get("OpkrSpeedLimitOffset", encoding="utf8"))

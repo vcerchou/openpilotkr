@@ -110,9 +110,9 @@ class CarState(CarStateBase):
 
     set_speed_kph = self.cruise_set_speed_kph
     if not self.cruise_active:
-      if self.prev_clu_CruiseSwState != self.cruise_buttons:
-        self.prev_clu_CruiseSwState = self.cruise_buttons
-        if self.cruise_buttons == Buttons.GAP_DIST:  # mode change
+      if self.prev_clu_CruiseSwState != self.cruise_buttons[-1]:
+        self.prev_clu_CruiseSwState = self.cruise_buttons[-1]
+        if self.cruise_buttons[-1] == Buttons.GAP_DIST:  # mode change
           self.cruise_set_mode += 1
           if self.cruise_set_mode > 5:
             self.cruise_set_mode = 0
@@ -121,7 +121,7 @@ class CarState(CarStateBase):
 
     if not self.prev_acc_set_btn:
       self.prev_acc_set_btn = self.acc_active
-      if self.cruise_buttons == Buttons.RES_ACCEL:   # up 
+      if self.cruise_buttons[-1] == Buttons.RES_ACCEL:   # up 
         self.cruise_set_speed_kph = self.VSetDis
       else:
         self.cruise_set_speed_kph = self.clu_Vanz
@@ -129,7 +129,7 @@ class CarState(CarStateBase):
     elif self.prev_acc_set_btn != self.acc_active:
       self.prev_acc_set_btn = self.acc_active
 
-    if self.cruise_buttons:
+    if self.cruise_buttons[-1]:
       self.cruise_buttons_time += 1
     else:
       self.cruise_buttons_time = 0
@@ -137,13 +137,13 @@ class CarState(CarStateBase):
     if self.cruise_buttons_time >= 60:
       self.cruise_set_speed_kph = self.VSetDis
 
-    if self.prev_clu_CruiseSwState == self.cruise_buttons:
+    if self.prev_clu_CruiseSwState == self.cruise_buttons[-1]:
       return set_speed_kph
-    self.prev_clu_CruiseSwState = self.cruise_buttons
+    self.prev_clu_CruiseSwState = self.cruise_buttons[-1]
 
-    if self.cruise_buttons == Buttons.RES_ACCEL:   # up 
+    if self.cruise_buttons[-1] == Buttons.RES_ACCEL:   # up 
       set_speed_kph += 1
-    elif self.cruise_buttons == Buttons.SET_DECEL:  # dn
+    elif self.cruise_buttons[-1] == Buttons.SET_DECEL:  # dn
       if self.gasPressed:
         set_speed_kph = self.clu_Vanz + 1
       else:
@@ -263,7 +263,7 @@ class CarState(CarStateBase):
 
     ret.cruiseState.accActive = self.acc_active
     ret.cruiseState.gapSet = cp.vl["SCC11"]['TauGapSet']
-    ret.cruiseState.cruiseSwState = self.cruise_buttons
+    ret.cruiseState.cruiseSwState = self.cruise_buttons[-1]
     ret.cruiseState.modeSel = self.cruise_set_mode
 
     set_speed = self.cruise_speed_button()
@@ -275,16 +275,16 @@ class CarState(CarStateBase):
       ret.cruiseState.speed = 0
 
     self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
-    self.prev_cruise_buttons = self.cruise_buttons
-    self.cruise_buttons = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]
-    ret.cruiseButtons = self.cruise_buttons
+    self.prev_cruise_buttons = self.cruise_buttons[-1]
+    self.cruise_buttons[-1] = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]
+    ret.cruiseButtons = self.cruise_buttons[-1]
 
-    if self.prev_gap_button != self.cruise_buttons:
-      if self.cruise_buttons == 3:
+    if self.prev_gap_button != self.cruise_buttons[-1]:
+      if self.cruise_buttons[-1] == 3:
         self.cruise_gap -= 1
       if self.cruise_gap < 1:
         self.cruise_gap = 4
-      self.prev_gap_button = self.cruise_buttons
+      self.prev_gap_button = self.cruise_buttons[-1]
 
 
     # TODO: Find brake pressure
@@ -298,7 +298,7 @@ class CarState(CarStateBase):
 
     if ret.brakePressed:
       self.brake_check = True
-    if self.cruise_buttons == 4:
+    if self.cruise_buttons[-1] == 4:
       self.cancel_check = True
 
     ret.brakeLights = bool(cp.vl["TCS13"]["BrakeLight"] or ret.brakePressed)

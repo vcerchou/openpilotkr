@@ -380,7 +380,7 @@ class CarController:
       enabled_speed = clu11_speed
 
     if CS.cruise_active: # to toggle lkas, hold gap button for 1 sec
-      if CS.cruise_buttons == 3:
+      if CS.cruise_buttons[-1] == 3:
         self.lkas_onoff_counter += 1
         self.gap_by_spd_on_sw = True
         self.gap_by_spd_on_sw_cnt2 = 0
@@ -781,11 +781,11 @@ class CarController:
         self.e2e_standstill_stat = False
         self.e2e_standstill_timer = 0
         self.e2e_standstill_timer_buf = 0
-      if CS.cruise_buttons == 4:
+      if CS.cruise_buttons[-1] == 4:
         self.cancel_counter += 1
         self.auto_res_starting = False
         self.standstill_res_button = False
-      elif CS.cruise_buttons == 3:
+      elif CS.cruise_buttons[-1] == 3:
         self.try_early_stop_retrieve = False
         self.try_early_stop_org_gap = CS.cruiseGapSet
         self.gap_by_spd_gap1 = False

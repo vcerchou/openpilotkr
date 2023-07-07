@@ -1,6 +1,7 @@
 import math
 
 from cereal import car, log
+import cereal.messaging as messaging
 from common.conversions import Conversions as CV
 from common.numpy_fast import clip, interp
 from common.realtime import DT_MDL

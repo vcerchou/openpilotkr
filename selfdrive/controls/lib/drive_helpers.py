@@ -54,6 +54,7 @@ class VCruiseHelper:
     self.sm = messaging.SubMaster(['liveENaviData', 'liveMapData'])
 
     self.is_kph = Params().get_bool("IsMetric")
+    self.variable_cruise = Params().get_bool("OpkrVariableCruise")
 
   @property
   def v_cruise_initialized(self):

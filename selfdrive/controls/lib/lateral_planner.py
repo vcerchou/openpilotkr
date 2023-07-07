@@ -14,6 +14,8 @@ from common.conversions import Conversions as CV
 from common.params import Params
 from decimal import Decimal
 
+LaneChangeState = log.LateralPlan.LaneChangeState
+
 TRAJECTORY_SIZE = 33
 
 CAMERA_OFFSET = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera

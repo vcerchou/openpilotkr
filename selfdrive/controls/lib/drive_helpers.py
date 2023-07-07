@@ -75,6 +75,13 @@ class VCruiseHelper:
 
     self.second2 = 0.0
 
+    self.cruise_over_maxspeed = self.params.get_bool('CruiseOverMaxSpeed')
+    self.cruise_road_limit_spd_enabled = self.params.get_bool('CruiseSetwithRoadLimitSpeedEnabled')
+    self.cruise_road_limit_spd_offset = int(self.params.get("CruiseSetwithRoadLimitSpeedOffset", encoding="utf8"))
+
+    self.cruise_road_limit_spd_switch = True
+    self.cruise_road_limit_spd_switch_prev = 0
+
   @property
   def v_cruise_initialized(self):
     return self.v_cruise_kph != V_CRUISE_UNSET

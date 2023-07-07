@@ -851,8 +851,8 @@ class Controls:
     else:
       v_future = 100.0
       v_future_a = 100.0
-    v_future_speed= float((v_future * CV.MS_TO_KPH) if IS_KPH else (v_future * CV.MS_TO_MPH))
-    v_future_speed_a= float((v_future_a * CV.MS_TO_KPH) if IS_KPH else (v_future_a * CV.MS_TO_MPH))
+    v_future_speed= float((v_future * CV.MS_TO_KPH) if self.is_metric else (v_future * CV.MS_TO_MPH))
+    v_future_speed_a= float((v_future_a * CV.MS_TO_KPH) if self.is_metric else (v_future_a * CV.MS_TO_MPH))
     hudControl.vFuture = v_future_speed
     hudControl.vFutureA = v_future_speed_a
     recent_blinker = (self.sm.frame - self.last_blinker_frame) * DT_CTRL < 5.0  # 5s blinker cooldown

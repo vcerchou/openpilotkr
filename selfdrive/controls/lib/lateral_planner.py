@@ -96,9 +96,9 @@ class LateralPlanner:
     self.right_edge_offset = float(Decimal(self.params.get("RightEdgeOffset", encoding="utf8")) * Decimal('0.01'))
     self.speed_offset = self.params.get_bool("SpeedCameraOffset")
     self.road_edge_offset = 0.0
-    self_timer = 0
-    self_timer2 = 0
-    self_timer3 = 0
+    self.timer = 0
+    self.timer2 = 0
+    self.timer3 = 0
     self.sm = messaging.SubMaster(['liveMapData'])
     self.total_camera_offset = self.camera_offset
 
@@ -141,9 +141,9 @@ class LateralPlanner:
       else:
         lean_offset = 0
 
-    self_timer += DT_MDL
-    if self_timer > 1.0:
-      self_timer = 0.0
+    self.timer += DT_MDL
+    if self.timer > 1.0:
+      self.timer = 0.0
       self.speed_offset = self.params.get_bool("SpeedCameraOffset")
       if self.params.get_bool("OpkrLiveTunePanelEnable"):
         self.camera_offset = -(float(Decimal(self.params.get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
@@ -156,9 +156,9 @@ class LateralPlanner:
       right_nearside_prob = md.laneLineProbs[3]
       right_edge_prob = np.clip(1.0 - md.roadEdgeStds[1], 0.0, 1.0)
 
-      self_timer3 += DT_MDL
-      if self_timer3 > 3.0:
-        self_timer3 = 0.0
+      self.timer3 += DT_MDL
+      if self.timer3 > 3.0:
+        self.timer3 = 0.0
         if right_nearside_prob < 0.1 and left_nearside_prob < 0.1:
           self.road_edge_offset = 0.0
         elif right_edge_prob > 0.35 and right_nearside_prob < 0.2 and right_close_prob > 0.5 and left_nearside_prob >= right_nearside_prob:
@@ -193,9 +193,9 @@ class LateralPlanner:
       self.r_lane_change_prob = desire_state[log.LateralPlan.Desire.laneChangeRight]
 
   def get_d_path(self, v_ego, path_t, path_xyz):
-    self_timer2 += DT_MDL
-    if self_timer2 > 1.0:
-      self_timer2 = 0.0
+    self.timer2 += DT_MDL
+    if self.timer2 > 1.0:
+      self.timer2 = 0.0
       if self.params.get_bool("OpkrLiveTunePanelEnable"):
         self.path_offset = -(float(Decimal(self.params.get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))
     # Reduce reliance on lanelines that are too far apart or

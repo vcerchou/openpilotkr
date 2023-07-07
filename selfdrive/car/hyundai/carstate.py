@@ -56,8 +56,6 @@ class CarState(CarStateBase):
     self.mdps_error_cnt = 0
     self.cruiseState_standstill = False
 
-    self.lfahda = None
-
     self.driverAcc_time = 0
 
     self.prev_cruise_buttons = 0
@@ -384,9 +382,6 @@ class CarState(CarStateBase):
 
     self.scc11init = copy.copy(cp.vl["SCC11"])
     self.scc12init = copy.copy(cp.vl["SCC12"])
-
-    if self.CP.carFingerprint in FEATURES["send_hda_mfa"]:
-      self.lfahda = copy.copy(cp_cam.vl["LFAHDA_MFC"])
 
     self.autoHold = ret.brakeHoldActive
     self.brake_error = cp.vl["TCS13"]["ACCEnable"] == 3 # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED

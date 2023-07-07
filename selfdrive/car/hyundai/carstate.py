@@ -3,6 +3,7 @@ import copy
 import math
 
 from cereal import car
+import cereal.messaging as messaging
 from common.conversions import Conversions as CV
 from opendbc.can.parser import CANParser
 from opendbc.can.can_define import CANDefine

@@ -178,7 +178,7 @@ class LongitudinalPlanner:
     longitudinalPlan.personality = self.personality
 
     longitudinalPlan.dynamicTRMode = int(self.mpc.dynamic_TR_mode)
-    longitudinalPlan.dynamicTRValue = float(self.mpc.desired_TR)
+    longitudinalPlan.dynamicTRValue = float(self.mpc.t_follow)
 
     longitudinalPlan.e2eX = self.mpc.e2e_x.tolist()
     longitudinalPlan.lead0Obstacle = self.mpc.lead_0_obstacle.tolist()

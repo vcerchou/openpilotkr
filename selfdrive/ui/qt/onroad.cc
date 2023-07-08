@@ -554,11 +554,125 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // current speed
+  float gas_opacity = a_req_v*255>255?255:a_req_v*255;
+  float brake_opacity = abs(a_req_v*175)>255?255:abs(a_req_v*175);
+  if (brake_pressed && !comma_stock_ui) {
+  	p.setPen(QColor(255, 0, 0, 255));
+  } else if (brake_light && speedStr == "0" && !comma_stock_ui) {
+    p.setPen(redColor(100));
+  } else if (gas_pressed && !comma_stock_ui) {
+    p.setPen(QColor(0, 240, 0, 255));
+  } else if (a_req_v < 0 && !comma_stock_ui) {
+    p.setPen(QColor((255-int(abs(a_req_v*8))), (255-int(brake_opacity)), (255-int(brake_opacity)), 255));
+  } else if (a_req_v > 0 && !comma_stock_ui) {
+    p.setPen(QColor((255-int(gas_opacity)), (255-int((a_req_v*10))), (255-int(gas_opacity)), 255));
+  }
   configFont(p, "Inter", 176, "Bold");
   drawText(p, rect().center().x(), 210, speedStr);
   configFont(p, "Inter", 66, "Regular");
   drawText(p, rect().center().x(), 290, speedUnit, 200);
 
+
+  // opkr
+  UIState *s = uiState();
+
+  p.setBrush(QColor(0, 0, 0, 0));
+  p.setPen(whiteColor(150));
+  //p.setRenderHint(QPainter::TextAntialiasing);
+  p.setOpacity(0.7);
+  int ui_viz_rx = bdr_s + 190;
+  int ui_viz_ry = bdr_s + 100;
+  int ui_viz_rx_center = s->fb_w/2;
+
+  // debug
+  int debug_y1 = 1010-bdr_s+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
+  int debug_y2 = 1050-bdr_s+(s->scene.mapbox_running ? 3:0)-(s->scene.animated_rpm?60:0);
+  int debug_y3 = 970-bdr_s+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
+  if (s->scene.nDebugUi1 && !comma_stock_ui) {
+    configFont(p, "Inter", s->scene.mapbox_running?20:25, "Semibold");
+    uiText(p, 205, debug_y1, s->scene.alertTextMsg1.c_str());
+    uiText(p, 205, debug_y2, s->scene.alertTextMsg2.c_str());
+  }
+  if (s->scene.nDebugUi3 && !comma_stock_ui) {
+    uiText(p, 205, debug_y3, s->scene.alertTextMsg3.c_str());
+  }
+  if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && !comma_stock_ui) {
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0: " + QString::fromStdString(s->scene.liveENaviData.eopkr0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+280, "1: " + QString::fromStdString(s->scene.liveENaviData.eopkr1));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+320, "2: " + QString::fromStdString(s->scene.liveENaviData.eopkr2));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+360, "3: " + QString::fromStdString(s->scene.liveENaviData.eopkr3));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+400, "4: " + QString::fromStdString(s->scene.liveENaviData.eopkr4));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+440, "5: " + QString::fromStdString(s->scene.liveENaviData.eopkr5));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+480, "6: " + QString::fromStdString(s->scene.liveENaviData.eopkr6));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+520, "7: " + QString::fromStdString(s->scene.liveENaviData.eopkr7));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+560, "8: " + QString::fromStdString(s->scene.liveENaviData.eopkr8));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+600, "9: " + QString::fromStdString(s->scene.liveENaviData.eopkr9));
+  }
+  if (s->scene.nDebugUi2 && !comma_stock_ui) {
+    configFont(p, "Inter", s->scene.mapbox_running?26:35, "Semibold");
+    uiText(p, ui_viz_rx, ui_viz_ry+240, "SR:" + QString::number(s->scene.liveParams.steerRatio, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+280, "AA:" + QString::number(s->scene.liveParams.angleOffsetAverage, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+320, "SF:" + QString::number(s->scene.liveParams.stiffnessFactor, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+360, "AD:" + QString::number(s->scene.steer_actuator_delay, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+400, "OS:" + QString::number(s->scene.output_scale, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.lProb, 'f', 2) + "|" + QString::number(s->scene.lateralPlan.rProb, 'f', 2));
+
+    QString szLaCMethod = "";
+    QString dszLaCMethodCur = "";
+    switch( s->scene.lateralControlMethod  )
+      {
+        case  0: szLaCMethod = "PID"; break;
+        case  1: szLaCMethod = "INDI"; break;
+        case  2: szLaCMethod = "LQR"; break;
+        case  3: szLaCMethod = "TORQUE"; break;
+        case  4: szLaCMethod = "MULTI"; break;
+      }
+    switch( (int)s->scene.multi_lat_selected  )
+      {
+        case  0: szLaCMethodCur = "PID"; break;
+        case  1: szLaCMethodCur = "INDI"; break;
+        case  2: szLaCMethodCur = "LQR"; break;
+        case  3: szLaCMethodCur = "TORQUE"; break;
+      }
+    if ( !s->scene.animated_rpm )
+    {
+      if( szLaCMethod )
+          drawText(p, ui_viz_rx_center, bdr_s+295, szLaCMethod );
+      if (s->scene.lateralControlMethod == 4) {
+        if( szLaCMethodCur )
+            drawText(p, ui_viz_rx_center, bdr_s+330, szLaCMethodCur );
+        }
+    } else {
+      if( szLaCMethod )
+          drawText(p, ui_viz_rx_center, bdr_s+320, szLaCMethod );
+      if (s->scene.lateralControlMethod == 4) {
+        if( szLaCMethodCur )
+            drawText(p, ui_viz_rx_center, bdr_s+355, szLaCMethodCur );
+        }
+    }
+    if (s->scene.navi_select == 1) {
+      if (s->scene.liveENaviData.eopkrsafetysign) uiText(p, ui_viz_rx, ui_viz_ry+560, "CS:" + QString::number(s->scene.liveENaviData.eopkrsafetysign, 'f', 0));
+      if (s->scene.liveENaviData.eopkrspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+600, "SL:" + QString::number(s->scene.liveENaviData.eopkrspeedlimit, 'f', 0) + "/DS:" + QString::number(s->scene.liveENaviData.eopkrsafetydist, 'f', 0));
+      if (s->scene.liveENaviData.eopkrturninfo) uiText(p, ui_viz_rx, ui_viz_ry+640, "TI:" + QString::number(s->scene.liveENaviData.eopkrturninfo, 'f', 0) + "/DT:" + QString::number(s->scene.liveENaviData.eopkrdisttoturn, 'f', 0));
+      if (s->scene.liveENaviData.eopkrroadlimitspeed > 0 && s->scene.liveENaviData.eopkrroadlimitspeed < 200) uiText(p, ui_viz_rx, ui_viz_ry+680, "RS:" + QString::number(s->scene.liveENaviData.eopkrroadlimitspeed, 'f', 0));
+      if (s->scene.liveENaviData.eopkrishighway || s->scene.liveENaviData.eopkristunnel) uiText(p, ui_viz_rx, ui_viz_ry+720, "H:" + QString::number(s->scene.liveENaviData.eopkrishighway, 'f', 0) + "/T:" + QString::number(s->scene.liveENaviData.eopkristunnel, 'f', 0));
+      //if (scene.liveENaviData.eopkrlinklength || scene.liveENaviData.eopkrcurrentlinkangle || scene.liveENaviData.eopkrnextlinkangle) uiText(p, ui_viz_rx, ui_viz_ry+840, "L:%d/C:%d/N:%d", scene.liveENaviData.eopkrlinklength, scene.liveENaviData.eopkrcurrentlinkangle, scene.liveENaviData.eopkrnextlinkangle);
+    } else if (s->scene.navi_select == 2) {
+      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+560, "AS:" + QString::number(s->scene.liveENaviData.ewazealertid, 'f', 0) + "/DS:" + QString::number(s->scene.liveENaviData.ewazealertdistance, 'f', 0));
+      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+600, "T:" + QString::fromStdString(s->scene.liveENaviData.ewazealerttype));
+      if (s->scene.liveENaviData.ewazecurrentspeed || s->scene.liveENaviData.ewazeroadspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+640, "CS:" + QString::number(s->scene.liveENaviData.ewazecurrentspeed, 'f', 0) + "/RS:" + QString::number(s->scene.liveENaviData.ewazeroadspeedlimit, 'f', 0));
+      if (s->scene.liveENaviData.ewazenavsign) uiText(p, ui_viz_rx, ui_viz_ry+680, "NS:" + QString::number(s->scene.liveENaviData.ewazenavsign, 'f', 0));
+      if (s->scene.liveENaviData.ewazenavdistance) uiText(p, ui_viz_rx, ui_viz_ry+720, "ND:" + QString::number(s->scene.liveENaviData.ewazenavdistance, 'f', 0));
+    }
+    if (s->scene.osm_enabled && !s->scene.OPKR_Debug) {
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:" + QString::number(s->scene.liveMapData.ospeedLimit, 'f', 0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+280, "SLA:" + QString::number(s->scene.liveMapData.ospeedLimitAhead, 'f', 0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+320, "SLAD:" + QString::number(s->scene.liveMapData.ospeedLimitAheadDistance, 'f', 0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+360, "TSL:" + QString::number(s->scene.liveMapData.oturnSpeedLimit, 'f', 0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+400, "TSLED:" + QString::number(s->scene.liveMapData.oturnSpeedLimitEndDistance, 'f', 0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+440, "TSLS:" + QString::number(s->scene.liveMapData.oturnSpeedLimitSign, 'f', 0));
+    }
+  }
   p.restore();
 }
 

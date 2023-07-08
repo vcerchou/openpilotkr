@@ -618,37 +618,30 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.lProb, 'f', 2) + "|" + QString::number(s->scene.lateralPlan.rProb, 'f', 2));
 
     QString szLaCMethod = "";
-    QString dszLaCMethodCur = "";
-    switch( s->scene.lateralControlMethod  )
-      {
-        case  0: szLaCMethod = "PID"; break;
-        case  1: szLaCMethod = "INDI"; break;
-        case  2: szLaCMethod = "LQR"; break;
-        case  3: szLaCMethod = "TORQUE"; break;
-        case  4: szLaCMethod = "MULTI"; break;
-      }
-    switch( (int)s->scene.multi_lat_selected  )
-      {
-        case  0: szLaCMethodCur = "PID"; break;
-        case  1: szLaCMethodCur = "INDI"; break;
-        case  2: szLaCMethodCur = "LQR"; break;
-        case  3: szLaCMethodCur = "TORQUE"; break;
-      }
-    if ( !s->scene.animated_rpm )
-    {
-      if( szLaCMethod )
-          drawText(p, ui_viz_rx_center, bdr_s+295, szLaCMethod );
+    QString szLaCMethodCur = "";
+    switch(s->scene.lateralControlMethod) {
+      case 0: szLaCMethod = "PID"; break;
+      case 1: szLaCMethod = "INDI"; break;
+      case 2: szLaCMethod = "LQR"; break;
+      case 3: szLaCMethod = "TORQUE"; break;
+      case 4: szLaCMethod = "MULTI"; break;
+    }
+    switch((int)s->scene.multi_lat_selected) {
+      case 0: szLaCMethodCur = "PID"; break;
+      case 1: szLaCMethodCur = "INDI"; break;
+      case 2: szLaCMethodCur = "LQR"; break;
+      case 3: szLaCMethodCur = "TORQUE"; break;
+    }
+    if (!s->scene.animated_rpm) {
+      if (szLaCMetho != "") drawText(p, ui_viz_rx_center, bdr_s+295, szLaCMethod);
       if (s->scene.lateralControlMethod == 4) {
-        if( szLaCMethodCur )
-            drawText(p, ui_viz_rx_center, bdr_s+330, szLaCMethodCur );
-        }
+        if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+330, szLaCMethodCur);
+      }
     } else {
-      if( szLaCMethod )
-          drawText(p, ui_viz_rx_center, bdr_s+320, szLaCMethod );
+      if(szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+320, szLaCMethod);
       if (s->scene.lateralControlMethod == 4) {
-        if( szLaCMethodCur )
-            drawText(p, ui_viz_rx_center, bdr_s+355, szLaCMethodCur );
-        }
+        if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+355, szLaCMethodCur);
+      }
     }
     if (s->scene.navi_select == 1) {
       if (s->scene.liveENaviData.eopkrsafetysign) uiText(p, ui_viz_rx, ui_viz_ry+560, "CS:" + QString::number(s->scene.liveENaviData.eopkrsafetysign, 'f', 0));

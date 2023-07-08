@@ -108,6 +108,7 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(int safety_speed MEMBER safety_speed);
   Q_PROPERTY(float safety_dist MEMBER safety_dist);
   Q_PROPERTY(int decel_off MEMBER decel_off);
+  Q_PROPERTY(bool record_stat MEMBER record_stat);
 
 public:
   explicit AnnotatedCameraWidget(VisionStreamType type, QWidget* parent = 0);
@@ -117,7 +118,7 @@ private:
   void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity);
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
   void uiText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
-  void debugText(QPainter &p, int x, int y, const QString &text, int alpha = 255, int fontsize = 30);
+  void debugText(QPainter &p, int x, int y, const QString &text, int alpha = 255, int fontsize = 30, bool bold = false);
   void paintEvent(QPaintEvent *event) override;
 
   ExperimentalButton *experimental_btn;
@@ -148,8 +149,10 @@ private:
   float dist_rel = 0;
   float vel_rel = 0;
   float ang_str = 0;
+  bool record_stat = false;
   int lane_stat = 0;
   bool laneless_stat = false;
+  bool mapbox_stat = false;
   bool dm_mode = false;
   int ss_elapsed = 0;
   bool standstill = false;

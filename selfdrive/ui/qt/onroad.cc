@@ -395,8 +395,10 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("dist_rel", drel);
   setProperty("vel_rel", vrel);
   setProperty("ang_str", s.scene.angleSteers);
+  setProperty("record_stat", s.scene.rec_stat);
   setProperty("lane_stat", s.scene.laneless_mode);
   setProperty("laneless_stat", s.scene.lateralPlan.lanelessModeStatus);
+  setProperty("mapbox_stat", s.scene.mapbox_running);
   setProperty("dm_mode", s.scene.monitoring_mode);
   setProperty("ss_elapsed", s.scene.lateralPlan.standstillElapsedTime);
   setProperty("standstill", s.scene.standStill);
@@ -660,7 +662,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       //if (scene.liveENaviData.eopkrlinklength || scene.liveENaviData.eopkrcurrentlinkangle || scene.liveENaviData.eopkrnextlinkangle) uiText(p, ui_viz_rx, ui_viz_ry+840, "L:%d/C:%d/N:%d", scene.liveENaviData.eopkrlinklength, scene.liveENaviData.eopkrcurrentlinkangle, scene.liveENaviData.eopkrnextlinkangle);
     } else if (s->scene.navi_select == 2) {
       if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+560, "AS:" + QString::number(s->scene.liveENaviData.ewazealertid, 'f', 0) + "/DS:" + QString::number(s->scene.liveENaviData.ewazealertdistance, 'f', 0));
-      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+600, "T:" + QString::fromStdString(s->scene.liveENaviData.ewazealerttype.c_str());
+      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+600, "T:" + QString::fromStdString(s->scene.liveENaviData.ewazealerttype));
       if (s->scene.liveENaviData.ewazecurrentspeed || s->scene.liveENaviData.ewazeroadspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+640, "CS:" + QString::number(s->scene.liveENaviData.ewazecurrentspeed, 'f', 0) + "/RS:" + QString::number(s->scene.liveENaviData.ewazeroadspeedlimit, 'f', 0));
       if (s->scene.liveENaviData.ewazenavsign) uiText(p, ui_viz_rx, ui_viz_ry+680, "NS:" + QString::number(s->scene.liveENaviData.ewazenavsign, 'f', 0));
       if (s->scene.liveENaviData.ewazenavdistance) uiText(p, ui_viz_rx, ui_viz_ry+720, "ND:" + QString::number(s->scene.liveENaviData.ewazenavdistance, 'f', 0));
@@ -969,7 +971,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   // opkr autohold
   if (auto_hold && !comma_stock_ui) {
     int y_pos = 0;
-    if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || standstill) && !s->scene.steer_wind_down && s->scene.car_state.getSteeringAngleDeg() < 90) {
+    if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || standstill) && s->scene.car_state.getSteeringAngleDeg() < 90) {
       y_pos = 500;
     } else {
       y_pos = 740;
@@ -1430,7 +1432,12 @@ void AnnotatedCameraWidget::showEvent(QShowEvent *event) {
   prev_draw_t = millis_since_boot();
 }
 
-void AnnotatedCameraWidget::debugText(QPainter &p, int x, int y, const QString &text, int alpha, int fontsize) {
+void AnnotatedCameraWidget::debugText(QPainter &p, int x, int y, const QString &text, int alpha, int fontsize, bool bold) {
+  if (bold) {
+    configFont(p, "Inter", fontsize, "Bold");
+  } else {
+    configFont(p, "Inter", fontsize, "SemiBold");
+  }
   configFont(p, "Inter", fontsize, "SemiBold");
   QFontMetrics fm(p.font());
   QRect init_rect = fm.boundingRect(text);

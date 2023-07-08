@@ -46,15 +46,15 @@ typedef struct Rect {
   }
 } Rect;
 
-const Rect rec_btn = {1745, 905, 140, 140};
-const Rect laneless_btn = {1585, 905, 140, 140};
+const Rect rec_btn = {1985, 905, 140, 140};
+const Rect laneless_btn = {1825, 905, 140, 140};
 const Rect monitoring_btn = {50, 770, 140, 150};
 const Rect stockui_btn = {15, 15, 184, 202};
-const Rect tuneui_btn = {1720, 15, 184, 202};
-const Rect livetunepanel_left_above_btn = {470, 570, 210, 170};
-const Rect livetunepanel_right_above_btn = {1240, 570, 210, 170};
-const Rect livetunepanel_left_btn = {470, 745, 210, 170};
-const Rect livetunepanel_right_btn = {1240, 745, 210, 170};
+const Rect tuneui_btn = {1960, 15, 184, 202};
+const Rect livetunepanel_left_above_btn = {590, 570, 210, 170};
+const Rect livetunepanel_right_above_btn = {1360, 570, 210, 170};
+const Rect livetunepanel_left_btn = {590, 745, 210, 170};
+const Rect livetunepanel_right_btn = {1360, 745, 210, 170};
 const Rect speedlimit_btn = {220, 15, 190, 190};
 
 struct Alert {
@@ -211,6 +211,7 @@ typedef struct UIScene {
   bool stand_still;
   bool show_error;
   int display_maxspeed_time = 0;
+  bool mapbox_running;
   int navi_select;
   bool tmux_error_check = false;
   bool speedlimit_signtype;

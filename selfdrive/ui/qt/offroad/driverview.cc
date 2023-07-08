@@ -6,6 +6,7 @@
 #include "selfdrive/ui/qt/util.h"
 
 const int FACE_IMG_SIZE = 130;
+bool infill = false;
 
 DriverViewWindow::DriverViewWindow(QWidget* parent) : QWidget(parent) {
   setAttribute(Qt::WA_OpaquePaintEvent);
@@ -21,7 +22,16 @@ DriverViewWindow::DriverViewWindow(QWidget* parent) : QWidget(parent) {
   layout->setCurrentWidget(scene);
 }
 
-void DriverViewWindow::mouseReleaseEvent(QMouseEvent* e) {
+void DriverViewWindow::mousePressEvent(QMouseEvent* e) {
+  if (d_rec_btn.contains(e->pos())) {
+    infill = !infill;
+    if (infill) {
+
+    } else {
+
+    }
+    return;
+  }
   cameraView->stopVipcThread();
   emit done();
 }
@@ -89,4 +99,30 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
   const int img_y = rect().bottom() - FACE_IMG_SIZE - img_offset;
   p.setOpacity(face_detected ? 1.0 : 0.2);
   p.drawPixmap(img_x, img_y, face_img);
+
+  // opkr
+  if (frame_updated) {
+    p.setPen(QColor(0xff, 0xff, 0xff));
+    p.setOpacity(1.0);
+    p.setRenderHint(QPainter::TextAntialiasing);
+    configFont(p, "Open Sans", 50, "Regular");
+
+    p.drawText(1050, 50, "faceProb:  " + QString::number(driver_data.getFaceProb(), 'f', 2));
+
+    p.drawText(1050, 150, "leftEyeProb:  " + QString::number(driver_data.getLeftEyeProb(), 'f', 2));
+    p.drawText(1050, 200, "rightEyeProb:  " + QString::number(driver_data.getRightEyeProb(), 'f', 2));
+    p.drawText(1050, 250, "leftBlinkProb:  " + QString::number(driver_data.getLeftBlinkProb(), 'f', 2));
+    p.drawText(1050, 300, "rightBlinkProb:  " + QString::number(driver_data.getRightBlinkProb(), 'f', 2));
+    p.drawText(1050, 400, "sunglassesProb:  " + QString::number(driver_data.getSunglassesProb(), 'f', 2));
+
+    p.drawText(1050, 500, "poorVision:  " + QString::number(driver_state.getPoorVision(), 'f', 2));
+
+    QRect rec = {1985, 905, 140, 140};
+    p.setBrush(Qt::NoBrush);
+    if (infill) p.setBrush(Qt::red);
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawEllipse(rec);
+    p.setPen(QColor(255, 255, 255, 200));
+    p.drawText(rec, Qt::AlignCenter, QString("REC"));
+  }
 }

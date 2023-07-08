@@ -39,10 +39,11 @@ signals:
   void done();
 
 protected:
-  void mouseReleaseEvent(QMouseEvent* e) override;
+  void mousePressEvent(QMouseEvent* e) override;
 
 private:
   CameraWidget *cameraView;
   DriverViewScene *scene;
   QStackedLayout *layout;
+  const QRect d_rec_btn = QRect(1985, 905, 140, 140);
 };

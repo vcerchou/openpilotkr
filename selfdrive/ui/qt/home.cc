@@ -323,7 +323,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
   QRect livetunepanel_left_btn = QRect(590, 745, 210, 170);
   QRect livetunepanel_right_btn = QRect(1360, 745, 210, 170);
 
-  printf( "mousePressEvent = (%d,%d)\n", e->pos() );
+  printf( "mousePressEvent = (%d,%d)\n", e->x(), e->y() );
 
   // OPKR REC
   if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
@@ -380,7 +380,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos() && uiState()->scene.mapbox_running)) {
+  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
     uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
     if (uiState()->scene.opkr_livetune_ui) {
       Params().putBool("OpkrLiveTunePanelEnable", true);
@@ -603,7 +603,7 @@ void OffroadHome::hideEvent(QHideEvent *event) {
 }
 
 void OffroadHome::refresh() {
-  version->setText("OPKR" + " " +  QString::fromStdString(params.get("UpdaterCurrentDescription")));
+  version->setText("OPKR " + QString::fromStdString(params.get("UpdaterCurrentDescription")));
 
   bool updateAvailable = update_widget->refresh();
   int alerts = alerts_widget->refresh();

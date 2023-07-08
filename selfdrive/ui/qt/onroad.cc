@@ -245,7 +245,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.setRenderHint(QPainter::Antialiasing);
 
-  QPoint center(btn_size / 2, btn_size / 2);
+  //QPoint center(btn_size / 2, btn_size / 2);
   QPixmap img = isChecked() ? experimental_img : engage_img;
 
   // engage-ability icon
@@ -598,16 +598,16 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     uiText(p, 205, debug_y3, s->scene.alertTextMsg3.c_str());
   }
   if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && !comma_stock_ui) {
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0:%s", s->scene.liveENaviData.eopkr0.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+280, "1:%s", s->scene.liveENaviData.eopkr1.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+320, "2:%s", s->scene.liveENaviData.eopkr2.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+360, "3:%s", s->scene.liveENaviData.eopkr3.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+400, "4:%s", s->scene.liveENaviData.eopkr4.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+440, "5:%s", s->scene.liveENaviData.eopkr5.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+480, "6:%s", s->scene.liveENaviData.eopkr6.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+520, "7:%s", s->scene.liveENaviData.eopkr7.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+560, "8:%s", s->scene.liveENaviData.eopkr8.c_str());
-      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+600, "9:%s", s->scene.liveENaviData.eopkr9.c_str());
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0: " + QString::fromStdString(s->scene.liveENaviData.eopkr0));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+280, "1: " + QString::fromStdString(s->scene.liveENaviData.eopkr1));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+320, "2: " + QString::fromStdString(s->scene.liveENaviData.eopkr2));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+360, "3: " + QString::fromStdString(s->scene.liveENaviData.eopkr3));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+400, "4: " + QString::fromStdString(s->scene.liveENaviData.eopkr4));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+440, "5: " + QString::fromStdString(s->scene.liveENaviData.eopkr5));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+480, "6: " + QString::fromStdString(s->scene.liveENaviData.eopkr6));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+520, "7: " + QString::fromStdString(s->scene.liveENaviData.eopkr7));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+560, "8: " + QString::fromStdString(s->scene.liveENaviData.eopkr8));
+      uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+600, "9: " + QString::fromStdString(s->scene.liveENaviData.eopkr9));
   }
   if (s->scene.nDebugUi2 && !comma_stock_ui) {
     configFont(p, "Inter", s->scene.mapbox_running?26:35, "Semibold");
@@ -652,18 +652,18 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         }
     }
     if (s->scene.navi_select == 1) {
-      if (s->scene.liveENaviData.eopkrsafetysign) uiText(p, ui_viz_rx, ui_viz_ry+560, "CS:%d", s->scene.liveENaviData.eopkrsafetysign);
-      if (s->scene.liveENaviData.eopkrspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+600, "SL:%d/DS:%.0f", s->scene.liveENaviData.eopkrspeedlimit, s->scene.liveENaviData.eopkrsafetydist);
-      if (s->scene.liveENaviData.eopkrturninfo) uiText(p, ui_viz_rx, ui_viz_ry+640, "TI:%d/DT:%.0f", s->scene.liveENaviData.eopkrturninfo, s->scene.liveENaviData.eopkrdisttoturn);
-      if (s->scene.liveENaviData.eopkrroadlimitspeed > 0 && s->scene.liveENaviData.eopkrroadlimitspeed < 200) uiText(p, ui_viz_rx, ui_viz_ry+680, "RS:%d", s->scene.liveENaviData.eopkrroadlimitspeed);
-      if (s->scene.liveENaviData.eopkrishighway || s->scene.liveENaviData.eopkristunnel) uiText(p, ui_viz_rx, ui_viz_ry+720, "H:%d/T:%d", s->scene.liveENaviData.eopkrishighway, s->scene.liveENaviData.eopkristunnel);
+      if (s->scene.liveENaviData.eopkrsafetysign) uiText(p, ui_viz_rx, ui_viz_ry+560, "CS:" + QString::number(s->scene.liveENaviData.eopkrsafetysign, 'f', 0));
+      if (s->scene.liveENaviData.eopkrspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+600, "SL:" + QString::number(s->scene.liveENaviData.eopkrspeedlimit, 'f', 0) + "/DS:" + QString::number(s->scene.liveENaviData.eopkrsafetydist, 'f', 0));
+      if (s->scene.liveENaviData.eopkrturninfo) uiText(p, ui_viz_rx, ui_viz_ry+640, "TI:" + QString::number(s->scene.liveENaviData.eopkrturninfo, 'f', 0) + "/DT:" + QString::number(s->scene.liveENaviData.eopkrdisttoturn, 'f', 0));
+      if (s->scene.liveENaviData.eopkrroadlimitspeed > 0 && s->scene.liveENaviData.eopkrroadlimitspeed < 200) uiText(p, ui_viz_rx, ui_viz_ry+680, "RS:" + QString::number(s->scene.liveENaviData.eopkrroadlimitspeed, 'f', 0));
+      if (s->scene.liveENaviData.eopkrishighway || s->scene.liveENaviData.eopkristunnel) uiText(p, ui_viz_rx, ui_viz_ry+720, "H:" + QString::number(s->scene.liveENaviData.eopkrishighway, 'f', 0) + "/T:" + QString::number(s->scene.liveENaviData.eopkristunnel, 'f', 0));
       //if (scene.liveENaviData.eopkrlinklength || scene.liveENaviData.eopkrcurrentlinkangle || scene.liveENaviData.eopkrnextlinkangle) uiText(p, ui_viz_rx, ui_viz_ry+840, "L:%d/C:%d/N:%d", scene.liveENaviData.eopkrlinklength, scene.liveENaviData.eopkrcurrentlinkangle, scene.liveENaviData.eopkrnextlinkangle);
     } else if (s->scene.navi_select == 2) {
-      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+560, "AS:%d/DS:%d", s->scene.liveENaviData.ewazealertid, s->scene.liveENaviData.ewazealertdistance);
-      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+600, "T:%s", s->scene.liveENaviData.ewazealerttype.c_str());
-      if (s->scene.liveENaviData.ewazecurrentspeed || s->scene.liveENaviData.ewazeroadspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+640, "CS:%d/RS:%d", s->scene.liveENaviData.ewazecurrentspeed, s->scene.liveENaviData.ewazeroadspeedlimit);
-      if (s->scene.liveENaviData.ewazenavsign) uiText(p, ui_viz_rx, ui_viz_ry+680, "NS:%d", s->scene.liveENaviData.ewazenavsign);
-      if (s->scene.liveENaviData.ewazenavdistance) uiText(p, ui_viz_rx, ui_viz_ry+720, "ND:%d", s->scene.liveENaviData.ewazenavdistance);
+      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+560, "AS:" + QString::number(s->scene.liveENaviData.ewazealertid, 'f', 0) + "/DS:" + QString::number(s->scene.liveENaviData.ewazealertdistance, 'f', 0));
+      if (s->scene.liveENaviData.ewazealertdistance) uiText(p, ui_viz_rx, ui_viz_ry+600, "T:" + QString::fromStdString(s->scene.liveENaviData.ewazealerttype.c_str());
+      if (s->scene.liveENaviData.ewazecurrentspeed || s->scene.liveENaviData.ewazeroadspeedlimit) uiText(p, ui_viz_rx, ui_viz_ry+640, "CS:" + QString::number(s->scene.liveENaviData.ewazecurrentspeed, 'f', 0) + "/RS:" + QString::number(s->scene.liveENaviData.ewazeroadspeedlimit, 'f', 0));
+      if (s->scene.liveENaviData.ewazenavsign) uiText(p, ui_viz_rx, ui_viz_ry+680, "NS:" + QString::number(s->scene.liveENaviData.ewazenavsign, 'f', 0));
+      if (s->scene.liveENaviData.ewazenavdistance) uiText(p, ui_viz_rx, ui_viz_ry+720, "ND:" + QString::number(s->scene.liveENaviData.ewazenavdistance, 'f', 0));
     }
     if (s->scene.osm_enabled && !s->scene.OPKR_Debug) {
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+240, "SL:" + QString::number(s->scene.liveMapData.ospeedLimit, 'f', 0));
@@ -771,7 +771,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int sp_xr = rect().right() - bdr_s - width_r / 2 - 10;
     int sp_yr = bdr_s + 260;
     int num_r = 1;
-    if (s->scene.batt_less) {num_r = num_r + 1;} else {num_r = num_r + 2;}
+    num_r = num_r + 1;
     if (s->scene.gpsAccuracyUblox != 0.00) {num_r = num_r + 2;}
     QRect right_panel(rect().right() - bdr_s - width_r, bdr_s + 200, width_r, 104*num_r);  
     p.setOpacity(1.0);
@@ -836,10 +836,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.drawText(0, 0, "m");
       p.resetMatrix();
     }
-  }
 
-  // opkr tpms
-  if (!comma_stock_ui) {
+    // opkr tpms
     int tpms_width = 180;
     int tpms_sp_xr = rect().right() - bdr_s - tpms_width / 2;
     int tpms_sp_yr = sp_yr + j_num;
@@ -925,6 +923,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
   }
+
 
   if (!comma_stock_ui) {
     // opkr rec

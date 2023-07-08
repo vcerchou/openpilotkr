@@ -115,8 +115,6 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
     p.drawText(1050, 300, "rightBlinkProb:  " + QString::number(driver_data.getRightBlinkProb(), 'f', 2));
     p.drawText(1050, 400, "sunglassesProb:  " + QString::number(driver_data.getSunglassesProb(), 'f', 2));
 
-    p.drawText(1050, 500, "poorVision:  " + QString::number(driver_state.getPoorVision(), 'f', 2));
-
     QRect rec = {1985, 905, 140, 140};
     p.setBrush(Qt::NoBrush);
     if (infill) p.setBrush(Qt::red);

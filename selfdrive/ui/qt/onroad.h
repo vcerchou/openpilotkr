@@ -53,7 +53,7 @@ protected:
 
 private:
   void paintEvent(QPaintEvent *event) override;
-  void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity, bool rotation = false, float angle = 0);
+  void drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation = false, float angle = 0);
   void debugText(QPainter &p, int x, int y, const QString &text, int alpha = 255, int fontsize = 30, bool bold = false);
 
   Params params;
@@ -92,7 +92,6 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(float dist_rel MEMBER dist_rel);
   Q_PROPERTY(float vel_rel MEMBER vel_rel);
   Q_PROPERTY(float ang_str MEMBER ang_str);
-  Q_PROPERTY(bool record_stat MEMBER record_stat);
   Q_PROPERTY(int lane_stat MEMBER lane_stat);
   Q_PROPERTY(bool laneless_stat MEMBER laneless_stat);
   Q_PROPERTY(bool dm_mode MEMBER dm_mode);
@@ -149,7 +148,6 @@ private:
   float dist_rel = 0;
   float vel_rel = 0;
   float ang_str = 0;
-  bool record_stat = false;
   int lane_stat = 0;
   bool laneless_stat = false;
   bool dm_mode = false;

@@ -378,9 +378,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   bool comma_ui = s.scene.comma_stock_ui;
 
   if (s.scene.navi_select == 2) {
-    over_sl = s.scene.limitspeedcamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
+    over_sl = s.scene.limitSpeedCamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
   } else if (s.scene.navi_select == 1 && (s.scene.mapSign != 20 && s.scene.mapSign != 21)) {
-    over_sl = s.scene.limitspeedcamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
+    over_sl = s.scene.limitSpeedCamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
   }
 
   auto lead_one = sm["radarState"].getRadarState().getLeadOne();
@@ -395,7 +395,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("dist_rel", drel);
   setProperty("vel_rel", vrel);
   setProperty("ang_str", s.scene.angleSteers);
-  setProperty("record_stat", s.scene.rec_stat);
   setProperty("lane_stat", s.scene.laneless_mode);
   setProperty("laneless_stat", s.scene.lateralPlan.lanelessModeStatus);
   setProperty("dm_mode", s.scene.monitoring_mode);

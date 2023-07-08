@@ -323,15 +323,15 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
   QRect livetunepanel_left_btn = QRect(590, 745, 210, 170);
   QRect livetunepanel_right_btn = QRect(1360, 745, 210, 170);
 
-  printf( "mousePressEvent = (%d,%d)\n", e->x(), e->y() );
+  printf( "mousePressEvent = (%d,%d)\n", e->pos() );
 
   // OPKR REC
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->x(), e->y()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
     uiState()->scene.touched = true;
     return;
   }
   // Laneless mode
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->x(), e->y()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
     uiState()->scene.laneless_mode = uiState()->scene.laneless_mode + 1;
     if (uiState()->scene.laneless_mode > 2) {
       uiState()->scene.laneless_mode = 0;
@@ -346,7 +346,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // Monitoring mode
-  if (uiState()->scene.started && !sidebar->isVisible() && monitoring_btn.contains(e->x(), e->y()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && monitoring_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
     uiState()->scene.monitoring_mode = !uiState()->scene.monitoring_mode;
     if (uiState()->scene.monitoring_mode) {
       Params().putBool("OpkrMonitoringMode", true);
@@ -356,7 +356,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // Stock UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && stockui_btn.contains(e->x(), e->y())) {
+  if (uiState()->scene.started && !sidebar->isVisible() && stockui_btn.contains(e->pos())) {
     uiState()->scene.comma_stock_ui = uiState()->scene.comma_stock_ui + 1;
     if (uiState()->scene.do_not_disturb_mode > 0) {
       if (uiState()->scene.comma_stock_ui > 2) {
@@ -380,7 +380,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->x(), e->y() && uiState()->scene.mapbox_running)) {
+  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos() && uiState()->scene.mapbox_running)) {
     uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
     if (uiState()->scene.opkr_livetune_ui) {
       Params().putBool("OpkrLiveTunePanelEnable", true);
@@ -392,7 +392,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // SpeedLimit Decel on/off Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && speedlimit_btn.contains(e->x(), e->y())) {
+  if (uiState()->scene.started && !sidebar->isVisible() && speedlimit_btn.contains(e->pos())) {
     uiState()->scene.sl_decel_off = !uiState()->scene.sl_decel_off;
     if (uiState()->scene.sl_decel_off) {
       Params().putBool("SpeedLimitDecelOff", true);
@@ -405,11 +405,11 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
   if (uiState()->scene.live_tune_panel_enable && uiState()->scene.started && !sidebar->isVisible()) {
     int nBtnDir = 0;
 
-    if (livetunepanel_left_btn.contains(e->x(), e->y())) {
+    if (livetunepanel_left_btn.contains(e->pos())) {
       nBtnDir = -1;
-    } else if (livetunepanel_right_btn.contains(e->x(), e->y())) {
+    } else if (livetunepanel_right_btn.contains(e->pos())) {
       nBtnDir = 1;
-    } else if (livetunepanel_left_above_btn.contains(e->x(), e->y())) {
+    } else if (livetunepanel_left_above_btn.contains(e->pos())) {
       uiState()->scene.live_tune_panel_list -= 1;
       int nLoop = 2;
 
@@ -427,7 +427,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
       uiState()->scene.live_tune_panel_list = uiState()->scene.list_count + nLoop;
       //clip( uiState()->scene.live_tune_panel_list, 1, 0 );
       return;
-    } else if (livetunepanel_right_above_btn.contains(e->x(), e->y())) {
+    } else if (livetunepanel_right_above_btn.contains(e->pos())) {
       uiState()->scene.live_tune_panel_list += 1;
       int nLoop = uiState()->scene.list_count;
 

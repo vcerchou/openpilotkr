@@ -666,6 +666,444 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 150:200), ui_viz_ry+440, "TSLS:" + QString::number(s->scene.liveMapData.oturnSpeedLimitSign, 'f', 0));
     }
   }
+
+  if (!comma_stock_ui) {
+    int j_num = 100;
+    // opkr debug info(left panel)
+    int width_l = 180;
+    int sp_xl = rect().left() + bdr_s + width_l / 2 - 10;
+    int sp_yl = bdr_s + 260;
+    int num_l = 4;
+    if (s->scene.longitudinal_control) {num_l = num_l + 1;}
+    QRect left_panel(rect().left() + bdr_s, bdr_s + 200, width_l, 104*num_l);  
+    p.setOpacity(1.0);
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawRoundedRect(left_panel, 20, 20);
+    p.setPen(whiteColor(200));
+    //p.setRenderHint(QPainter::TextAntialiasing);
+    // lead drel
+    if (lead_stat) {
+      if (dist_rel < 5) {
+        p.setPen(redColor(200));
+      } else if (int(dist_rel) < 15) {
+        p.setPen(orangeColor(200));
+      }
+      if (dist_rel < 10) {
+        debugText(p, sp_xl, sp_yl, QString::number(dist_rel, 'f', 1), 150, 58);
+      } else {
+        debugText(p, sp_xl, sp_yl, QString::number(dist_rel, 'f', 0), 150, 58);
+      }
+    }
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xl, sp_yl + 35, QString("REL DIST"), 150, 27);
+    p.translate(sp_xl + 90, sp_yl + 20);
+    p.rotate(-90);
+    p.drawText(0, 0, "m");
+    p.resetMatrix();
+    // lead spd
+    sp_yl = sp_yl + j_num;
+    if (int(vel_rel) < -5) {
+      p.setPen(redColor(200));
+    } else if (int(vel_rel) < 0) {
+      p.setPen(orangeColor(200));
+    }
+    if (lead_stat) {
+      debugText(p, sp_xl, sp_yl, QString::number(vel_rel * (s->scene.is_metric ? 3.6 : 2.2369363), 'f', 0), 150, 58);
+    } else {
+      debugText(p, sp_xl, sp_yl, "-", 150, 58);
+    }
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xl, sp_yl + 35, QString("REL SPED"), 150, 27);
+    p.translate(sp_xl + 90, sp_yl + 20);
+    p.rotate(-90);
+    if (s->scene.is_metric) {p.drawText(0, 0, "km/h");} else {p.drawText(0, 0, "mi/h");}
+    p.resetMatrix();
+    // steer angle
+    sp_yl = sp_yl + j_num;
+    p.setPen(greenColor(200));
+    if ((int(ang_str) < -50) || (int(ang_str) > 50)) {
+      p.setPen(redColor(200));
+    } else if ((int(ang_str) < -30) || (int(ang_str) > 30)) {
+      p.setPen(orangeColor(200));
+    }
+    debugText(p, sp_xl, sp_yl, QString::number(ang_str, 'f', 0), 150, 58);
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xl, sp_yl + 35, QString("STER ANG"), 150, 27);
+    p.translate(sp_xl + 90, sp_yl + 20);
+    p.rotate(-90);
+    p.drawText(0, 0, "       °");
+    p.resetMatrix();
+    // steer ratio
+    sp_yl = sp_yl + j_num;
+    debugText(p, sp_xl, sp_yl, QString::number(s->scene.steerRatio, 'f', 2), 150, 58);
+    debugText(p, sp_xl, sp_yl + 35, QString("SteerRatio"), 150, 27);
+    // cruise gap for long
+    if (s->scene.longitudinal_control) {
+      sp_yl = sp_yl + j_num;
+      if (s->scene.controls_state.getEnabled()) {
+        if (s->scene.cruise_gap == s->scene.dynamic_tr_mode) {
+          debugText(p, sp_xl, sp_yl, "AUT", 150, 58);
+        } else {
+          debugText(p, sp_xl, sp_yl, QString::number(s->scene.cruise_gap, 'f', 0), 150, 58);
+        }
+      } else {
+        debugText(p, sp_xl, sp_yl, "-", 150, 58);
+      }
+      debugText(p, sp_xl, sp_yl + 35, QString("CruiseGap"), 150, 27);
+      if (s->scene.cruise_gap == s->scene.dynamic_tr_mode) {
+        p.translate(sp_xl + 90, sp_yl + 20);
+        p.rotate(-90);
+        p.drawText(0, 0, QString::number(s->scene.dynamic_tr_value, 'f', 0));
+        p.resetMatrix();
+      }
+    }
+
+    // opkr debug info(right panel)
+    int width_r = 180;
+    int sp_xr = rect().right() - bdr_s - width_r / 2 - 10;
+    int sp_yr = bdr_s + 260;
+    int num_r = 1;
+    num_r = num_r + 1;
+    if (s->scene.gpsAccuracyUblox != 0.00) {num_r = num_r + 2;}
+    QRect right_panel(rect().right() - bdr_s - width_r, bdr_s + 200, width_r, 104*num_r);  
+    p.setOpacity(1.0);
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawRoundedRect(right_panel, 20, 20);
+    p.setPen(whiteColor(200));
+    //p.setRenderHint(QPainter::TextAntialiasing);
+    // cpu temp
+    if (s->scene.cpuTemp > 85) {
+      p.setPen(redColor(200));
+    } else if (s->scene.cpuTemp > 75) {
+      p.setPen(orangeColor(200));
+    }
+    debugText(p, sp_xr, sp_yr, QString::number(s->scene.cpuTemp, 'f', 0) + "°C", 150, 58);
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xr, sp_yr + 35, QString("CPU TEMP"), 150, 27);
+    p.translate(sp_xr + 90, sp_yr + 20);
+    p.rotate(-90);
+    p.drawText(0, 0, QString::number(s->scene.cpuPerc, 'f', 0) + "%");
+    p.resetMatrix();
+    // sys temp
+    sp_yr = sp_yr + j_num;
+    if (s->scene.ambientTemp > 50) {
+      p.setPen(redColor(200));
+    } else if (s->scene.ambientTemp > 45) {
+      p.setPen(orangeColor(200));
+    } 
+    debugText(p, sp_xr, sp_yr, QString::number(s->scene.ambientTemp, 'f', 0) + "°C", 150, 58);
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xr, sp_yr + 35, QString("SYS TEMP"), 150, 27);
+    p.translate(sp_xr + 90, sp_yr + 20);
+    p.rotate(-90);
+    p.drawText(0, 0, QString::number(s->scene.fanSpeed/1000, 'f', 0));
+    p.resetMatrix();
+    // Ublox GPS accuracy
+    if (s->scene.gpsAccuracyUblox != 0.00) {
+      sp_yr = sp_yr + j_num;
+      if (s->scene.gpsAccuracyUblox > 1.3) {
+        p.setPen(redColor(200));
+      } else if (s->scene.gpsAccuracyUblox > 0.85) {
+        p.setPen(orangeColor(200));
+      }
+      if (s->scene.gpsAccuracyUblox > 99 || s->scene.gpsAccuracyUblox == 0) {
+        debugText(p, sp_xr, sp_yr, "None", 150, 58);
+      } else if (s->scene.gpsAccuracyUblox > 9.99) {
+        debugText(p, sp_xr, sp_yr, QString::number(s->scene.gpsAccuracyUblox, 'f', 1), 150, 58);
+      } else {
+        debugText(p, sp_xr, sp_yr, QString::number(s->scene.gpsAccuracyUblox, 'f', 2), 150, 58);
+      }
+      p.setPen(whiteColor(200));
+      debugText(p, sp_xr, sp_yr + 35, QString("GPS PREC"), 150, 27);
+      p.translate(sp_xr + 90, sp_yr + 20);
+      p.rotate(-90);
+      p.drawText(0, 0, QString::number(s->scene.satelliteCount, 'f', 0));
+      p.resetMatrix();
+      // altitude
+      sp_yr = sp_yr + j_num;
+      debugText(p, sp_xr, sp_yr, QString::number(s->scene.altitudeUblox, 'f', 0), 150, 58);
+      debugText(p, sp_xr, sp_yr + 35, QString("ALTITUDE"), 150, 27);
+      p.translate(sp_xr + 90, sp_yr + 20);
+      p.rotate(-90);
+      p.drawText(0, 0, "m");
+      p.resetMatrix();
+    }
+
+    // opkr tpms
+    int tpms_width = 180;
+    int tpms_sp_xr = rect().right() - bdr_s - tpms_width / 2;
+    int tpms_sp_yr = sp_yr + j_num;
+    QRect tpms_panel(rect().right() - bdr_s - tpms_width, tpms_sp_yr - 20, tpms_width, 130);  
+    p.setOpacity(1.0);
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawRoundedRect(tpms_panel, 20, 20);
+    p.setPen(QColor(255, 255, 255, 200));
+    //p.setRenderHint(QPainter::TextAntialiasing);
+    float maxv = 0;
+    float minv = 300;
+    int font_size = 60;
+
+    if (maxv < s->scene.tpmsPressureFl) {maxv = s->scene.tpmsPressureFl;}
+    if (maxv < s->scene.tpmsPressureFr) {maxv = s->scene.tpmsPressureFr;}
+    if (maxv < s->scene.tpmsPressureRl) {maxv = s->scene.tpmsPressureRl;}
+    if (maxv < s->scene.tpmsPressureRr) {maxv = s->scene.tpmsPressureRr;}
+    if (minv > s->scene.tpmsPressureFl) {minv = s->scene.tpmsPressureFl;}
+    if (minv > s->scene.tpmsPressureFr) {minv = s->scene.tpmsPressureFr;}
+    if (minv > s->scene.tpmsPressureRl) {minv = s->scene.tpmsPressureRl;}
+    if (minv > s->scene.tpmsPressureRr) {minv = s->scene.tpmsPressureRr;}
+
+    if (((maxv - minv) > 3 && s->scene.tpmsUnit != 2) || ((maxv - minv) > 0.2 && s->scene.tpmsUnit == 2)) {
+      p.setBrush(QColor(255, 0, 0, 150));
+    }
+    if (s->scene.tpmsUnit != 0) {
+      debugText(p, tpms_sp_xr, tpms_sp_yr+15, "TPMS", 150, 33);
+      font_size = (s->scene.tpmsUnit == 2) ? 60 : 55;
+    } else {
+      debugText(p, tpms_sp_xr, tpms_sp_yr+15, "TPMS(psi)", 150, 33);
+      font_size = 65;
+    }
+    if ((s->scene.tpmsPressureFl < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFl < 2.2 && s->scene.tpmsUnit == 2)) {
+      p.setPen(yellowColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else if (s->scene.tpmsPressureFl > 50) {
+      p.setPen(whiteColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, "N/A", 200, font_size);
+    } else if ((s->scene.tpmsPressureFl > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFl > 2.8 && s->scene.tpmsUnit == 2)) {
+      p.setPen(redColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else {
+      p.setPen(greenColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    }
+    if ((s->scene.tpmsPressureFr < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFr < 2.2 && s->scene.tpmsUnit == 2)) {
+      p.setPen(yellowColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else if (s->scene.tpmsPressureFr > 50) {
+      p.setPen(whiteColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, "N/A", 200, font_size);
+    } else if ((s->scene.tpmsPressureFr > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFr > 2.8 && s->scene.tpmsUnit == 2)) {
+      p.setPen(redColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else {
+      p.setPen(greenColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    }
+    if ((s->scene.tpmsPressureRl < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRl < 2.2 && s->scene.tpmsUnit == 2)) {
+      p.setPen(yellowColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else if (s->scene.tpmsPressureRl > 50) {
+      p.setPen(whiteColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, "N/A", 200, font_size);
+    } else if ((s->scene.tpmsPressureRl > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRl > 2.8 && s->scene.tpmsUnit == 2)) {
+      p.setPen(redColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else {
+      p.setPen(greenColor(200));
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    }
+    if ((s->scene.tpmsPressureRr < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRr < 2.2 && s->scene.tpmsUnit == 2)) {
+      p.setPen(yellowColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else if (s->scene.tpmsPressureRr > 50) {
+      p.setPen(whiteColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, "N/A", 200, font_size);
+    } else if ((s->scene.tpmsPressureRr > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRr > 2.8 && s->scene.tpmsUnit == 2)) {
+      p.setPen(redColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    } else {
+      p.setPen(greenColor(200));
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+    }
+  }
+
+
+  if (!comma_stock_ui) {
+    // opkr rec
+    QRect recbtn_draw(rect().right() - bdr_s - 140 - 20, 905, 140, 140);
+    p.setBrush(Qt::NoBrush);
+    if (record_stat) p.setBrush(redColor(150));
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawEllipse(recbtn_draw);
+    p.setPen(whiteColor(200));
+    p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
+
+    // opkr lane selector
+    QRect lanebtn_draw(rect().right() - bdr_s - 140 - 20 - 160, 905, 140, 140);
+    p.setBrush(Qt::NoBrush);
+    if (laneless_stat) p.setBrush(greenColor(150));
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawEllipse(lanebtn_draw);
+    p.setPen(whiteColor(200));
+    if (lane_stat == 0) {
+      configFont(p, "Inter", 39, "SemiBold");
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 890, 140, 140), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 920, 140, 140), Qt::AlignCenter, QString("LINE"));
+    } else if (lane_stat == 1) {
+      configFont(p, "Inter", 39, "SemiBold");
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 890, 140, 140), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 920, 140, 140), Qt::AlignCenter, QString("LESS"));
+    } else if (lane_stat == 2) {
+      p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
+    }
+  }
+  // opkr standstill
+  if (standstill && !comma_stock_ui) {
+    int minute = 0;
+    int second = 0;
+    minute = int(ss_elapsed / 60);
+    second = int(ss_elapsed) - (minute * 60);
+    p.setPen(ochreColor(220));
+    debugText(p, mapbox_stat?(rect().right()-bdr_s-295):(rect().right()-bdr_s-545), bdr_s+420, "STOP", 220, mapbox_stat?85:130);
+    p.setPen(whiteColor(220));
+    debugText(p, mapbox_stat?(rect().right()-bdr_s-295):(rect().right()-bdr_s-545), mapbox_stat?bdr_s+500:bdr_s+550, QString::number(minute).rightJustified(2,'0') + ":" + QString::number(second).rightJustified(2,'0'), 220, mapbox_stat?95:140);
+  }
+
+  // opkr autohold
+  if (auto_hold && !comma_stock_ui) {
+    int y_pos = 0;
+    if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || standstill) && s->scene.car_state.getSteeringAngleDeg() < 90) {
+      y_pos = 500;
+    } else {
+      y_pos = 740;
+    }
+    int width = 500;
+    int a_center = s->fb_w/2;
+    QRect ah_rect(a_center - width/2, y_pos, width, 145);
+    p.setBrush(Qt::NoBrush);
+    p.setBrush(blackColor(80));
+    p.setPen(QPen(QColor(255, 255, 255, 50), 10));
+    p.drawRoundedRect(ah_rect, 20, 20);
+    p.setPen(greenColor(150));
+    debugText(p, a_center, y_pos + 99, "AUTO HOLD", 150, 79, true);
+  }
+
+  // opkr blinker
+  if (!comma_stock_ui) {
+    float bw = 0;
+    float bx = 0;
+    float bh = 0;
+    if (left_blinker) {
+      bw = 250;
+      bx = s->fb_w/2 - bw/2;
+      bh = 400;
+      QPointF leftbsign1[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
+      bx -= 125;
+      QPointF leftbsign2[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
+      bx -= 125;
+      QPointF leftbsign3[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
+
+      if (blinker_rate<=120 && blinker_rate>=60) {
+        p.setBrush(yellowColor(70));
+        p.drawPolygon(leftbsign1, std::size(leftbsign1));
+      }
+      if (blinker_rate<=100 && blinker_rate>=60) {
+        p.setBrush(yellowColor(140));
+        p.drawPolygon(leftbsign2, std::size(leftbsign2));
+      }
+      if (blinker_rate<=80 && blinker_rate>=60) {
+        p.setBrush(yellowColor(210));
+        p.drawPolygon(leftbsign3, std::size(leftbsign3));
+      }
+    }
+    if (right_blinker) {
+      bw = 250;
+      bx = s->fb_w/2 - bw/2 + bw;
+      bh = 400;
+      QPointF rightbsign1[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
+      bx += 125;
+      QPointF rightbsign2[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
+      bx += 125;
+      QPointF rightbsign3[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
+
+      if (blinker_rate<=120 && blinker_rate>=60) {
+        p.setBrush(yellowColor(70));
+        p.drawPolygon(rightbsign1, std::size(rightbsign1));
+      }
+      if (blinker_rate<=100 && blinker_rate>=60) {
+        p.setBrush(yellowColor(140));
+        p.drawPolygon(rightbsign2, std::size(rightbsign2));
+      }
+      if (blinker_rate<=80 && blinker_rate>=60) {
+        p.setBrush(yellowColor(210));
+        p.drawPolygon(rightbsign3, std::size(rightbsign3));
+      }
+    }
+  }
+
+  // opkr safetysign
+  if (!comma_stock_ui) {
+    int diameter1 = 185;
+    int diameter2 = 170;
+    int diameter3 = 202;
+    int s_center_x = bdr_s + 305;
+    int s_center_y = bdr_s + 100;
+    
+    int d_center_x = s_center_x;
+    int d_center_y = s_center_y + 155;
+    int d_width = 220;
+    int d_height = 70;
+    int opacity = 0;
+
+    QRect rect_s = QRect(s_center_x - diameter1/2, s_center_y - diameter1/2, diameter1, diameter1);
+    QRect rect_si = QRect(s_center_x - diameter2/2, s_center_y - diameter2/2, diameter2, diameter2);
+    QRect rect_so = QRect(s_center_x - diameter3/2, s_center_y - diameter3/2, diameter3, diameter3);
+    QRect rect_d = QRect(d_center_x - d_width/2, d_center_y - d_height/2, d_width, d_height);
+    int sl_opacity = 0;
+    if (decel_off) {
+      sl_opacity = 3;
+    } else if (s->scene.pause_spdlimit) {
+      sl_opacity = 2;
+    } else {
+      sl_opacity = 1;
+    }
+
+    if (safety_dist != 0) {
+      opacity = safety_dist>600 ? 0 : (600 - safety_dist) * 0.425;
+      p.setBrush(redColor(opacity/sl_opacity));
+      p.setPen(QPen(QColor(255, 255, 255, 100), 7));
+      p.drawRoundedRect(rect_d, 8, 8);
+      configFont(p, "Inter", 55, "Bold");
+      p.setPen(whiteColor(255));
+      if (s->scene.is_metric) {
+        if (safety_dist >= 1000) {
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist/1000, 'f', 2) + "km");
+        } else {
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist, 'f', 0) + "m");
+        }
+      } else {
+        if (safety_dist >= 1000) {
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist/1000, 'f', 2) + "mi");
+        } else {
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist, 'f', 0) + "yd");
+        }
+      }
+    }
+
+    if (safety_speed > 19) {
+      if (s->scene.speedlimit_signtype) {
+        p.setBrush(whiteColor(255/sl_opacity));
+        p.drawRoundedRect(rect_si, 8, 8);
+        p.setBrush(Qt::NoBrush);
+        p.setPen(QPen(QColor(0, 0, 0, 255/sl_opacity), 12));
+        p.drawRoundedRect(rect_s, 8, 8);
+        p.setPen(QPen(QColor(255, 255, 255, 255/sl_opacity), 10));
+        p.drawRoundedRect(rect_so, 8, 8);
+        p.setPen(blackColor(255/sl_opacity));
+        debugText(p, rect_so.center().x(), rect_so.center().y()-45, "SPEED", 255/sl_opacity, 36, true);
+        debugText(p, rect_so.center().x(), rect_so.center().y()-12, "LIMIT", 255/sl_opacity, 36, true);
+        debugText(p, rect_so.center().x(), rect_so.center().y()+bdr_s+(safety_speed<100?60:50), QString::number(safety_speed), 255/sl_opacity, safety_speed<100?110:90, true);
+      } else {
+        p.setBrush(whiteColor(255/sl_opacity));
+        p.drawEllipse(rect_si);
+        p.setBrush(Qt::NoBrush);
+        p.setPen(QPen(redColor(255/sl_opacity), 20));
+        p.drawEllipse(rect_s);
+        p.setPen(blackColor(255/sl_opacity));
+        debugText(p, rect_si.center().x(), rect_si.center().y()+bdr_s+(safety_speed<100?25:15), QString::number(safety_speed), 255/sl_opacity, safety_speed<100?110:90, true);
+      }
+    }
+  }
+
   p.restore();
 }
 

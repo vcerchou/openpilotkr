@@ -633,7 +633,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       case 3: szLaCMethodCur = "TORQUE"; break;
     }
     if (!s->scene.animated_rpm) {
-      if (szLaCMetho != "") drawText(p, ui_viz_rx_center, bdr_s+295, szLaCMethod);
+      if (szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+295, szLaCMethod);
       if (s->scene.lateralControlMethod == 4) {
         if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+330, szLaCMethodCur);
       }

@@ -1061,7 +1061,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int sl_opacity = 0;
     if (decel_off) {
       sl_opacity = 3;
-    } else if (s->scene.osm_off_spdlimit) {
+    } else if (s->scene.pause_spdlimit) {
       sl_opacity = 2;
     } else {
       sl_opacity = 1;

@@ -211,6 +211,7 @@ typedef struct UIScene {
   bool depart_chime_at_resume;
   int comma_stock_ui;
   bool OPKR_Debug;
+  bool rec_stat = false;
   // gps
   int satelliteCount;
   float gpsAccuracy;

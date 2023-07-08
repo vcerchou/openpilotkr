@@ -31,17 +31,40 @@ private:
 
 class ExperimentalButton : public QPushButton {
   Q_OBJECT
+  Q_PROPERTY(bool engaged MEMBER engaged);
+  Q_PROPERTY(float ang_str MEMBER ang_str);
+  Q_PROPERTY(bool comma_stock_ui MEMBER comma_stock_ui);
+  Q_PROPERTY(int gear_shifter MEMBER gear_shifter);
 
 public:
   explicit ExperimentalButton(QWidget *parent = 0);
   void updateState(const UIState &s);
 
+protected:
+  inline QColor redColor(int alpha = 255) { return QColor(201, 34, 49, alpha); }
+  inline QColor blackColor(int alpha = 255) { return QColor(0, 0, 0, alpha); }
+  inline QColor whiteColor(int alpha = 255) { return QColor(255, 255, 255, alpha); }
+  inline QColor yellowColor(int alpha = 255) { return QColor(218, 202, 37, alpha); }
+  inline QColor ochreColor(int alpha = 255) { return QColor(218, 111, 37, alpha); }
+  inline QColor greenColor(int alpha = 255) { return QColor(0, 255, 0, alpha); }
+  inline QColor blueColor(int alpha = 255) { return QColor(0, 0, 255, alpha); }
+  inline QColor orangeColor(int alpha = 255) { return QColor(255, 175, 3, alpha); }
+  inline QColor greyColor(int alpha = 1) { return QColor(191, 191, 191, alpha); }
+
 private:
   void paintEvent(QPaintEvent *event) override;
+  void drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation = false, float angle = 0);
+  void debugText(QPainter &p, int x, int y, const QString &text, int alpha = 255, int fontsize = 30, bool bold = false);
 
   Params params;
   QPixmap engage_img;
   QPixmap experimental_img;
+  bool engaged = false;
+  float ang_str = 0;
+  bool comma_stock_ui = false;
+  int gear_shifter = 0;
+  const int radius = 180;
+  const int img_size = (radius / 2) * 1.5;
 };
 
 // container window for the NVG UI

@@ -235,23 +235,75 @@ void ExperimentalButton::updateState(const UIState &s) {
   const auto cp = sm["carParams"].getCarParams();
   const bool experimental_mode_available = cp.getExperimentalLongitudinalAvailable() ? params.getBool("ExperimentalLongitudinalEnabled") : cp.getOpenpilotLongitudinalControl();
   setEnabled(params.getBool("ExperimentalModeConfirmed") && experimental_mode_available);
+
+  setProperty("engaged", cs.getEnabled());
+  setProperty("ang_str", s.scene.angleSteers);
+  setProperty("gear_shifter", int(s.scene.getGearShifter));
+  setProperty("comma_stock_ui", s.scene.comma_stock_ui);
 }
 
 void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.setRenderHint(QPainter::Antialiasing);
 
-  QPoint center(btn_size / 2, btn_size / 2);
+  //QPoint center(btn_size / 2, btn_size / 2);
   QPixmap img = isChecked() ? experimental_img : engage_img;
 
-  p.setOpacity(1.0);
-  p.setPen(Qt::NoPen);
-  p.setBrush(QColor(0, 0, 0, 166));
-  p.drawEllipse(center, btn_size / 2, btn_size / 2);
-  p.setOpacity(isDown() ? 0.8 : 1.0);
-  p.drawPixmap((btn_size - img_size) / 2, (btn_size - img_size) / 2, img);
+  // engage-ability icon
+  if (engaged) {
+    drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, ang_str);
+  } else if (!comma_stock_ui) {
+    QString gear_text = "";
+    switch(gear_shifter) {
+      case 1 : gear_text = "P"; p.setPen(QColor(200, 200, 255, 255)); break;
+      case 2 : gear_text = "D"; p.setPen(greenColor(255)); break;
+      case 3 : gear_text = "N"; p.setPen(whiteColor(255)); break;
+      case 4 : gear_text = "R"; p.setPen(redColor(255)); break;
+      case 5 : gear_text = "M"; p.setPen(greenColor(255)); break;
+      case 7 : gear_text = "B"; p.setPen(whiteColor(255)); break;
+      default: gear_text = QString::number(gear_shifter, 'f', 0); p.setPen(whiteColor(255)); break;
+    }
+    debugText(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s + 70, gear_text, 255, 190, true);
+  }
 }
 
+void ExperimentalButton::drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation, float angle) {
+  // opkr
+  if (rotation) {
+    p.setOpacity(opacity);
+    p.setPen(Qt::NoPen);
+    p.setBrush(QColor(0, 0, 0, 166));
+    p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
+    p.setOpacity(isDown() ? 0.8 : 1.0);
+    p.save();
+    p.translate(x, y);
+    p.rotate(-angle);
+    QRect r = img.rect();
+    r.moveCenter(QPoint(0,0));
+    p.drawPixmap(r, img);
+    p.restore();
+  } else {
+    p.setOpacity(opacity);
+    p.setPen(Qt::NoPen);
+    p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
+    p.drawPixmap(x - img_size / 2, y - img_size / 2, img);
+  }
+}
+
+void ExperimentalButton::debugText(QPainter &p, int x, int y, const QString &text, int alpha, int fontsize, bool bold) {
+  if (bold) {
+    configFont(p, "Inter", fontsize, "Bold");
+  } else {
+    configFont(p, "Inter", fontsize, "SemiBold");
+  }
+  QFontMetrics fm(p.font());
+  QRect init_rect = fm.boundingRect(text);
+  QRect real_rect = fm.boundingRect(init_rect, 0, text);
+  real_rect.moveCenter({x, y - real_rect.height() / 2});
+
+  //p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.drawText(real_rect.x(), real_rect.bottom(), text);
+}
 
 AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* parent) : fps_filter(UI_FREQ, 3, 1. / UI_FREQ), CameraWidget("camerad", type, true, parent) {
   pm = std::make_unique<PubMaster, const std::initializer_list<const char *>>({"uiDebug"});

@@ -371,6 +371,45 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("rightHandDM", dm_state.getIsRHD());
   // DM icon transition
   dm_fade_state = std::clamp(dm_fade_state+0.2*(0.5-dmActive), 0.0, 1.0);
+
+  // opkr
+  bool over_sl = false;
+  if (s.scene.navi_select == 2) {
+    over_sl = s.scene.limitSpeedCamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
+  } else if (s.scene.navi_select == 1 && (s.scene.mapSign != 20 && s.scene.mapSign != 21)) {
+    over_sl = s.scene.limitSpeedCamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
+  }
+
+  auto lead_one = sm["radarState"].getRadarState().getLeadOne();
+  float drel = lead_one.getDRel();
+  float vrel = lead_one.getVRel();
+  bool leadstat = lead_one.getStatus();
+
+  setProperty("cruiseSpeed", s.scene.vSetDis);
+  setProperty("is_over_sl", over_sl);
+  setProperty("comma_stock_ui", s.scene.comma_stock_ui);
+  setProperty("lead_stat", leadstat);
+  setProperty("dist_rel", drel);
+  setProperty("vel_rel", vrel);
+  setProperty("ang_str", s.scene.angleSteers);
+  setProperty("record_stat", s.scene.rec_stat);
+  setProperty("lane_stat", s.scene.laneless_mode);
+  setProperty("laneless_stat", s.scene.lateralPlan.lanelessModeStatus);
+  setProperty("mapbox_stat", s.scene.mapbox_running);
+  setProperty("dm_mode", s.scene.monitoring_mode);
+  setProperty("ss_elapsed", s.scene.lateralPlan.standstillElapsedTime);
+  setProperty("standstill", s.scene.standStill);
+  setProperty("auto_hold", s.scene.autoHold);
+  setProperty("left_blinker", s.scene.leftBlinker);
+  setProperty("right_blinker", s.scene.rightBlinker);
+  setProperty("blinker_rate", s.scene.blinker_blinkingrate);
+  setProperty("a_req_v", s.scene.a_req_value);
+  setProperty("brake_pressed", s.scene.brakePress);
+  setProperty("brake_light", s.scene.brakeLights);
+  setProperty("gas_pressed", s.scene.gasPress);
+  setProperty("safety_speed", s.scene.limitSpeedCamera);
+  setProperty("safety_dist", s.scene.limitSpeedCameraDist);
+  setProperty("decel_off", s.scene.sl_decel_off);
 }
 
 void AnnotatedCameraWidget::drawHud(QPainter &p) {
@@ -698,16 +737,65 @@ void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState
   float g_xo = sz / 5;
   float g_yo = sz / 10;
 
-  QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_yo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
-  painter.setBrush(QColor(218, 202, 37, 255));
-  painter.drawPolygon(glow, std::size(glow));
+  UIState *s = uiState();
 
-  // chevron
-  QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
-  painter.setBrush(redColor(fillAlpha));
-  painter.drawPolygon(chevron, std::size(chevron));
+  // opkr
+  if (s->scene.radarDistance < 149) {
+    QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_xo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
+    painter.setBrush(QColor(218, 202, 37, 255));
+    painter.drawPolygon(glow, std::size(glow));
+
+    // chevron
+    QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
+    painter.setBrush(redColor(fillAlpha));
+    painter.drawPolygon(chevron, std::size(chevron));
+    painter.setPen(QColor(0x0, 0x0, 0xff));
+    //painter.setRenderHint(QPainter::TextAntialiasing);
+    configFont(painter, "Inter", 35, "SemiBold");
+    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("R"));
+  } else {
+    QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_xo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
+    painter.setBrush(QColor(0, 255, 0, 255));
+    painter.drawPolygon(glow, std::size(glow));
+
+    // chevron
+    QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
+    painter.setBrush(greenColor(fillAlpha));
+    painter.drawPolygon(chevron, std::size(chevron));
+    painter.setPen(QColor(0xff, 0xff, 0xff));
+    //painter.setRenderHint(QPainter::TextAntialiasing);
+    configFont(painter, "Inter", 35, "SemiBold");
+    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("V"));
+  }
 
   painter.restore();
+}
+
+
+void AnnotatedCameraWidget::debugText(QPainter &p, int x, int y, const QString &text, int alpha, int fontsize, bool bold) {
+  if (bold) {
+    configFont(p, "Inter", fontsize, "Bold");
+  } else {
+    configFont(p, "Inter", fontsize, "SemiBold");
+  }
+  configFont(p, "Inter", fontsize, "SemiBold");
+  QFontMetrics fm(p.font());
+  QRect init_rect = fm.boundingRect(text);
+  QRect real_rect = fm.boundingRect(init_rect, 0, text);
+  real_rect.moveCenter({x, y - real_rect.height() / 2});
+
+  //p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.drawText(real_rect.x(), real_rect.bottom(), text);
+}
+
+void AnnotatedCameraWidget::uiText(QPainter &p, int x, int y, const QString &text, int alpha) {
+  QFontMetrics fm(p.font());
+  QRect init_rect = fm.boundingRect(text);
+  QRect real_rect = fm.boundingRect(init_rect, 0, text);
+  real_rect.moveCenter({x + real_rect.width() / 2, y - real_rect.height() / 2});
+
+  p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
 void AnnotatedCameraWidget::paintGL() {
@@ -774,7 +862,7 @@ void AnnotatedCameraWidget::paintGL() {
 
     drawLaneLines(painter, s);
 
-    if (s->scene.longitudinal_control) {
+    if (true) {
       auto lead_one = radar_state.getLeadOne();
       auto lead_two = radar_state.getLeadTwo();
       if (lead_one.getStatus()) {

@@ -64,6 +64,8 @@ private:
   float ang_str = 0;
   bool comma_stock_ui = false;
   int gear_shifter = 0;
+  const int radius = 180;
+  const int img_size = (radius / 2) * 1.5;
 };
 
 // container window for the NVG UI
@@ -177,8 +179,6 @@ protected:
   inline QColor redColor(int alpha = 255) { return QColor(201, 34, 49, alpha); }
   inline QColor whiteColor(int alpha = 255) { return QColor(255, 255, 255, alpha); }
   inline QColor blackColor(int alpha = 255) { return QColor(0, 0, 0, alpha); }
-
-  inline QColor whiteColor(int alpha = 255) { return QColor(255, 255, 255, alpha); }
   inline QColor yellowColor(int alpha = 255) { return QColor(218, 202, 37, alpha); }
   inline QColor ochreColor(int alpha = 255) { return QColor(218, 111, 37, alpha); }
   inline QColor greenColor(int alpha = 255) { return QColor(0, 255, 0, alpha); }

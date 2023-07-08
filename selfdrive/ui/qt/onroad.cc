@@ -96,8 +96,15 @@ void OnroadWindow::updateState(const UIState &s) {
 
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
+  QRect rec_btn = QRect(1985, 905, 140, 140);
+  QRect laneless_btn = QRect(1825, 905, 140, 140);
+  QRect monitoring_btn = QRect(50, 770, 140, 150);
+  QRect stockui_btn = QRect(15, 15, 184, 202);
+  QRect tuneui_btn = QRect(1960, 15, 184, 202);
+  QRect speedlimit_btn = QRect(220, 15, 190, 190);
+
   if (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) ||
-    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) uiState()->scene.live_tune_panel_enable) {return;}
+    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable) {return;}
   if (map != nullptr) {
     bool sidebarVisible = geometry().x() > 0;
     map->setVisible(!sidebarVisible && !map->isVisible());

@@ -35,28 +35,6 @@ const vec3 default_face_kpts_3d[] = {
   {18.02, -49.14, 8.00}, {6.36, -51.20, 8.00}, {-5.98, -51.20, 8.00},
 };
 
-typedef struct Rect {
-  int x, y, w, h;
-  int centerX() const { return x + w / 2; }
-  int centerY() const { return y + h / 2; }
-  int right() const { return x + w; }
-  int bottom() const { return y + h; }
-  bool ptInRect(int px, int py) const {
-    return px >= x && px < (x + w) && py >= y && py < (y + h);
-  }
-} Rect;
-
-const Rect rec_btn = {1985, 905, 140, 140};
-const Rect laneless_btn = {1825, 905, 140, 140};
-const Rect monitoring_btn = {50, 770, 140, 150};
-const Rect stockui_btn = {15, 15, 184, 202};
-const Rect tuneui_btn = {1960, 15, 184, 202};
-const Rect livetunepanel_left_above_btn = {590, 570, 210, 170};
-const Rect livetunepanel_right_above_btn = {1360, 570, 210, 170};
-const Rect livetunepanel_left_btn = {590, 745, 210, 170};
-const Rect livetunepanel_right_btn = {1360, 745, 210, 170};
-const Rect speedlimit_btn = {220, 15, 190, 190};
-
 struct Alert {
   QString text1;
   QString text2;

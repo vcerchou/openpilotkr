@@ -312,6 +312,17 @@ void HomeWindow::mousePressMULTI(QMouseEvent* e, int nDir) {
 
 void HomeWindow::mousePressEvent(QMouseEvent* e) 
 {
+  QRect rec_btn = QRect(1985, 905, 140, 140);
+  QRect laneless_btn = QRect(1825, 905, 140, 140);
+  QRect monitoring_btn = QRect(50, 770, 140, 150);
+  QRect stockui_btn = QRect(15, 15, 184, 202);
+  QRect tuneui_btn = QRect(1960, 15, 184, 202);
+  QRect speedlimit_btn = QRect(220, 15, 190, 190);
+  QRect livetunepanel_left_above_btn = QRect(590, 570, 210, 170);
+  QRect livetunepanel_right_above_btn = QRect(1360, 570, 210, 170);
+  QRect livetunepanel_left_btn = QRect(590, 745, 210, 170);
+  QRect livetunepanel_right_btn = QRect(1360, 745, 210, 170);
+
   printf( "mousePressEvent = (%d,%d)\n", e->x(), e->y() );
 
   // OPKR REC
@@ -369,7 +380,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.ptInRect(e->x(), e->y() && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.ptInRect(e->x(), e->y() && uiState()->scene.mapbox_running)) {
     uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
     if (uiState()->scene.opkr_livetune_ui) {
       Params().putBool("OpkrLiveTunePanelEnable", true);

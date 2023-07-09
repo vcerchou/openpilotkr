@@ -253,7 +253,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   if (engaged) {
     drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, ang_str);
   } else if (!comma_stock_ui) {
-    QString gear_text = "";
+    QString gear_text = "0";
     switch(gear_shifter) {
       case 1 : gear_text = "P"; p.setPen(QColor(200, 200, 255, 255)); break;
       case 2 : gear_text = "D"; p.setPen(greenColor(255)); break;
@@ -426,6 +426,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(setSpeed)) : "–";
 
   // Draw outer box + border to contain set speed and speed limit
+  int top_x = rect().left() + bdr_s + bdr_s;
   int default_rect_width = 172;
   int rect_width = default_rect_width;
   if (is_metric || has_eu_speed_limit) rect_width = 200;
@@ -438,7 +439,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
-  QRect set_speed_rect(60 + default_rect_width / 2 - rect_width / 2, 45, rect_width, rect_height);
+  QRect set_speed_rect(top_x, 30, rect_width, rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
   drawRoundedRect(p, set_speed_rect, top_radius, top_radius, bottom_radius, bottom_radius);
@@ -486,7 +487,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   speed_rect.moveCenter({set_speed_rect.center().x(), 0});
   speed_rect.moveTop(set_speed_rect.top() + 77);
   p.drawText(speed_rect, Qt::AlignCenter, setSpeedStr);
-
 
 
   // US/Canada (MUTCD style) sign
@@ -590,11 +590,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int debug_y3 = 970-bdr_s+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
   if (s->scene.nDebugUi1 && !comma_stock_ui) {
     configFont(p, "Inter", s->scene.mapbox_running?20:25, "Semibold");
-    uiText(p, 205, debug_y1, s->scene.alertTextMsg1.c_str());
-    uiText(p, 205, debug_y2, s->scene.alertTextMsg2.c_str());
+    uiText(p, 205, debug_y1, "OOPKR1"+QString::fromStdString(s->scene.alertTextMsg1));
+    uiText(p, 205, debug_y2, "OOPKR2"+QString::fromStdString(s->scene.alertTextMsg2));
   }
   if (s->scene.nDebugUi3 && !comma_stock_ui) {
-    uiText(p, 205, debug_y3, s->scene.alertTextMsg3.c_str());
+    uiText(p, 205, debug_y3, "OOPKR3"+QString::fromStdString(s->scene.alertTextMsg3));
   }
   if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && !comma_stock_ui) {
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0: " + QString::fromStdString(s->scene.liveENaviData.eopkr0));
@@ -856,11 +856,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setBrush(QColor(255, 0, 0, 150));
     }
     if (s->scene.tpmsUnit != 0) {
-      debugText(p, tpms_sp_xr, tpms_sp_yr+15, "TPMS", 150, 33);
-      font_size = (s->scene.tpmsUnit == 2) ? 60 : 55;
+      debugText(p, tpms_sp_xr, tpms_sp_yr+15, (s->scene.tpmsUnit == 2) ? "TPMS(bar)" : "TPMS(psi)", 150, 33);
+      font_size = (s->scene.tpmsUnit == 2) ? 55 : 50;
     } else {
       debugText(p, tpms_sp_xr, tpms_sp_yr+15, "TPMS(psi)", 150, 33);
-      font_size = 65;
+      font_size = 55;
     }
     if ((s->scene.tpmsPressureFl < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFl < 2.2 && s->scene.tpmsUnit == 2)) {
       p.setPen(yellowColor(200));
@@ -925,6 +925,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(recbtn_draw);
     p.setPen(whiteColor(200));
+    configFont(p, "Inter", 35, "SemiBold");
     p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
 
     // opkr lane selector
@@ -947,7 +948,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
   // opkr standstill
-  if (standstill && !comma_stock_ui) {
+  if (standstill && !comma_stock_ui || true) {
     int minute = 0;
     int second = 0;
     minute = int(ss_elapsed / 60);
@@ -959,7 +960,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // opkr autohold
-  if (auto_hold && !comma_stock_ui) {
+  if (auto_hold && !comma_stock_ui || true) {
     int y_pos = 0;
     if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || standstill) && s->scene.car_state.getSteeringAngleDeg() < 90) {
       y_pos = 500;
@@ -982,7 +983,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     float bw = 0;
     float bx = 0;
     float bh = 0;
-    if (left_blinker) {
+    if (left_blinker || true) {
       bw = 250;
       bx = s->fb_w/2 - bw/2;
       bh = 400;
@@ -1005,7 +1006,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.drawPolygon(leftbsign3, std::size(leftbsign3));
       }
     }
-    if (right_blinker) {
+    if (right_blinker || true) {
       bw = 250;
       bx = s->fb_w/2 - bw/2 + bw;
       bh = 400;
@@ -1057,7 +1058,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       sl_opacity = 1;
     }
 
-    if (safety_dist != 0) {
+    if (safety_dist != 0 || true) {
       opacity = safety_dist>600 ? 0 : (600 - safety_dist) * 0.425;
       p.setBrush(redColor(opacity/sl_opacity));
       p.setPen(QPen(QColor(255, 255, 255, 100), 7));
@@ -1079,7 +1080,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       }
     }
 
-    if (safety_speed > 19) {
+    if (safety_speed > 19 || true) {
       if (s->scene.speedlimit_signtype) {
         p.setBrush(whiteColor(255/sl_opacity));
         p.drawRoundedRect(rect_si, 8, 8);

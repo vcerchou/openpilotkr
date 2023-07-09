@@ -326,12 +326,12 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
   printf( "mousePressEvent = (%d,%d)\n", e->x(), e->y() );
 
   // OPKR REC
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.touched = true;
     return;
   }
   // Laneless mode
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.laneless_mode = uiState()->scene.laneless_mode + 1;
     if (uiState()->scene.laneless_mode > 2) {
       uiState()->scene.laneless_mode = 0;
@@ -346,7 +346,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // Monitoring mode
-  if (uiState()->scene.started && !sidebar->isVisible() && monitoring_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && monitoring_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.monitoring_mode = !uiState()->scene.monitoring_mode;
     if (uiState()->scene.monitoring_mode) {
       Params().putBool("OpkrMonitoringMode", true);
@@ -380,7 +380,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
     if (uiState()->scene.opkr_livetune_ui) {
       Params().putBool("OpkrLiveTunePanelEnable", true);

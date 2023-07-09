@@ -391,12 +391,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("dm_mode", s.scene.monitoring_mode);
   setProperty("ss_elapsed", s.scene.lateralPlan.standstillElapsedTime);
   setProperty("standstill", s.scene.standStill);
-
-  setProperty("left_blinker", s.scene.leftBlinker);
-  setProperty("right_blinker", s.scene.rightBlinker);
-  setProperty("safety_speed", s.scene.limitSpeedCamera);
-  setProperty("safety_dist", s.scene.limitSpeedCameraDist);
-  setProperty("decel_off", s.scene.sl_decel_off);
 }
 
 void AnnotatedCameraWidget::drawHud(QPainter &p) {
@@ -1041,7 +1035,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     QRect rect_so = QRect(s_center_x - diameter3/2, s_center_y - diameter3/2, diameter3, diameter3);
     QRect rect_d = QRect(d_center_x - d_width/2, d_center_y - d_height/2, d_width, d_height);
     int sl_opacity = 0;
-    if (decel_off) {
+    if (s->scene.sl_decel_off) {
       sl_opacity = 3;
     } else if (s->scene.pause_spdlimit) {
       sl_opacity = 2;
@@ -1049,29 +1043,29 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       sl_opacity = 1;
     }
 
-    if (safety_dist != 0) {
-      opacity = safety_dist>600 ? 0 : (600 - safety_dist) * 0.425;
+    if (s->scene.limitSpeedCameraDist != 0) {
+      opacity = s->scene.limitSpeedCameraDist>600 ? 0 : (600 - s->scene.limitSpeedCameraDist) * 0.425;
       p.setBrush(redColor(opacity/sl_opacity));
       p.setPen(QPen(QColor(255, 255, 255, 100), 7));
       p.drawRoundedRect(rect_d, 8, 8);
       configFont(p, "Inter", 55, "Bold");
       p.setPen(whiteColor(255));
       if (s->scene.is_metric) {
-        if (safety_dist >= 1000) {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist/1000, 'f', 2) + "km");
+        if (s->scene.limitSpeedCameraDist >= 1000) {
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist/1000, 'f', 2) + "km");
         } else {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist, 'f', 0) + "m");
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist, 'f', 0) + "m");
         }
       } else {
-        if (safety_dist >= 1000) {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist/1000, 'f', 2) + "mi");
+        if (s->scene.limitSpeedCameraDist >= 1000) {
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist/1000, 'f', 2) + "mi");
         } else {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(safety_dist, 'f', 0) + "yd");
+          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist, 'f', 0) + "yd");
         }
       }
     }
 
-    if (safety_speed > 19) {
+    if (s->scene.limitSpeedCamera > 19) {
       if (s->scene.speedlimit_signtype) {
         p.setBrush(whiteColor(255/sl_opacity));
         p.drawRoundedRect(rect_si, 8, 8);
@@ -1083,7 +1077,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(blackColor(255/sl_opacity));
         debugText(p, rect_so.center().x(), rect_so.center().y()-45, "SPEED", 255/sl_opacity, 36, true);
         debugText(p, rect_so.center().x(), rect_so.center().y()-12, "LIMIT", 255/sl_opacity, 36, true);
-        debugText(p, rect_so.center().x(), rect_so.center().y()+bdr_s+(safety_speed<100?60:50), QString::number(safety_speed), 255/sl_opacity, safety_speed<100?110:90, true);
+        debugText(p, rect_so.center().x(), rect_so.center().y()+bdr_s+(s->scene.limitSpeedCamera<100?60:50), QString::number(s->scene.limitSpeedCamera), 255/sl_opacity, s->scene.limitSpeedCamera<100?110:90, true);
       } else {
         p.setBrush(whiteColor(255/sl_opacity));
         p.drawEllipse(rect_si);
@@ -1091,7 +1085,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(QPen(redColor(255/sl_opacity), 20));
         p.drawEllipse(rect_s);
         p.setPen(blackColor(255/sl_opacity));
-        debugText(p, rect_si.center().x(), rect_si.center().y()+bdr_s+(safety_speed<100?25:15), QString::number(safety_speed), 255/sl_opacity, safety_speed<100?110:90, true);
+        debugText(p, rect_si.center().x(), rect_si.center().y()+bdr_s+(s->scene.limitSpeedCamera<100?25:15), QString::number(s->scene.limitSpeedCamera), 255/sl_opacity, s->scene.limitSpeedCamera<100?110:90, true);
       }
     }
   }

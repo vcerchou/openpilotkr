@@ -87,12 +87,6 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(int ss_elapsed MEMBER ss_elapsed);
   Q_PROPERTY(bool standstill MEMBER standstill);
 
-  Q_PROPERTY(bool left_blinker MEMBER left_blinker);
-  Q_PROPERTY(bool right_blinker MEMBER right_blinker);
-
-  Q_PROPERTY(int safety_speed MEMBER safety_speed);
-  Q_PROPERTY(float safety_dist MEMBER safety_dist);
-  Q_PROPERTY(int decel_off MEMBER decel_off);
   Q_PROPERTY(bool record_stat MEMBER record_stat);
 
 public:
@@ -138,13 +132,6 @@ private:
   bool dm_mode = false;
   int ss_elapsed = 0;
   bool standstill = false;
-
-  bool left_blinker = false;
-  bool right_blinker = false;
-
-  int safety_speed = 0;
-  float safety_dist = 0;
-  int decel_off = 0;
 
 protected:
   void paintGL() override;

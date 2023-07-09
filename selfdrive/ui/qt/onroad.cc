@@ -933,15 +933,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(lanebtn_draw);
     p.setPen(whiteColor(200));
-    if (lane_stat == 0) {
+    if (s->scene.laneless_mode == 0) {
       configFont(p, "Inter", 39, "SemiBold");
       p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 890, 140, 140), Qt::AlignCenter, QString("LANE"));
       p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 920, 140, 140), Qt::AlignCenter, QString("LINE"));
-    } else if (lane_stat == 1) {
+    } else if (s->scene.laneless_mode == 1) {
       configFont(p, "Inter", 39, "SemiBold");
       p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 890, 140, 140), Qt::AlignCenter, QString("LANE"));
       p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 920, 140, 140), Qt::AlignCenter, QString("LESS"));
-    } else if (lane_stat == 2) {
+    } else if (s->scene.laneless_mode == 2) {
       p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
     }
   }
@@ -1018,11 +1018,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setBrush(yellowColor(70));
         p.drawPolygon(rightbsign1, std::size(rightbsign1));
       }
-      if (blinker_s->scene.blinker_blinkingraterate<=100 && s->scene.blinker_blinkingrate>=60) {
+      if (s->scene.blinker_blinkingraterate<=100 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(140));
         p.drawPolygon(rightbsign2, std::size(rightbsign2));
       }
-      if (blinks->scene.blinker_blinkingrateer_rate<=80 && blins->scene.blinker_blinkingrateker_rate>=60) {
+      if (s->scene.blinker_blinkingrateer_rate<=80 && s->scene.blinker_blinkingrateker_rate>=60) {
         p.setBrush(yellowColor(210));
         p.drawPolygon(rightbsign3, std::size(rightbsign3));
       }

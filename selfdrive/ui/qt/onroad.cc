@@ -536,6 +536,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   float act_accel = (!s->scene.longitudinal_control)?s->scene.a_req_value:s->scene.accel;
   float gas_opacity = act_accel*255>255?255:act_accel*255;
   float brake_opacity = abs(act_accel*175)>255?255:abs(act_accel*175);
+  p.setPen(whiteColor(255));
   if (s->scene.brakePress && s->scene.comma_stock_ui != 1) {
   	p.setPen(redColor(255));
   } else if (s->scene.brakeLights && speedStr == "0" && s->scene.comma_stock_ui != 1) {

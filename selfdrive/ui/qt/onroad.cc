@@ -1283,7 +1283,7 @@ void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState
     painter.setPen(QColor(0x0, 0x0, 0xff));
     //painter.setRenderHint(QPainter::TextAntialiasing);
     configFont(painter, "Inter", 35, "SemiBold");
-    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("R"), 255, false);
+    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("R"));
   } else {
     QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_xo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
     painter.setBrush(QColor(0, 255, 0, 255));
@@ -1296,7 +1296,7 @@ void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState
     painter.setPen(QColor(0xff, 0xff, 0xff));
     //painter.setRenderHint(QPainter::TextAntialiasing);
     configFont(painter, "Inter", 35, "SemiBold");
-    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("V"), 255, false);
+    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("V"));
   }
 
   painter.restore();

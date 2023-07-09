@@ -31,10 +31,6 @@ private:
 
 class ExperimentalButton : public QPushButton {
   Q_OBJECT
-  Q_PROPERTY(bool engaged MEMBER engaged);
-  Q_PROPERTY(float ang_str MEMBER ang_str);
-  Q_PROPERTY(bool comma_stock_ui MEMBER comma_stock_ui);
-  Q_PROPERTY(int gear_shifter MEMBER gear_shifter);
 
 public:
   explicit ExperimentalButton(QWidget *parent = 0);
@@ -59,10 +55,6 @@ private:
   Params params;
   QPixmap engage_img;
   QPixmap experimental_img;
-  bool engaged = false;
-  float ang_str = 0;
-  bool comma_stock_ui = false;
-  int gear_shifter = 0;
   const int radius = 180;
   const int img_size = (radius / 2) * 1.5;
 };
@@ -86,12 +78,12 @@ class AnnotatedCameraWidget : public CameraWidget {
 
   Q_PROPERTY(int cruiseSpeed MEMBER cruiseSpeed);
   Q_PROPERTY(bool is_over_sl MEMBER is_over_sl);
-  Q_PROPERTY(bool comma_stock_ui MEMBER comma_stock_ui);
+
   Q_PROPERTY(bool lead_stat MEMBER lead_stat);
   Q_PROPERTY(float dist_rel MEMBER dist_rel);
   Q_PROPERTY(float vel_rel MEMBER vel_rel);
-  Q_PROPERTY(float ang_str MEMBER ang_str);
-  Q_PROPERTY(bool laneless_stat MEMBER laneless_stat);
+
+
   Q_PROPERTY(bool dm_mode MEMBER dm_mode);
   Q_PROPERTY(int ss_elapsed MEMBER ss_elapsed);
   Q_PROPERTY(bool standstill MEMBER standstill);
@@ -138,15 +130,14 @@ private:
   int skip_frame_count = 0;
   bool wide_cam_requested = false;
 
-  int cruiseSpeed;
   bool is_over_sl = false;
-  bool comma_stock_ui = false;
+
   bool lead_stat = false;
   float dist_rel = 0;
   float vel_rel = 0;
-  float ang_str = 0;
+
   bool record_stat = false;
-  bool laneless_stat = false;
+
   bool mapbox_stat = false;
   bool dm_mode = false;
   int ss_elapsed = 0;

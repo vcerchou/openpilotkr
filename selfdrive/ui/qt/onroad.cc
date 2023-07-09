@@ -208,7 +208,7 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
 
 
 ExperimentalButton::ExperimentalButton(QWidget *parent) : QPushButton(parent) {
-  setVisible(false);
+  setVisible(true);
   setFixedSize(btn_size, btn_size);
   setCheckable(true);
 
@@ -235,11 +235,6 @@ void ExperimentalButton::updateState(const UIState &s) {
   const auto cp = sm["carParams"].getCarParams();
   const bool experimental_mode_available = cp.getExperimentalLongitudinalAvailable() ? params.getBool("ExperimentalLongitudinalEnabled") : cp.getOpenpilotLongitudinalControl();
   setEnabled(params.getBool("ExperimentalModeConfirmed") && experimental_mode_available);
-
-  setProperty("engaged", cs.getEnabled());
-  setProperty("ang_str", s.scene.angleSteers);
-  setProperty("gear_shifter", int(s.scene.getGearShifter));
-  setProperty("comma_stock_ui", s.scene.comma_stock_ui);
 }
 
 void ExperimentalButton::paintEvent(QPaintEvent *event) {
@@ -250,18 +245,18 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPixmap img = isChecked() ? experimental_img : engage_img;
 
   // engage-ability icon
-  if (engaged) {
-    drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, ang_str);
-  } else if (!comma_stock_ui) {
+  if (uiState()->scene.engaged) {
+    drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, uiState()->scene.angleSteers);
+  } else if (!uiState()->scene.comma_stock_ui) {
     QString gear_text = "0";
-    switch(gear_shifter) {
+    switch(int(uiState()->scene.getGearShifter)) {
       case 1 : gear_text = "P"; p.setPen(QColor(200, 200, 255, 255)); break;
       case 2 : gear_text = "D"; p.setPen(greenColor(255)); break;
       case 3 : gear_text = "N"; p.setPen(whiteColor(255)); break;
       case 4 : gear_text = "R"; p.setPen(redColor(255)); break;
       case 5 : gear_text = "M"; p.setPen(greenColor(255)); break;
       case 7 : gear_text = "B"; p.setPen(whiteColor(255)); break;
-      default: gear_text = QString::number(gear_shifter, 'f', 0); p.setPen(whiteColor(255)); break;
+      default: gear_text = QString::number(uiState()->scene.getGearShifter, 'f', 0); p.setPen(whiteColor(255)); break;
     }
     debugText(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s + 70, gear_text, 255, 190, true);
   }
@@ -385,15 +380,13 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   float vrel = lead_one.getVRel();
   bool leadstat = lead_one.getStatus();
 
-  setProperty("cruiseSpeed", s.scene.vSetDis);
   setProperty("is_over_sl", over_sl);
-  setProperty("comma_stock_ui", s.scene.comma_stock_ui);
   setProperty("lead_stat", leadstat);
   setProperty("dist_rel", drel);
   setProperty("vel_rel", vrel);
-  setProperty("ang_str", s.scene.angleSteers);
+
   setProperty("record_stat", s.scene.rec_stat);
-  setProperty("laneless_stat", s.scene.lateralPlan.lanelessModeStatus);
+
   setProperty("mapbox_stat", s.scene.mapbox_running);
   setProperty("dm_mode", s.scene.monitoring_mode);
   setProperty("ss_elapsed", s.scene.lateralPlan.standstillElapsedTime);
@@ -554,15 +547,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   // current speed
   float gas_opacity = a_req_v*255>255?255:a_req_v*255;
   float brake_opacity = abs(a_req_v*175)>255?255:abs(a_req_v*175);
-  if (brake_pressed && !comma_stock_ui) {
+  if (brake_pressed && !s->scene.comma_stock_ui) {
   	p.setPen(QColor(255, 0, 0, 255));
-  } else if (brake_light && speedStr == "0" && !comma_stock_ui) {
+  } else if (brake_light && speedStr == "0" && !s->scene.comma_stock_ui) {
     p.setPen(redColor(100));
-  } else if (gas_pressed && !comma_stock_ui) {
+  } else if (gas_pressed && !s->scene.comma_stock_ui) {
     p.setPen(QColor(0, 240, 0, 255));
-  } else if (a_req_v < 0 && !comma_stock_ui) {
+  } else if (a_req_v < 0 && !s->scene.comma_stock_ui) {
     p.setPen(QColor((255-int(abs(a_req_v*8))), (255-int(brake_opacity)), (255-int(brake_opacity)), 255));
-  } else if (a_req_v > 0 && !comma_stock_ui) {
+  } else if (a_req_v > 0 && !s->scene.comma_stock_ui) {
     p.setPen(QColor((255-int(gas_opacity)), (255-int((a_req_v*10))), (255-int(gas_opacity)), 255));
   }
   configFont(p, "Inter", 176, "Bold");
@@ -586,15 +579,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int debug_y1 = 1015-bdr_s+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
   int debug_y2 = 1050-bdr_s+(s->scene.mapbox_running ? 3:0)-(s->scene.animated_rpm?60:0);
   int debug_y3 = 970-bdr_s+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
-  if (s->scene.nDebugUi1 && !comma_stock_ui) {
+  if (s->scene.nDebugUi1 && !s->scene.comma_stock_ui) {
     configFont(p, "Inter", s->scene.mapbox_running?22:27, "Semibold");
     uiText(p, 205, debug_y1, s->scene.alertTextMsg1.c_str());
     uiText(p, 205, debug_y2, s->scene.alertTextMsg2.c_str());
   }
-  if (s->scene.nDebugUi3 && !comma_stock_ui) {
+  if (s->scene.nDebugUi3 && !s->scene.comma_stock_ui) {
     uiText(p, 205, debug_y3, s->scene.alertTextMsg3.c_str());
   }
-  if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && !comma_stock_ui) {
+  if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && !s->scene.comma_stock_ui) {
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0: " + QString::fromStdString(s->scene.liveENaviData.eopkr0));
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+280, "1: " + QString::fromStdString(s->scene.liveENaviData.eopkr1));
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+320, "2: " + QString::fromStdString(s->scene.liveENaviData.eopkr2));
@@ -606,7 +599,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+560, "8: " + QString::fromStdString(s->scene.liveENaviData.eopkr8));
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+600, "9: " + QString::fromStdString(s->scene.liveENaviData.eopkr9));
   }
-  if (s->scene.nDebugUi2 && !comma_stock_ui) {
+  if (s->scene.nDebugUi2 && !s->scene.comma_stock_ui) {
     configFont(p, "Inter", s->scene.mapbox_running?26:35, "Semibold");
     uiText(p, ui_viz_rx, ui_viz_ry+240, "SR:" + QString::number(s->scene.liveParams.steerRatio, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+280, "AA:" + QString::number(s->scene.liveParams.angleOffsetAverage, 'f', 2));
@@ -719,12 +712,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // steer angle
     sp_yl = sp_yl + j_num;
     p.setPen(greenColor(200));
-    if ((int(ang_str) < -50) || (int(ang_str) > 50)) {
+    if ((int(s->scene.angleSteers) < -50) || (int(s->scene.angleSteers) > 50)) {
       p.setPen(redColor(200));
-    } else if ((int(ang_str) < -30) || (int(ang_str) > 30)) {
+    } else if ((int(s->scene.angleSteers) < -30) || (int(s->scene.angleSteers) > 30)) {
       p.setPen(orangeColor(200));
     }
-    debugText(p, sp_xl, sp_yl, QString::number(ang_str, 'f', 0), 150, 58);
+    debugText(p, sp_xl, sp_yl, QString::number(s->scene.angleSteers, 'f', 0), 150, 58);
     p.setPen(whiteColor(200));
     debugText(p, sp_xl, sp_yl + 35, QString("STER ANG"), 150, 27);
     p.translate(sp_xl + 90, sp_yl + 20);
@@ -929,7 +922,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // opkr lane selector
     QRect lanebtn_draw(rect().right() - bdr_s - 140 - 20 - 160, 905, 140, 140);
     p.setBrush(Qt::NoBrush);
-    if (laneless_stat) p.setBrush(greenColor(150));
+    if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(150));
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(lanebtn_draw);
     p.setPen(whiteColor(200));
@@ -946,7 +939,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
   // opkr standstill
-  if (standstill && !comma_stock_ui) {
+  if (standstill && !s->scene.comma_stock_ui) {
     int minute = 0;
     int second = 0;
     minute = int(ss_elapsed / 60);
@@ -958,7 +951,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // opkr autohold
-  if (auto_hold && !comma_stock_ui) {
+  if (s->scene.autoHold && !s->scene.comma_stock_ui) {
     int y_pos = 0;
     if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || standstill) && s->scene.car_state.getSteeringAngleDeg() < 90) {
       y_pos = 500;

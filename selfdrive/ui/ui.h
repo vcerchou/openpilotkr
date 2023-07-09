@@ -126,7 +126,7 @@ typedef struct UIScene {
   bool leftblindspot;
   bool leftBlinker;
   bool rightBlinker;
-  int blinker_blinkingrate;
+  int blinker_blinkingrate = 60;
   int tpms_blinkingrate = 120;
   int blindspot_blinkingrate = 120;
   int car_valid_status_changed = 0;

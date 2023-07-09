@@ -91,7 +91,6 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(float dist_rel MEMBER dist_rel);
   Q_PROPERTY(float vel_rel MEMBER vel_rel);
   Q_PROPERTY(float ang_str MEMBER ang_str);
-  Q_PROPERTY(int lane_stat MEMBER lane_stat);
   Q_PROPERTY(bool laneless_stat MEMBER laneless_stat);
   Q_PROPERTY(bool dm_mode MEMBER dm_mode);
   Q_PROPERTY(int ss_elapsed MEMBER ss_elapsed);
@@ -99,7 +98,6 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(bool auto_hold MEMBER auto_hold);
   Q_PROPERTY(bool left_blinker MEMBER left_blinker);
   Q_PROPERTY(bool right_blinker MEMBER right_blinker);
-  Q_PROPERTY(int blinker_rate MEMBER blinker_rate);
   Q_PROPERTY(float a_req_v MEMBER a_req_v);
   Q_PROPERTY(bool brake_pressed MEMBER brake_pressed);
   Q_PROPERTY(bool brake_light MEMBER brake_light);
@@ -148,7 +146,6 @@ private:
   float vel_rel = 0;
   float ang_str = 0;
   bool record_stat = false;
-  int lane_stat = 0;
   bool laneless_stat = false;
   bool mapbox_stat = false;
   bool dm_mode = false;
@@ -157,7 +154,6 @@ private:
   bool auto_hold = false;
   bool left_blinker = false;
   bool right_blinker = false;
-  int blinker_rate = 120;
   float a_req_v = 0;
   bool brake_pressed = false;
   bool brake_light = false;

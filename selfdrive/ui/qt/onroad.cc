@@ -393,7 +393,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("vel_rel", vrel);
   setProperty("ang_str", s.scene.angleSteers);
   setProperty("record_stat", s.scene.rec_stat);
-  setProperty("lane_stat", s.scene.laneless_mode);
   setProperty("laneless_stat", s.scene.lateralPlan.lanelessModeStatus);
   setProperty("mapbox_stat", s.scene.mapbox_running);
   setProperty("dm_mode", s.scene.monitoring_mode);
@@ -402,7 +401,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("auto_hold", s.scene.autoHold);
   setProperty("left_blinker", s.scene.leftBlinker);
   setProperty("right_blinker", s.scene.rightBlinker);
-  setProperty("blinker_rate", s.scene.blinker_blinkingrate);
   setProperty("a_req_v", s.scene.a_req_value);
   setProperty("brake_pressed", s.scene.brakePress);
   setProperty("brake_light", s.scene.brakeLights);
@@ -993,15 +991,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       bx -= 125;
       QPointF leftbsign3[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
 
-      if (blinker_rate<=120 && blinker_rate>=60) {
+      if (s->scene.blinker_blinkingrate<=120 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(70));
         p.drawPolygon(leftbsign1, std::size(leftbsign1));
       }
-      if (blinker_rate<=100 && blinker_rate>=60) {
+      if (s->scene.blinker_blinkingrate<=100 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(140));
         p.drawPolygon(leftbsign2, std::size(leftbsign2));
       }
-      if (blinker_rate<=80 && blinker_rate>=60) {
+      if (s->scene.blinker_blinkingrate<=80 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(210));
         p.drawPolygon(leftbsign3, std::size(leftbsign3));
       }
@@ -1016,15 +1014,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       bx += 125;
       QPointF rightbsign3[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
 
-      if (blinker_rate<=120 && blinker_rate>=60) {
+      if (s->scene.blinker_blinkingrate<=120 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(70));
         p.drawPolygon(rightbsign1, std::size(rightbsign1));
       }
-      if (blinker_rate<=100 && blinker_rate>=60) {
+      if (blinker_s->scene.blinker_blinkingraterate<=100 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(140));
         p.drawPolygon(rightbsign2, std::size(rightbsign2));
       }
-      if (blinker_rate<=80 && blinker_rate>=60) {
+      if (blinks->scene.blinker_blinkingrateer_rate<=80 && blins->scene.blinker_blinkingrateker_rate>=60) {
         p.setBrush(yellowColor(210));
         p.drawPolygon(rightbsign3, std::size(rightbsign3));
       }

@@ -424,7 +424,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(setSpeed)) : "–";
 
   // Draw outer box + border to contain set speed and speed limit
-  int top_x = rect().left() + bdr_s + bdr_s;
+  int top_x = rect().left() + bdr_s;
   int default_rect_width = 172;
   int rect_width = default_rect_width;
   if (is_metric || has_eu_speed_limit) rect_width = 200;
@@ -437,7 +437,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
-  QRect set_speed_rect(top_x, 30, rect_width, rect_height);
+  QRect set_speed_rect(top_x, bdr_s, rect_width, rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
   drawRoundedRect(p, set_speed_rect, top_radius, top_radius, bottom_radius, bottom_radius);
@@ -855,10 +855,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     if (s->scene.tpmsUnit != 0) {
       debugText(p, tpms_sp_xr, tpms_sp_yr+15, (s->scene.tpmsUnit == 2) ? "TPMS(bar)" : "TPMS(psi)", 150, 33);
-      font_size = (s->scene.tpmsUnit == 2) ? 55 : 50;
+      font_size = (s->scene.tpmsUnit == 2) ? 45 : 40;
     } else {
       debugText(p, tpms_sp_xr, tpms_sp_yr+15, "TPMS(psi)", 150, 33);
-      font_size = 55;
+      font_size = 45;
     }
     if ((s->scene.tpmsPressureFl < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFl < 2.2 && s->scene.tpmsUnit == 2)) {
       p.setPen(yellowColor(200));

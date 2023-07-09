@@ -1102,7 +1102,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &text, int alpha) {
   QRect real_rect = getTextRect(p, 0, text);
   real_rect.moveCenter({x, y - real_rect.height() / 2});
-  p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  //p.setPen(QColor(0xff, 0xff, 0xff, alpha));
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
@@ -1283,7 +1283,8 @@ void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState
     painter.drawPolygon(chevron, std::size(chevron));
     painter.setPen(QColor(0x0, 0x0, 0xff));
     //painter.setRenderHint(QPainter::TextAntialiasing);
-    painter.debugText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), QString("R"), 255, 35, false);
+    configFont(painter, "Inter", 35, "SemiBold");
+    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("R"));
   } else {
     QPointF glow[] = {{x + (sz * 1.35) + g_xo, y + sz + g_yo}, {x, y - g_xo}, {x - (sz * 1.35) - g_xo, y + sz + g_yo}};
     painter.setBrush(QColor(0, 255, 0, 255));
@@ -1293,9 +1294,10 @@ void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState
     QPointF chevron[] = {{x + (sz * 1.25), y + sz}, {x, y}, {x - (sz * 1.25), y + sz}};
     painter.setBrush(greenColor(fillAlpha));
     painter.drawPolygon(chevron, std::size(chevron));
-    painter.setPen(QColor(0xff, 0xff, 0xff));
+    painter.setPen(QColor(0x0, 0x0, 0x0));
     //painter.setRenderHint(QPainter::TextAntialiasing);
-    painter.debugText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), QString("V"), 255, 35, false);
+    configFont(painter, "Inter", 35, "SemiBold");
+    painter.drawText(QRect(x - (sz * 1.25), y, 2 * (sz * 1.25), sz * 1.25), Qt::AlignCenter, QString("V"));
   }
 
   painter.restore();

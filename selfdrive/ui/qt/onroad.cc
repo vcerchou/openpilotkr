@@ -1097,11 +1097,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 // Window that shows camera view and variety of
 // info drawn on top
 
-void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &text, int alpha, bool whitecolor = true) {
+void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &text, int alpha) {
   QRect real_rect = getTextRect(p, 0, text);
   real_rect.moveCenter({x, y - real_rect.height() / 2});
-
-  if (whitecolor) p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.setPen(QColor(0xff, 0xff, 0xff, alpha));
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 

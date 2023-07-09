@@ -87,13 +87,10 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(bool dm_mode MEMBER dm_mode);
   Q_PROPERTY(int ss_elapsed MEMBER ss_elapsed);
   Q_PROPERTY(bool standstill MEMBER standstill);
-  Q_PROPERTY(bool auto_hold MEMBER auto_hold);
+
   Q_PROPERTY(bool left_blinker MEMBER left_blinker);
   Q_PROPERTY(bool right_blinker MEMBER right_blinker);
-  Q_PROPERTY(float a_req_v MEMBER a_req_v);
-  Q_PROPERTY(bool brake_pressed MEMBER brake_pressed);
-  Q_PROPERTY(bool brake_light MEMBER brake_light);
-  Q_PROPERTY(bool gas_pressed MEMBER gas_pressed);
+
   Q_PROPERTY(int safety_speed MEMBER safety_speed);
   Q_PROPERTY(float safety_dist MEMBER safety_dist);
   Q_PROPERTY(int decel_off MEMBER decel_off);
@@ -142,13 +139,10 @@ private:
   bool dm_mode = false;
   int ss_elapsed = 0;
   bool standstill = false;
-  bool auto_hold = false;
+
   bool left_blinker = false;
   bool right_blinker = false;
-  float a_req_v = 0;
-  bool brake_pressed = false;
-  bool brake_light = false;
-  bool gas_pressed = false;
+
   int safety_speed = 0;
   float safety_dist = 0;
   int decel_off = 0;

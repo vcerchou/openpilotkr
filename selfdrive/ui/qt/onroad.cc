@@ -245,7 +245,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPixmap img = isChecked() ? experimental_img : engage_img;
 
   // engage-ability icon
-  if (uiState()->scene.engaged) {
+  if (uiState()->scene.enabled) {
     drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, uiState()->scene.angleSteers);
   } else if (!uiState()->scene.comma_stock_ui) {
     QString gear_text = "0";
@@ -256,7 +256,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
       case 4 : gear_text = "R"; p.setPen(redColor(255)); break;
       case 5 : gear_text = "M"; p.setPen(greenColor(255)); break;
       case 7 : gear_text = "B"; p.setPen(whiteColor(255)); break;
-      default: gear_text = QString::number(uiState()->scene.getGearShifter, 'f', 0); p.setPen(whiteColor(255)); break;
+      default: gear_text = QString::number(int(uiState()->scene.getGearShifter), 'f', 0); p.setPen(whiteColor(255)); break;
     }
     debugText(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s + 70, gear_text, 255, 190, true);
   }
@@ -391,13 +391,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("dm_mode", s.scene.monitoring_mode);
   setProperty("ss_elapsed", s.scene.lateralPlan.standstillElapsedTime);
   setProperty("standstill", s.scene.standStill);
-  setProperty("auto_hold", s.scene.autoHold);
+
   setProperty("left_blinker", s.scene.leftBlinker);
   setProperty("right_blinker", s.scene.rightBlinker);
-  setProperty("a_req_v", s.scene.a_req_value);
-  setProperty("brake_pressed", s.scene.brakePress);
-  setProperty("brake_light", s.scene.brakeLights);
-  setProperty("gas_pressed", s.scene.gasPress);
   setProperty("safety_speed", s.scene.limitSpeedCamera);
   setProperty("safety_dist", s.scene.limitSpeedCameraDist);
   setProperty("decel_off", s.scene.sl_decel_off);
@@ -544,19 +540,21 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.drawText(speed_limit_rect, Qt::AlignCenter, speedLimitStr);
   }
 
+
+  UIState *s = uiState();
   // current speed
-  float gas_opacity = a_req_v*255>255?255:a_req_v*255;
-  float brake_opacity = abs(a_req_v*175)>255?255:abs(a_req_v*175);
-  if (brake_pressed && !s->scene.comma_stock_ui) {
+  float gas_opacity = s->scene.a_req_value*255>255?255:s->scene.a_req_value*255;
+  float brake_opacity = abs(s->scene.a_req_value*175)>255?255:abs(s->scene.a_req_value*175);
+  if (s->scene.brakePress && !s->scene.comma_stock_ui) {
   	p.setPen(QColor(255, 0, 0, 255));
-  } else if (brake_light && speedStr == "0" && !s->scene.comma_stock_ui) {
+  } else if (s->scene.brakeLights && speedStr == "0" && !s->scene.comma_stock_ui) {
     p.setPen(redColor(100));
-  } else if (gas_pressed && !s->scene.comma_stock_ui) {
+  } else if (s->scene.gasPress && !s->scene.comma_stock_ui) {
     p.setPen(QColor(0, 240, 0, 255));
-  } else if (a_req_v < 0 && !s->scene.comma_stock_ui) {
-    p.setPen(QColor((255-int(abs(a_req_v*8))), (255-int(brake_opacity)), (255-int(brake_opacity)), 255));
-  } else if (a_req_v > 0 && !s->scene.comma_stock_ui) {
-    p.setPen(QColor((255-int(gas_opacity)), (255-int((a_req_v*10))), (255-int(gas_opacity)), 255));
+  } else if (s->scene.a_req_value < 0 && !s->scene.comma_stock_ui) {
+    p.setPen(QColor((255-int(abs(s->scene.a_req_value*8))), (255-int(brake_opacity)), (255-int(brake_opacity)), 255));
+  } else if (s->scene.a_req_value > 0 && !s->scene.comma_stock_ui) {
+    p.setPen(QColor((255-int(gas_opacity)), (255-int((s->scene.a_req_value*10))), (255-int(gas_opacity)), 255));
   }
   configFont(p, "Inter", 176, "Bold");
   drawText(p, rect().center().x(), 210, speedStr);
@@ -565,8 +563,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
 
   // opkr
-  UIState *s = uiState();
-
   p.setBrush(QColor(0, 0, 0, 0));
   p.setPen(whiteColor(150));
   //p.setRenderHint(QPainter::TextAntialiasing);
@@ -658,7 +654,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
 
-  if (!comma_stock_ui) {
+  if (!s->scene.comma_stock_ui) {
     int j_num = 100;
     // opkr debug info(left panel)
     int width_l = 180;
@@ -666,7 +662,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int sp_yl = bdr_s + 275;
     int num_l = 4;
     if (s->scene.longitudinal_control) {num_l = num_l + 1;}
-    QRect left_panel(rect().left() + bdr_s, bdr_s + 200, width_l, 104*num_l);  
+    QRect left_panel(rect().left() + bdr_s, bdr_s + 215, width_l, 104*num_l);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(left_panel, 20, 20);
@@ -756,7 +752,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int num_r = 1;
     num_r = num_r + 1;
     if (s->scene.gpsAccuracyUblox != 0.00) {num_r = num_r + 2;}
-    QRect right_panel(rect().right() - bdr_s - width_r, bdr_s + 200, width_r, 104*num_r);  
+    QRect right_panel(rect().right() - bdr_s - width_r, bdr_s + 215, width_r, 104*num_r);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(right_panel, 20, 20);
@@ -908,7 +904,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
 
-  if (!comma_stock_ui) {
+  if (!s->scene.comma_stock_ui) {
     // opkr rec
     QRect recbtn_draw(rect().right() - bdr_s - 140 - 20, 905, 140, 140);
     p.setBrush(Qt::NoBrush);
@@ -970,7 +966,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // opkr blinker
-  if (!comma_stock_ui) {
+  if (!s->scene.comma_stock_ui) {
     float bw = 0;
     float bx = 0;
     float bh = 0;
@@ -1027,7 +1023,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // opkr safetysign
-  if (!comma_stock_ui) {
+  if (!s->scene.comma_stock_ui) {
     int diameter1 = 185;
     int diameter2 = 170;
     int diameter3 = 202;

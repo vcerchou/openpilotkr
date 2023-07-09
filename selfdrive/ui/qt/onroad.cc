@@ -547,13 +547,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else if (act_accel > 0 && act_accel < 3.0 && s->scene.comma_stock_ui != 1) {
     p.setPen(QColor((255-int(gas_opacity)), (255-int((act_accel*10))), (255-int(gas_opacity)), 255));
   }
-  debugText(p, rect().center().x(), 210, speedStr, 255, 176, true);
+  debugText(p, rect().center().x(), 210, speedStr, 255, 180, true);
   if (s->scene.brakeLights) {
     p.setPen(redColor(200));
   } else {
     p.setPen(whiteColor(255));
   }
-  debugText(p, rect().center().x(), 290, speedUnit, 255, 55, true);
+  debugText(p, rect().center().x(), 290, speedUnit, 255, 50, true);
 
 
   // opkr

@@ -1243,9 +1243,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
   if (szTuneName != "") {
-    QRect rect_tune_name = QRect(x_pos-bwidth+30+10, y_pos-bheight, 2*bwidth-30-10, bheight);
-    QRect rect_tune_param = QRect(x_pos-bwidth+30+10, y_pos, 2*bwidth-30-10, bheight);
+    QRect rect_tune_name = QRect(x_pos-2*bwidth+30+10, y_pos-bheight, 2*bwidth-30-10, bheight);
+    QRect rect_tune_param = QRect(x_pos-2*bwidth+30+10, y_pos, 2*bwidth-30-10, bheight);
     p.setPen(QColor(255, 255, 255, 255));
+    configFont(p, "Inter", 80, "Bold");
     p.drawText(rect_tune_name, Qt::AlignCenter, szTuneName);
     p.drawText(rect_tune_param, Qt::AlignCenter, szTuneParam);
   }

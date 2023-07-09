@@ -76,7 +76,6 @@ class AnnotatedCameraWidget : public CameraWidget {
   Q_PROPERTY(bool rightHandDM MEMBER rightHandDM);
   Q_PROPERTY(int status MEMBER status);
 
-  Q_PROPERTY(int cruiseSpeed MEMBER cruiseSpeed);
   Q_PROPERTY(bool is_over_sl MEMBER is_over_sl);
 
   Q_PROPERTY(bool lead_stat MEMBER lead_stat);

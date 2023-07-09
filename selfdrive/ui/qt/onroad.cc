@@ -1093,162 +1093,164 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
 
-  float bwidth = 160;
-  float bheight = 160;
-  float x_start_pos_l = s->fb_w/2-bwidth*2;
-  float x_start_pos_r = s->fb_w/2+bwidth*2;
-  float x_pos = s->fb_w/2;
-  float y_pos = 750;
-  //upper left arrow
-  QPointF leftupar[] = {{x_start_pos_l, y_pos-175}, {x_start_pos_l-bwidth+30, y_pos+bheight/2-175}, {x_start_pos_l, y_pos+bheight-175}};
-  p.setBrush(ochreColor(100));
-  p.drawPolygon(leftupar, std::size(leftupar));
-  //upper right arrow
-  QPointF rightupar[] = {{x_start_pos_r, y_pos-175}, {x_start_pos_r+bwidth-30, y_pos+bheight/2-175}, {x_start_pos_r, y_pos+bheight-175}};
-  p.setBrush(ochreColor(100));
-  p.drawPolygon(rightupar, std::size(rightupar));
+  if (s->scene.live_tune_panel_enable) {
+    float bwidth = 160;
+    float bheight = 160;
+    float x_start_pos_l = s->fb_w/2-bwidth*2;
+    float x_start_pos_r = s->fb_w/2+bwidth*2;
+    float x_pos = s->fb_w/2;
+    float y_pos = 750;
+    //upper left arrow
+    QPointF leftupar[] = {{x_start_pos_l, y_pos-175}, {x_start_pos_l-bwidth+30, y_pos+bheight/2-175}, {x_start_pos_l, y_pos+bheight-175}};
+    p.setBrush(ochreColor(100));
+    p.drawPolygon(leftupar, std::size(leftupar));
+    //upper right arrow
+    QPointF rightupar[] = {{x_start_pos_r, y_pos-175}, {x_start_pos_r+bwidth-30, y_pos+bheight/2-175}, {x_start_pos_r, y_pos+bheight-175}};
+    p.setBrush(ochreColor(100));
+    p.drawPolygon(rightupar, std::size(rightupar));
 
-  //left arrow
-  QPointF leftar[] = {{x_start_pos_l, y_pos}, {x_start_pos_l-bwidth+30, y_pos+bheight/2}, {x_start_pos_l, y_pos+bheight}};
-  p.setBrush(greenColor(100));
-  p.drawPolygon(leftar, std::size(leftar));
-  //right arrow
-  QPointF rightar[] = {{x_start_pos_r, y_pos}, {x_start_pos_r+bwidth-30, y_pos+bheight/2}, {x_start_pos_r, y_pos+bheight}};
-  p.setBrush(greenColor(100));
-  p.drawPolygon(rightar, std::size(rightar));
+    //left arrow
+    QPointF leftar[] = {{x_start_pos_l, y_pos}, {x_start_pos_l-bwidth+30, y_pos+bheight/2}, {x_start_pos_l, y_pos+bheight}};
+    p.setBrush(greenColor(100));
+    p.drawPolygon(leftar, std::size(leftar));
+    //right arrow
+    QPointF rightar[] = {{x_start_pos_r, y_pos}, {x_start_pos_r+bwidth-30, y_pos+bheight/2}, {x_start_pos_r, y_pos+bheight}};
+    p.setBrush(greenColor(100));
+    p.drawPolygon(rightar, std::size(rightar));
 
-  int live_tune_panel_list = s->scene.live_tune_panel_list;
-  int lateralControlMethod = s->scene.lateralControlMethod;
+    int live_tune_panel_list = s->scene.live_tune_panel_list;
+    int lateralControlMethod = s->scene.lateralControlMethod;
 
-  QString szTuneName = "";
-  QString szTuneParam = "";
-  int list_menu = live_tune_panel_list - (s->scene.list_count);
-  if (live_tune_panel_list == 0) {
-    //szTuneParam.sprintf("%+0.3f", s->scene.cameraOffset*0.001);
-    szTuneParam.sprintf("%+0.3f", s->scene.cameraOffset*0.001);
-    szTuneName = "CameraOffset";
-  } else if (live_tune_panel_list == 1) {
-    szTuneParam.sprintf("%+0.3f", s->scene.pathOffset*0.001);
-    szTuneName = "PathOffset";
-  } else if (lateralControlMethod == 0) {  // 0.PID
-    if ( list_menu == 0 ) {
-      szTuneParam.sprintf("%0.2f", s->scene.pidKp*0.01);
-      szTuneName = "Pid: Kp";
-    } else if (list_menu == 1 ) {
-      szTuneParam.sprintf("%0.3f", s->scene.pidKi*0.001);
-      szTuneName = "Pid: Ki";
-    } else if (list_menu == 2 ) {
-      szTuneParam.sprintf("%0.2f", s->scene.pidKd*0.01);
-      szTuneName = "Pid: Kd";
-    } else if (list_menu == 3 ) {
-      szTuneParam.sprintf("%0.5f", s->scene.pidKf*0.00001);
-      szTuneName = "Pid: Kf";
+    QString szTuneName = "";
+    QString szTuneParam = "";
+    int list_menu = live_tune_panel_list - (s->scene.list_count);
+    if (live_tune_panel_list == 0) {
+      //szTuneParam.sprintf("%+0.3f", s->scene.cameraOffset*0.001);
+      szTuneParam.sprintf("%+0.3f", s->scene.cameraOffset*0.001);
+      szTuneName = "CameraOffset";
+    } else if (live_tune_panel_list == 1) {
+      szTuneParam.sprintf("%+0.3f", s->scene.pathOffset*0.001);
+      szTuneName = "PathOffset";
+    } else if (lateralControlMethod == 0) {  // 0.PID
+      if ( list_menu == 0 ) {
+        szTuneParam.sprintf("%0.2f", s->scene.pidKp*0.01);
+        szTuneName = "Pid: Kp";
+      } else if (list_menu == 1 ) {
+        szTuneParam.sprintf("%0.3f", s->scene.pidKi*0.001);
+        szTuneName = "Pid: Ki";
+      } else if (list_menu == 2 ) {
+        szTuneParam.sprintf("%0.2f", s->scene.pidKd*0.01);
+        szTuneName = "Pid: Kd";
+      } else if (list_menu == 3 ) {
+        szTuneParam.sprintf("%0.5f", s->scene.pidKf*0.00001);
+        szTuneName = "Pid: Kf";
+      }
+    } else if (lateralControlMethod == 1) {         // 1.INDI
+
+      if ( list_menu == 0 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiInnerLoopGain*0.1);
+        szTuneName = "INDI: ILGain";
+      } else if ( list_menu == 1 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiOuterLoopGain*0.1);
+        szTuneName = "INDI: OLGain";
+      } else if ( list_menu == 2 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiTimeConstant*0.1);
+        szTuneName = "INDI: TConst";
+      } else if ( list_menu == 3 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiActuatorEffectiveness*0.1);
+        szTuneName = "INDI: ActEffct";
+      }
+    } else if (lateralControlMethod == 2) {       // 2.LQR
+
+      if ( list_menu == 0 ) {
+        szTuneParam.sprintf("%0.0f", s->scene.lqrScale*1.0);
+        szTuneName = "LQR: Scale";
+      } else if ( list_menu == 1) {
+        szTuneParam.sprintf("%0.3f", s->scene.lqrKi*0.001);
+        szTuneName = "LQR: Ki";
+      } else if ( list_menu == 2 ) {
+        szTuneParam.sprintf("%0.5f", s->scene.lqrDcGain*0.00001);
+        szTuneName = "LQR: DcGain";
+      }
+    } else if (lateralControlMethod == 3) {     // 3.TORQUE
+      float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
+
+      if ( list_menu == 0 ) {
+        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKp*0.1, (s->scene.torqueKp*0.1)/max_lat_accel);
+        szTuneName = "TORQUE: Kp";
+      } else if ( list_menu == 1 ) {
+        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKf*0.1, (s->scene.torqueKf*0.1)/max_lat_accel);
+        szTuneName = "TORQUE: Kf";
+      } else if ( list_menu == 2 ) {
+        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKi*0.1, (s->scene.torqueKi*0.1)/max_lat_accel);
+        szTuneName = "TORQUE: Ki";
+      } else if ( list_menu == 3 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.torqueMaxLatAccel*0.1);
+        szTuneName = "TORQUE: MaxL";
+      } else if ( list_menu == 4 ) {
+        szTuneParam.sprintf("%0.3f", s->scene.torqueFriction*0.001);
+        szTuneName = "TORQUE: Fric";
+      }
+    } else if (lateralControlMethod == 4) {     // 4.MULTI
+      float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
+      if ( list_menu == 0 ) {
+        szTuneParam.sprintf("%0.2f", s->scene.pidKp*0.01);
+        szTuneName = "Pid: Kp";
+      } else if (list_menu == 1 ) {
+        szTuneParam.sprintf("%0.3f", s->scene.pidKi*0.001);
+        szTuneName = "Pid: Ki";
+      } else if (list_menu == 2 ) {
+        szTuneParam.sprintf("%0.2f", s->scene.pidKd*0.01);
+        szTuneName = "Pid: Kd";
+      } else if (list_menu == 3 ) {
+        szTuneParam.sprintf("%0.5f", s->scene.pidKf*0.00001);
+        szTuneName = "Pid: Kf";
+      } else if ( list_menu == 4 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiInnerLoopGain*0.1);
+        szTuneName = "INDI: ILGain";
+      } else if ( list_menu == 5 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiOuterLoopGain*0.1);
+        szTuneName = "INDI: OLGain";
+      } else if ( list_menu == 6 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiTimeConstant*0.1);
+        szTuneName = "INDI: TConst";
+      } else if ( list_menu == 7 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.indiActuatorEffectiveness*0.1);
+        szTuneName = "INDI: ActEffct";
+      } else if ( list_menu == 8 ) {
+        szTuneParam.sprintf("%0.0f", s->scene.lqrScale*1.0);
+        szTuneName = "LQR: Scale";
+      } else if ( list_menu == 9) {
+        szTuneParam.sprintf("%0.3f", s->scene.lqrKi*0.001);
+        szTuneName = "LQR: Ki";
+      } else if ( list_menu == 10 ) {
+        szTuneParam.sprintf("%0.5f", s->scene.lqrDcGain*0.00001);
+        szTuneName = "LQR: DcGain";
+      } else if ( list_menu == 11 ) {
+        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKp*0.1, (s->scene.torqueKp*0.1)/max_lat_accel);
+        szTuneName = "TORQUE: Kp";
+      } else if ( list_menu == 12 ) {
+        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKf*0.1, (s->scene.torqueKf*0.1)/max_lat_accel);
+        szTuneName = "TORQUE: Kf";
+      } else if ( list_menu == 13 ) {
+        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKi*0.1, (s->scene.torqueKi*0.1)/max_lat_accel);
+        szTuneName = "TORQUE: Ki";
+      } else if ( list_menu == 14 ) {
+        szTuneParam.sprintf("%0.1f", s->scene.torqueMaxLatAccel*0.1);
+        szTuneName = "TORQUE: MaxL";
+      } else if ( list_menu == 15 ) {
+        szTuneParam.sprintf("%0.3f", s->scene.torqueFriction*0.001);
+        szTuneName = "TORQUE: Fric";
+      }
     }
-  } else if (lateralControlMethod == 1) {         // 1.INDI
-
-    if ( list_menu == 0 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiInnerLoopGain*0.1);
-      szTuneName = "INDI: ILGain";
-    } else if ( list_menu == 1 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiOuterLoopGain*0.1);
-      szTuneName = "INDI: OLGain";
-    } else if ( list_menu == 2 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiTimeConstant*0.1);
-      szTuneName = "INDI: TConst";
-    } else if ( list_menu == 3 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiActuatorEffectiveness*0.1);
-      szTuneName = "INDI: ActEffct";
+    if (szTuneName != "") {
+      QRect rect_tune_name = QRect(x_pos-2*bwidth+30+10, y_pos-bheight-20, 4*bwidth-30-10, bheight);
+      QRect rect_tune_param = QRect(x_pos-2*bwidth+30+10, y_pos, 4*bwidth-30-10, bheight);
+      p.setPen(QColor(255, 255, 255, 255));
+      configFont(p, "Inter", 90, "Bold");
+      p.drawText(rect_tune_name, Qt::AlignCenter, szTuneName);
+      p.drawText(rect_tune_param, Qt::AlignCenter, szTuneParam);
     }
-  } else if (lateralControlMethod == 2) {       // 2.LQR
-
-    if ( list_menu == 0 ) {
-      szTuneParam.sprintf("%0.0f", s->scene.lqrScale*1.0);
-      szTuneName = "LQR: Scale";
-    } else if ( list_menu == 1) {
-      szTuneParam.sprintf("%0.3f", s->scene.lqrKi*0.001);
-      szTuneName = "LQR: Ki";
-    } else if ( list_menu == 2 ) {
-      szTuneParam.sprintf("%0.5f", s->scene.lqrDcGain*0.00001);
-      szTuneName = "LQR: DcGain";
-    }
-  } else if (lateralControlMethod == 3) {     // 3.TORQUE
-    float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
-
-    if ( list_menu == 0 ) {
-      szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKp*0.1, (s->scene.torqueKp*0.1)/max_lat_accel);
-      szTuneName = "TORQUE: Kp";
-    } else if ( list_menu == 1 ) {
-      szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKf*0.1, (s->scene.torqueKf*0.1)/max_lat_accel);
-      szTuneName = "TORQUE: Kf";
-    } else if ( list_menu == 2 ) {
-      szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKi*0.1, (s->scene.torqueKi*0.1)/max_lat_accel);
-      szTuneName = "TORQUE: Ki";
-    } else if ( list_menu == 3 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.torqueMaxLatAccel*0.1);
-      szTuneName = "TORQUE: MaxL";
-    } else if ( list_menu == 4 ) {
-      szTuneParam.sprintf("%0.3f", s->scene.torqueFriction*0.001);
-      szTuneName = "TORQUE: Fric";
-    }
-  } else if (lateralControlMethod == 4) {     // 4.MULTI
-    float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
-    if ( list_menu == 0 ) {
-      szTuneParam.sprintf("%0.2f", s->scene.pidKp*0.01);
-      szTuneName = "Pid: Kp";
-    } else if (list_menu == 1 ) {
-      szTuneParam.sprintf("%0.3f", s->scene.pidKi*0.001);
-      szTuneName = "Pid: Ki";
-    } else if (list_menu == 2 ) {
-      szTuneParam.sprintf("%0.2f", s->scene.pidKd*0.01);
-      szTuneName = "Pid: Kd";
-    } else if (list_menu == 3 ) {
-      szTuneParam.sprintf("%0.5f", s->scene.pidKf*0.00001);
-      szTuneName = "Pid: Kf";
-    } else if ( list_menu == 4 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiInnerLoopGain*0.1);
-      szTuneName = "INDI: ILGain";
-    } else if ( list_menu == 5 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiOuterLoopGain*0.1);
-      szTuneName = "INDI: OLGain";
-    } else if ( list_menu == 6 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiTimeConstant*0.1);
-      szTuneName = "INDI: TConst";
-    } else if ( list_menu == 7 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.indiActuatorEffectiveness*0.1);
-      szTuneName = "INDI: ActEffct";
-    } else if ( list_menu == 8 ) {
-      szTuneParam.sprintf("%0.0f", s->scene.lqrScale*1.0);
-      szTuneName = "LQR: Scale";
-    } else if ( list_menu == 9) {
-      szTuneParam.sprintf("%0.3f", s->scene.lqrKi*0.001);
-      szTuneName = "LQR: Ki";
-    } else if ( list_menu == 10 ) {
-      szTuneParam.sprintf("%0.5f", s->scene.lqrDcGain*0.00001);
-      szTuneName = "LQR: DcGain";
-    } else if ( list_menu == 11 ) {
-      szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKp*0.1, (s->scene.torqueKp*0.1)/max_lat_accel);
-      szTuneName = "TORQUE: Kp";
-    } else if ( list_menu == 12 ) {
-      szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKf*0.1, (s->scene.torqueKf*0.1)/max_lat_accel);
-      szTuneName = "TORQUE: Kf";
-    } else if ( list_menu == 13 ) {
-      szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKi*0.1, (s->scene.torqueKi*0.1)/max_lat_accel);
-      szTuneName = "TORQUE: Ki";
-    } else if ( list_menu == 14 ) {
-      szTuneParam.sprintf("%0.1f", s->scene.torqueMaxLatAccel*0.1);
-      szTuneName = "TORQUE: MaxL";
-    } else if ( list_menu == 15 ) {
-      szTuneParam.sprintf("%0.3f", s->scene.torqueFriction*0.001);
-      szTuneName = "TORQUE: Fric";
-    }
-  }
-  if (szTuneName != "") {
-    QRect rect_tune_name = QRect(x_pos-2*bwidth+30+10, y_pos-bheight, 2*bwidth-30-10, bheight);
-    QRect rect_tune_param = QRect(x_pos-2*bwidth+30+10, y_pos, 2*bwidth-30-10, bheight);
-    p.setPen(QColor(255, 255, 255, 255));
-    configFont(p, "Inter", 80, "Bold");
-    p.drawText(rect_tune_name, Qt::AlignCenter, szTuneName);
-    p.drawText(rect_tune_param, Qt::AlignCenter, szTuneParam);
   }
   p.restore();
 }

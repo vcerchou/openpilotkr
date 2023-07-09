@@ -1093,12 +1093,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
 
-  int bwidth = 160;
-  int bheight = 160;
-  int x_start_pos_l = s->fb_w/2-bwidth*2;
-  int x_start_pos_r = s->fb_w/2+bwidth*2;
-  int x_pos = s->fb_w/2;
-  int y_pos = 750;
+  float bwidth = 160;
+  float bheight = 160;
+  float x_start_pos_l = s->fb_w/2-bwidth*2;
+  float x_start_pos_r = s->fb_w/2+bwidth*2;
+  float x_pos = s->fb_w/2;
+  float y_pos = 750;
   //upper left arrow
   QPointF leftupar[] = {{x_start_pos_l, y_pos-175}, {x_start_pos_l-bwidth+30, y_pos+bheight/2-175}, {x_start_pos_l, y_pos+bheight-175}};
   p.setBrush(ochreColor(100));

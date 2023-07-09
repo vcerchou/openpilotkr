@@ -122,11 +122,12 @@ typedef struct UIScene {
   int cpuPerc;
   float cpuTemp;
   float ambientTemp;
+  int fanSpeedRpm;
   bool rightblindspot;
   bool leftblindspot;
   bool leftBlinker;
   bool rightBlinker;
-  int blinker_blinkingrate = 60;
+  int blinker_blinkingrate = 0;
   int tpms_blinkingrate = 120;
   int blindspot_blinkingrate = 120;
   int car_valid_status_changed = 0;
@@ -217,6 +218,7 @@ typedef struct UIScene {
   float gpsAccuracy;
 
   cereal::DeviceState::Reader deviceState;
+  cereal::PeripheralState::Reader peripheralState;
   cereal::CarState::Reader car_state;
   cereal::ControlsState::Reader controls_state;
   cereal::CarState::GearShifter getGearShifter;

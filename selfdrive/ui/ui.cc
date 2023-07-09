@@ -269,6 +269,10 @@ static void update_state(UIState *s) {
     scene.ambientTemp = scene.deviceState.getAmbientTempC();
     scene.fanSpeed = scene.deviceState.getFanSpeedPercentDesired();
   }
+  if (sm.updated("peripheralState")) {
+    scene.peripheralState = sm["peripheralState"].getPeripheralState();
+    scene.fanSpeedRpm = scene.peripheralState.getFanSpeedRpm();
+  }
   if (sm.updated("pandaStates")) {
     auto pandaStates = sm["pandaStates"].getPandaStates();
     if (pandaStates.size() > 0) {
@@ -500,7 +504,7 @@ void UIState::updateStatus() {
 
 UIState::UIState(QObject *parent) : QObject(parent) {
   sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
-    "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "roadCameraState",
+    "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "peripheralState", "roadCameraState",
     "pandaStates", "carParams", "driverMonitoringState", "carState", "liveLocationKalman", "driverStateV2",
     "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "uiPlan",
     "liveParameters", "gpsLocationExternal", "lateralPlan", "longitudinalPlan", "liveENaviData", "liveMapData",

@@ -1018,11 +1018,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setBrush(yellowColor(70));
         p.drawPolygon(rightbsign1, std::size(rightbsign1));
       }
-      if (s->scene.blinker_blinkingraterate<=100 && s->scene.blinker_blinkingrate>=60) {
+      if (s->scene.blinker_blinkingrate<=100 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(140));
         p.drawPolygon(rightbsign2, std::size(rightbsign2));
       }
-      if (s->scene.blinker_blinkingrateer_rate<=80 && s->scene.blinker_blinkingrateker_rate>=60) {
+      if (s->scene.blinker_blinkingrate<=80 && s->scene.blinker_blinkingrate>=60) {
         p.setBrush(yellowColor(210));
         p.drawPolygon(rightbsign3, std::size(rightbsign3));
       }

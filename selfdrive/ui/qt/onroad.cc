@@ -104,7 +104,10 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
   QRect speedlimit_btn = QRect(220, 15, 190, 190);
 
   if (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) ||
-    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable) {return;}
+    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable) {
+    QWidget::mousePressEvent(e);
+    return;
+  }
   if (map != nullptr) {
     bool sidebarVisible = geometry().x() > 0;
     map->setVisible(!sidebarVisible && !map->isVisible());

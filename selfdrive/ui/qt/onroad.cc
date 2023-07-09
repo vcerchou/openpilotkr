@@ -1247,8 +1247,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       QRect rect_tune_name = QRect(x_pos-2*bwidth+30+10, y_pos-bheight-20, 4*bwidth-30-10, bheight);
       QRect rect_tune_param = QRect(x_pos-2*bwidth+30+10, y_pos, 4*bwidth-30-10, bheight);
       p.setPen(QColor(255, 255, 255, 255));
-      configFont(p, "Inter", 90, "Bold");
+      configFont(p, "Inter", 80, "Bold");
       p.drawText(rect_tune_name, Qt::AlignCenter, szTuneName);
+      configFont(p, "Inter", 100, "Bold");
       p.drawText(rect_tune_param, Qt::AlignCenter, szTuneParam);
     }
   }

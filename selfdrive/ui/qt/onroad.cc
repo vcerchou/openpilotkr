@@ -907,7 +907,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(recbtn_draw);
     p.setPen(whiteColor(200));
-    configFont(p, "Inter", 40, "SemiBold");
+    configFont(p, "Inter", 41, "SemiBold");
     p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
 
     // opkr lane selector
@@ -919,12 +919,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(whiteColor(200));
     if (s->scene.laneless_mode == 0) {
       configFont(p, "Inter", 39, "SemiBold");
-      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 890, 140, 140), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 920, 140, 140), Qt::AlignCenter, QString("LINE"));
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 885, 140, 140), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 925, 140, 140), Qt::AlignCenter, QString("LINE"));
     } else if (s->scene.laneless_mode == 1) {
       configFont(p, "Inter", 39, "SemiBold");
-      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 890, 140, 140), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 920, 140, 140), Qt::AlignCenter, QString("LESS"));
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 885, 140, 140), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - bdr_s - 140 - 20 - 160, 925, 140, 140), Qt::AlignCenter, QString("LESS"));
     } else if (s->scene.laneless_mode == 2) {
       p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
     }

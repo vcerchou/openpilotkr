@@ -1298,6 +1298,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setPen(QPen(QBrush(QColor(255,0,0,200)), 60));
       p.drawArc(rectangle, startAngle, spanAngle);
     }
+  }
 
   p.restore();
 }

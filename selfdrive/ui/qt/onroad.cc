@@ -1264,7 +1264,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(pen);
     p.setRenderHint(QPainter::Antialiasing);
     int startAngle = 225 * 16;
-    int spanAngle = 90 * 16;
+    int spanAngle = -90 * 16;
     p.drawArc(rectangle, startAngle, spanAngle);
   }
 

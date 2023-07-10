@@ -1267,6 +1267,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
+    startAngle = 225 * 16;
+    spanAngle = int(fmax(-45, (-15*3))) * 16;
+    p.setPen(QPen(QBrush(QColor(25,127,54,200)), 60));
+    p.drawArc(rectangle, startAngle, spanAngle);
+
     if (rpm > 1.0) {
       startAngle = 225 * 16;
       spanAngle = fmax(-45, (-15*count)) * 16;

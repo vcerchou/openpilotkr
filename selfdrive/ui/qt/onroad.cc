@@ -1267,40 +1267,49 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
-    for (int count = 0; count < rpm_to_deg; ++count) {
-      if (rpm < 1.0) break;
-      if (count < 3) {
-        startAngle = 225 * 16;
-        spanAngle = (-15*(count+1)) * 16;
-        p.setPen(QPen(QColor(25,127,54,200), 40));
-        p.drawArc(rectangle, startAngle, spanAngle);
-      } else if (count < 6) {
-        startAngle = 225 * 16;
-        spanAngle = (-15*(count-2)) * 16;
-        p.setPen(QPen(QColor(34,177,76,200), 40));
-        p.drawArc(rectangle, startAngle, spanAngle);
-      } else if (count < 9) {
-        startAngle = 225 * 16;
-        spanAngle = (-15*(count-5)) * 16;
-        p.setPen(QPen(QColor(0,255,0,200), 40));
-        p.drawArc(rectangle, startAngle, spanAngle);
-      } else if (count < 12) {
-        startAngle = 225 * 16;
-        spanAngle = (-15*(count-8)) * 16;
-        p.setPen(QPen(QColor(255,201,14,200), 40));
-        p.drawArc(rectangle, startAngle, spanAngle);
-      } else if (count < 15) {
-        startAngle = 225 * 16;
-        spanAngle = (-15*(count-11)) * 16;
-        p.setPen(QPen(QColor(255,127,39,200), 40));
-        p.drawArc(rectangle, startAngle, spanAngle);
-      } else if (count < 19) {
-        startAngle = 225 * 16;
-        spanAngle = (-15*(count-14)) * 16;
-        p.setPen(QPen(QColor(255,0,0,200), 40));
-        p.drawArc(rectangle, startAngle, spanAngle);
-      }
-    }
+    startAngle = 225 * 16;
+    spanAngle = (-15*3) * 16;
+    p.setPen(QPen(QColor(25,127,54,200), 40));
+    p.drawArc(rectangle, startAngle, spanAngle);
+    startAngle = 225*(-15*3) * 16;
+    spanAngle = (-15*3) * 16;
+    p.setPen(QPen(QColor(34,177,76,200), 40));
+    p.drawArc(rectangle, startAngle, spanAngle);
+
+    // for (int count = 0; count < rpm_to_deg; ++count) {
+    //   if (rpm < 1.0) break;
+    //   if (count < 3) {
+    //     startAngle = 225 * 16;
+    //     spanAngle = (-15*(count+1)) * 16;
+    //     p.setPen(QPen(QColor(25,127,54,200), 40));
+    //     p.drawArc(rectangle, startAngle, spanAngle);
+    //   } else if (count < 6) {
+    //     startAngle = 225 * 16;
+    //     spanAngle = (-15*(count-2)) * 16;
+    //     p.setPen(QPen(QColor(34,177,76,200), 40));
+    //     p.drawArc(rectangle, startAngle, spanAngle);
+    //   } else if (count < 9) {
+    //     startAngle = 225 * 16;
+    //     spanAngle = (-15*(count-5)) * 16;
+    //     p.setPen(QPen(QColor(0,255,0,200), 40));
+    //     p.drawArc(rectangle, startAngle, spanAngle);
+    //   } else if (count < 12) {
+    //     startAngle = 225 * 16;
+    //     spanAngle = (-15*(count-8)) * 16;
+    //     p.setPen(QPen(QColor(255,201,14,200), 40));
+    //     p.drawArc(rectangle, startAngle, spanAngle);
+    //   } else if (count < 15) {
+    //     startAngle = 225 * 16;
+    //     spanAngle = (-15*(count-11)) * 16;
+    //     p.setPen(QPen(QColor(255,127,39,200), 40));
+    //     p.drawArc(rectangle, startAngle, spanAngle);
+    //   } else if (count < 18) {
+    //     startAngle = 225 * 16;
+    //     spanAngle = (-15*(count-14)) * 16;
+    //     p.setPen(QPen(QColor(255,0,0,200), 40));
+    //     p.drawArc(rectangle, startAngle, spanAngle);
+    //   }
+    // }
   }
 
   p.restore();

@@ -1270,17 +1270,17 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     if (rpm > 1.0) {
       startAngle = 225 * 16;
       spanAngle = max(-45, (-15*count)) * 16;
-      p.setPen(Qpen(QBrush(QColor(25,127,54,200)), 60));
+      p.setPen(QPen(QBrush(QColor(25,127,54,200)), 60));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 180 * 16;
       spanAngle = max(-45, -15*(max(0, count-3))) * 16;
-      p.setPen(Qpen(QBrush(QColor(34,177,76,200)), 60));
+      p.setPen(QPen(QBrush(QColor(34,177,76,200)), 60));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 135 * 16;
       spanAngle = max(-45, -15*(max(0, count-6))) * 16;
-      p.setPen(Qpen(QBrush(QColor(0,255,0,200)), 60));
+      p.setPen(QPen(QBrush(QColor(0,255,0,200)), 60));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 90 * 16;
@@ -1290,12 +1290,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
       startAngle = 45 * 16;
       spanAngle = max(-45, -15*(max(0, count-12))) * 16;
-      p.setPen(Qpen(QBrush(QColor(255,127,39,200)), 60));
+      p.setPen(QPen(QBrush(QColor(255,127,39,200)), 60));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 0 * 16;
       spanAngle = max(-45, -15*(max(0, count-15))) * 16;
-      p.setPen(Qpen(QBrush(QColor(255,0,0,200)), 60));
+      p.setPen(QPen(QBrush(QColor(255,0,0,200)), 60));
       p.drawArc(rectangle, startAngle, spanAngle);
     }
 

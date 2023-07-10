@@ -1260,47 +1260,42 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     //int rpm = min(s->scene.engine_rpm, max_rpm);
     int rpm = 3600;
     // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
-    int count = floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0)); // min:0, max:18
-    int arpm_width = 250;
-    int arpm_height = 250;
-    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+40/2, arpm_width, arpm_height);
+    int count = int(floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0))); // min:0, max:18
+    int arpm_width = 300;
+    int arpm_height = 300;
+    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+50, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
-    startAngle = 225 * 16;
-    spanAngle = int(fmax(-45, (-15*3))) * 16;
-    p.setPen(QPen(QBrush(QColor(25,127,54,200)), 60));
-    p.drawArc(rectangle, startAngle, spanAngle);
-
-    if (rpm > 1.0) {
+    if (rpm > 1) {
       startAngle = 225 * 16;
-      spanAngle = fmax(-45, (-15*count)) * 16;
-      p.setPen(QPen(QBrush(QColor(25,127,54,200)), 60));
+      spanAngle = int(fmax(-45, (-15*count))) * 16;
+      p.setPen(QPen(QColor(25,127,54,200),55,Qt::FlatCap))
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 180 * 16;
-      spanAngle = fmax(-45, -15*(fmax(0, count-3))) * 16;
-      p.setPen(QPen(QBrush(QColor(34,177,76,200)), 60));
+      spanAngle = int(fmax(-45, -15*(fmax(0, count-3)))) * 16;
+      p.setPen(QPen(QColor(34,177,76,200),55,Qt::FlatCap))
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 135 * 16;
-      spanAngle = fmax(-45, -15*(fmax(0, count-6))) * 16;
-      p.setPen(QPen(QBrush(QColor(0,255,0,200)), 60));
+      spanAngle = int(fmax(-45, -15*(fmax(0, count-6)))) * 16;
+      p.setPen(QPen(QColor(0,255,0,200),55,Qt::FlatCap))
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 90 * 16;
-      spanAngle = fmax(-45, -15*(fmax(0, count-9))) * 16;
-      p.setPen(QPen(QBrush(QColor(255,201,14,200)), 60));
+      spanAngle = int(fmax(-45, -15*(fmax(0, count-9)))) * 16;
+      p.setPen(QPen(QColor(255,201,14,200),55,Qt::FlatCap))
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 45 * 16;
-      spanAngle = fmax(-45, -15*(fmax(0, count-12))) * 16;
-      p.setPen(QPen(QBrush(QColor(255,127,39,200)), 60));
+      spanAngle = int(fmax(-45, -15*(fmax(0, count-12)))) * 16;
+      p.setPen(QPen(QColor(255,127,39,200),55,Qt::FlatCap))
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 0 * 16;
-      spanAngle = fmax(-45, -15*(fmax(0, count-15))) * 16;
-      p.setPen(QPen(QBrush(QColor(255,0,0,200)), 60));
+      spanAngle = int(fmax(-45, -15*(fmax(0, count-15)))) * 16;
+      p.setPen(QPen(QColor(255,0,0,200),55,Qt::FlatCap))
       p.drawArc(rectangle, startAngle, spanAngle);
     }
   }

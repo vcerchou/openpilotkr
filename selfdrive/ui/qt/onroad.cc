@@ -1266,8 +1266,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+50, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
+    count = 18;
 
-    if (rpm > 1) {
+    if (true) {
       startAngle = 225 * 16;
       spanAngle = int(fmax(-45, (-15*count))) * 16;
       QPen pen1(QBrush(QColor(25, 127, 54, 200)), 55);

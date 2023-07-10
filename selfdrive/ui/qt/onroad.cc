@@ -1272,32 +1272,32 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       if (count < 3) {
         startAngle = 225 * 16;
         spanAngle = (-15*(count+1)) * 16;
-        p.setPen(QColor(25,127,54,200), 40);
+        p.setPen(QPen(QColor(25,127,54,200), 40));
         p.drawArc(rectangle, startAngle, spanAngle);
       } else if (count < 6) {
         startAngle = 225 * 16;
         spanAngle = (-15*(count-2)) * 16;
-        p.setPen(QColor(34,177,76,200), 40);
+        p.setPen(QPen(QColor(34,177,76,200), 40));
         p.drawArc(rectangle, startAngle, spanAngle);
       } else if (count < 9) {
         startAngle = 225 * 16;
         spanAngle = (-15*(count-5)) * 16;
-        p.setPen(QColor(0,255,0,200), 40);
+        p.setPen(QPen(QColor(0,255,0,200), 40));
         p.drawArc(rectangle, startAngle, spanAngle);
       } else if (count < 12) {
         startAngle = 225 * 16;
         spanAngle = (-15*(count-8)) * 16;
-        p.setPen(QColor(255,201,14,200), 40);
+        p.setPen(QPen(QColor(255,201,14,200), 40));
         p.drawArc(rectangle, startAngle, spanAngle);
       } else if (count < 15) {
         startAngle = 225 * 16;
         spanAngle = (-15*(count-11)) * 16;
-        p.setPen(QColor(255,127,39,200), 40);
+        p.setPen(QPen(QColor(255,127,39,200), 40));
         p.drawArc(rectangle, startAngle, spanAngle);
       } else if (count < 18) {
         startAngle = 225 * 16;
         spanAngle = (-15*(count-14)) * 16;
-        p.setPen(QColor(255,0,0,200), 40);
+        p.setPen(QPen(QColor(255,0,0,200), 40));
         p.drawArc(rectangle, startAngle, spanAngle);
       }
     }

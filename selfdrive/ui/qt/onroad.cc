@@ -1260,7 +1260,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     //int rpm = min(s->scene.engine_rpm, max_rpm);
     int rpm = 3600;
     // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
-    int rpm_to_deg = floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0)); // min:0, max:18
+    //int rpm_to_deg = floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0)); // min:0, max:18
     int arpm_width = 200;
     int arpm_height = 200;
     QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+40/2, arpm_width, arpm_height);

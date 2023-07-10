@@ -1254,18 +1254,53 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
 
-  // draw arc test
+  // draw rpm arc
   if (true) {
+    int max_rpm = s->scene.max_animated_rpm;
+    //int rpm = min(s->scene.engine_rpm, max_rpm);
+    int rpm = 3600;
+    // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
+    int rpm_to_deg = floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0)); // min:0, max:18
     int arpm_width = 200;
     int arpm_height = 200;
-    QRectF rectangle(s->fb_w/2-arpm_width/2, 300.0, arpm_width, arpm_height);
-
-    QPen pen(QBrush(QColor(255, 0, 255)), 40);
-    p.setPen(pen);
-    p.setRenderHint(QPainter::Antialiasing);
+    QRectF rectangle(s->fb_w/2-arpm_width/2, 225.0, arpm_width, arpm_height);
     int startAngle = 225 * 16;
-    int spanAngle = -90 * 16;
-    p.drawArc(rectangle, startAngle, spanAngle);
+    int spanAngle = -0 * 16;
+
+    for (int count = 0; count < rpm_to_deg; ++count) {
+      if (rpm < 1.0) break;
+      if (count < 3) {
+        startAngle = 225 * 16;
+        spanAngle = (-15*(count+1)) * 16
+        p.setPen(QBrush(QColor(25,127,54,200)), 40);
+        p.drawArc(rectangle, startAngle, spanAngle);
+      } else if (count < 6) {
+        startAngle = 225 * 16;
+        spanAngle = (-15*(count-2)) * 16
+        p.setPen(QBrush(QColor(34,177,76,200)), 40);
+        p.drawArc(rectangle, startAngle, spanAngle);
+      } else if (count < 9) {
+        startAngle = 225 * 16;
+        spanAngle = (-15*(count-5)) * 16
+        p.setPen(QBrush(QColor(0,255,0,200)), 40);
+        p.drawArc(rectangle, startAngle, spanAngle);
+      } else if (count < 12) {
+        startAngle = 225 * 16;
+        spanAngle = (-15*(count-8)) * 16
+        p.setPen(QBrush(QColor(255,201,14,200)), 40);
+        p.drawArc(rectangle, startAngle, spanAngle);
+      } else if (count < 15) {
+        startAngle = 225 * 16;
+        spanAngle = (-15*(count-11)) * 16
+        p.setPen(QBrush(QColor(255,127,39,200)), 40);
+        p.drawArc(rectangle, startAngle, spanAngle);
+      } else if (count < 18) {
+        startAngle = 225 * 16;
+        spanAngle = (-15*(count-14)) * 16
+        p.setPen(QBrush(QColor(255,0,0,200)), 40);
+        p.drawArc(rectangle, startAngle, spanAngle);
+      }
+    }
   }
 
   p.restore();

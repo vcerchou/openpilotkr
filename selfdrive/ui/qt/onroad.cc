@@ -1255,20 +1255,19 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // draw rpm arc
-  if (true) {
+  if (s->scene.animated_rpm) {
     int max_rpm = s->scene.max_animated_rpm;
-    //int rpm = min(s->scene.engine_rpm, max_rpm);
-    int rpm = 3600;
+    int rpm = int(fmin(s->scene.engine_rpm, max_rpm));
+    // int rpm = 3600;
     // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
     int count = int(floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0))); // min:0, max:18
-    int arpm_width = 300;
-    int arpm_height = 300;
-    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+50, arpm_width, arpm_height);
+    int arpm_width = 330;
+    int arpm_height = 330;
+    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+20, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
-    count = 18;
 
-    if (true) {
+    if (rpm > 1) {
       startAngle = 225 * 16;
       spanAngle = int(fmax(-45, (-15*count))) * 16;
       QPen pen1(QBrush(QColor(25, 127, 54, 200)), 55);

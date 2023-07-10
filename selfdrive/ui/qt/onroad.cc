@@ -1253,6 +1253,28 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.drawText(rect_tune_param, Qt::AlignCenter, szTuneParam);
     }
   }
+
+  // draw arc test
+  if (true) {
+    int arpm_width = 200;
+    int arpm_height = 200;
+    QRectF rectangle(s->fb_w/2-arpm_width/2, 300.0, arpm_width, arpm_height);
+
+    QConicalGradient gradient;
+    gradient.setCenter(rectangle.center());
+    gradient.setAngle(60);
+    gradient.setColorAt(0, QColor(255, 0, 255));
+    gradient.setColorAt(1, QColor(0, 0, 255));
+
+    QPen pen(QBrush(gradient), 40);
+    p.setPen(pen);
+    p.setRenderHint(QPainter::Antialiasing);
+
+    int startAngle = 0 * 16;
+    int spanAngle = 90 * 16;
+    p.drawArc(rectangle, startAngle, spanAngle);
+  }
+
   p.restore();
 }
 

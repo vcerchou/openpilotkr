@@ -285,8 +285,8 @@ class CarController:
     actuators = CC.actuators
     hud_control = CC.hudControl
 
-    self.vFuture = hud_control.v_future
-    self.vFutureA = hud_control.v_future_a
+    self.vFuture = hud_control.vFuture
+    self.vFutureA = hud_control.vFutureA
 
     path_plan = self.NC.update_lateralPlan()
     if frame % 10 == 0:
@@ -1149,13 +1149,13 @@ class CarController:
         self.scc11cnt = CS.scc11init["AliveCounterACC"]
 
       str_log1 = 'MD={}  BS={:1.0f}/{:1.0f}  CV={:03.0f}/{:0.4f}  TQ={:03.0f}/{:03.0f}  VF={:03.0f}  ST={:03.0f}/{:01.0f}/{:01.0f}'.format(
-        CS.out.cruiseState.modeSel, self.CP.mdpsBus, self.CP.sccBus, self.model_speed, abs(self.sm['controlsState'].curvature), abs(new_steer), abs(CS.out.steeringTorque), v_future, self.p.STEER_MAX, self.p.STEER_DELTA_UP, self.p.STEER_DELTA_DOWN)
+        CS.out.cruiseState.modeSel, self.CP.mdpsBus, self.CP.sccBus, self.model_speed, abs(self.sm['controlsState'].curvature), abs(new_steer), abs(CS.out.steeringTorque), self.vFuture, self.p.STEER_MAX, self.p.STEER_DELTA_UP, self.p.STEER_DELTA_DOWN)
       if CS.out.cruiseState.accActive:
         str_log2 = 'AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  TS={:03.0f}  SS/VS={:03.0f}/{:03.0f}  RD/LD={:04.1f}/{:03.1f}  CG={:1.0f}'.format(
-        self.aq_value if self.longcontrol else CS.scc12["aReqValue"], v_future, v_future_a, self.NC.ctrl_speed , set_speed_in_units, round(CS.VSetDis), CS.lead_distance, self.last_lead_distance, CS.cruiseGapSet)
+        self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, self.NC.ctrl_speed , set_speed_in_units, round(CS.VSetDis), CS.lead_distance, self.last_lead_distance, CS.cruiseGapSet)
       else:
         str_log2 = 'MDPS={}  LKAS={}  LEAD={}  AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  CG={:1.0f}'.format(
-        CS.out.steerFaultTemporary, CS.lkas_button_on, 0 < CS.lead_distance < 149, self.aq_value if self.longcontrol else CS.scc12["aReqValue"], v_future, v_future_a, CS.cruiseGapSet)
+        CS.out.steerFaultTemporary, CS.lkas_button_on, 0 < CS.lead_distance < 149, self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, CS.cruiseGapSet)
       trace1.printf2( '{}'.format( str_log2 ) )
 
       # str_log3 = 'V/D/R/A/M/G={:.1f}/{:.1f}/{:.1f}/{:.2f}/{:.1f}/{:1.0f}'.format(CS.clu_Vanz, CS.lead_distance, CS.lead_objspd, CS.scc12["aReqValue"], self.stoppingdist, CS.cruiseGapSet)

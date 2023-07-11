@@ -226,10 +226,7 @@ ExperimentalButton::ExperimentalButton(QWidget *parent) : QPushButton(parent) {
 
 void ExperimentalButton::updateState(const UIState &s) {
   const SubMaster &sm = *(s.sm);
-
-  // button is "visible" if engageable or enabled
-  const auto cs = sm["controlsState"].getControlsState();
-  setVisible(cs.getEngageable() || cs.getEnabled());
+  setVisible(true);
 
   // button is "checked" if experimental mode is enabled
   setChecked(sm["controlsState"].getControlsState().getExperimentalMode());

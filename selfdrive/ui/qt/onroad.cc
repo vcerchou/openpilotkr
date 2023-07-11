@@ -968,7 +968,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     s->scene.blinker_blinkingrate = 60;
     if (true) {
       bw = 250;
-      bx = s->fb_w/2 - bw/2;
+      bx = s->fb_w/2 - bw/2 - 50;
       bh = 400;
       QPointF leftbsign1[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
       bx -= 125;
@@ -992,7 +992,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     //if (s->scene.rightBlinker) {
     if (true) {
       bw = 250;
-      bx = s->fb_w/2 - bw/2 + bw;
+      bx = s->fb_w/2 - bw/2 + bw + 50;
       bh = 400;
       QPointF rightbsign1[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
       bx += 125;

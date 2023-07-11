@@ -331,6 +331,9 @@ class CarState(CarStateBase):
       cp.vl["TPMS11"]["PRESSURE_RR"],
     )
 
+    self.cruiseGapSet = cp_scc.vl["SCC11"]["TauGapSet"]
+    ret.cruiseGapSet = self.cruiseGapSet
+
     # Gear Selection via Cluster - For those Kia/Hyundai which are not fully discovered, we can use the Cluster Indicator for Gear Selection,
     # as this seems to be standard over all cars, but is not the preferred method.
     if self.CP.carFingerprint in CAN_GEARS["use_cluster_gears"]:

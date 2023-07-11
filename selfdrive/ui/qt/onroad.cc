@@ -274,6 +274,7 @@ void ExperimentalButton::drawIcon(QPainter &p, int x, int y, QPixmap &img, float
     p.save();
     p.translate(x, y);
     p.rotate(-angle);
+    img.scaled(105,105);
     QRect r = img.rect();
     r.moveCenter(QPoint(0,0));
     p.drawPixmap(r, img);
@@ -552,7 +553,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else {
     p.setPen(whiteColor(255));
   }
-  debugText(p, rect().center().x(), s->scene.animated_rpm?315:290, speedUnit, 255, 50, true);
+  debugText(p, rect().center().x(), s->scene.animated_rpm?315:280, speedUnit, 255, 50, true);
 
 
   // opkr
@@ -963,7 +964,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     float bw = 0;
     float bx = 0;
     float bh = 0;
-    if (s->scene.leftBlinker) {
+    //if (s->scene.leftBlinker) {
+    s->scene.blinker_blinkingrate = 60;
+    if (true) {
       bw = 250;
       bx = s->fb_w/2 - bw/2;
       bh = 400;
@@ -986,7 +989,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.drawPolygon(leftbsign3, std::size(leftbsign3));
       }
     }
-    if (s->scene.rightBlinker) {
+    //if (s->scene.rightBlinker) {
+    if (true) {
       bw = 250;
       bx = s->fb_w/2 - bw/2 + bw;
       bh = 400;

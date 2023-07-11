@@ -546,13 +546,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else if (act_accel > 0 && act_accel < 3.0 && s->scene.comma_stock_ui != 1) {
     p.setPen(QColor((255-int(gas_opacity)), (255-int((act_accel*10))), (255-int(gas_opacity)), 255));
   }
-  debugText(p, rect().center().x(), s->scene.animated_rpm?245:210, speedStr, 255, 180, true);
+  debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   if (s->scene.brakeLights) {
     p.setPen(redColor(200));
   } else {
     p.setPen(whiteColor(255));
   }
-  debugText(p, rect().center().x(), s->scene.animated_rpm?305:290, speedUnit, 255, 50, true);
+  debugText(p, rect().center().x(), s->scene.animated_rpm?315:290, speedUnit, 255, 50, true);
 
 
   // opkr
@@ -618,9 +618,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+345, szLaCMethodCur);
       }
     } else {
-      if(szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+335, szLaCMethod);
+      if(szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+340, szLaCMethod);
       if (s->scene.lateralControlMethod == 4) {
-        if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+370, szLaCMethodCur);
+        if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+375, szLaCMethodCur);
       }
     }
     if (s->scene.navi_select == 1) {
@@ -812,8 +812,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // opkr tpms
     int tpms_width = 180;
     int tpms_sp_xr = rect().right() - bdr_s - tpms_width / 2;
-    int tpms_sp_yr = sp_yr + j_num;
-    QRect tpms_panel(rect().right() - bdr_s - tpms_width, tpms_sp_yr - 20, tpms_width, 130);  
+    int tpms_sp_yr = sp_yr + j_num - 5;
+    QRect tpms_panel(rect().right() - bdr_s - tpms_width, tpms_sp_yr - 25, tpms_width, 130);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(tpms_panel, 20, 20);
@@ -1259,17 +1259,17 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // int rpm = 3600;
     // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
     int count = int(floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0))); // min:0, max:18
-    int arpm_width = 360;
-    int arpm_height = 360;
-    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+20, arpm_width, arpm_height);
+    int arpm_width = 370;
+    int arpm_height = 370;
+    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+15, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
     rpm = 3600;
     count = 18;
     if (rpm > 1) {
-      configFont(p, "Inter", 30, "Regular");
-      p.drawText(QRect(s->fb_w/2-arpm_width/2, bdr_s+50, arpm_width, arpm_height/4), Qt::AlignCenter, QString::number(rpm));
+      configFont(p, "Inter", 40, "Regular");
+      p.drawText(QRect(s->fb_w/2-arpm_width/2, bdr_s+30, arpm_width, arpm_height/4), Qt::AlignCenter, QString::number(rpm));
       startAngle = 225 * 16;
       spanAngle = int(fmax(-45, (-15*count))) * 16;
       p.setPen(QPen(QBrush(QColor(25, 127, 54, 200)),50,Qt::SolidLine,Qt::FlatCap));

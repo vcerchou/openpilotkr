@@ -1268,7 +1268,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+15, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
-    printf("max=%d, rpm=%d, count=%d", max_rpm, rpm, count);
+    printf("max=%f, rpm=%f, count=%d", max_rpm, rpm, count);
 
     if (rpm > 1) {
       configFont(p, "Inter", 40, "Regular");

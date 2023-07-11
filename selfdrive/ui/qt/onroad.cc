@@ -414,7 +414,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
-  QRect set_speed_rect(top_x, bdr_s*2, rect_width, rect_height);
+  QRect set_speed_rect(top_x, bdr_s, rect_width, rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
   drawRoundedRect(p, set_speed_rect, top_radius, top_radius, bottom_radius, bottom_radius);
@@ -546,13 +546,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else if (act_accel > 0 && act_accel < 3.0 && s->scene.comma_stock_ui != 1) {
     p.setPen(QColor((255-int(gas_opacity)), (255-int((act_accel*10))), (255-int(gas_opacity)), 255));
   }
-  debugText(p, rect().center().x(), 210, speedStr, 255, 180, true);
+  debugText(p, rect().center().x(), s->scene.animated_rpm?245:210, speedStr, 255, 180, true);
   if (s->scene.brakeLights) {
     p.setPen(redColor(200));
   } else {
     p.setPen(whiteColor(255));
   }
-  debugText(p, rect().center().x(), 290, speedUnit, 255, 50, true);
+  debugText(p, rect().center().x(), s->scene.animated_rpm?305:290, speedUnit, 255, 50, true);
 
 
   // opkr
@@ -613,14 +613,14 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       case 3: szLaCMethodCur = "TORQUE"; break;
     }
     if (!s->scene.animated_rpm) {
-      if (szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+295, szLaCMethod);
+      if (szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+305, szLaCMethod);
       if (s->scene.lateralControlMethod == 4) {
-        if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+330, szLaCMethodCur);
+        if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+345, szLaCMethodCur);
       }
     } else {
-      if(szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+320, szLaCMethod);
+      if(szLaCMethod != "") drawText(p, ui_viz_rx_center, bdr_s+335, szLaCMethod);
       if (s->scene.lateralControlMethod == 4) {
-        if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+355, szLaCMethodCur);
+        if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, bdr_s+370, szLaCMethodCur);
       }
     }
     if (s->scene.navi_select == 1) {
@@ -745,7 +745,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int num_r = 1;
     num_r = num_r + 1;
     if (s->scene.gpsAccuracyUblox != 0.00) {num_r = num_r + 2;}
-    QRect right_panel(rect().right() - bdr_s - width_r, bdr_s + 215, width_r, 104*num_r);  
+    QRect right_panel(rect().right() - bdr_s - width_r, bdr_s + 200, width_r, 104*num_r);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(right_panel, 20, 20);
@@ -1259,9 +1259,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // int rpm = 3600;
     // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
     int count = int(floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0))); // min:0, max:18
-    int arpm_width = 350;
-    int arpm_height = 350;
-    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+30, arpm_width, arpm_height);
+    int arpm_width = 360;
+    int arpm_height = 360;
+    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+20, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 

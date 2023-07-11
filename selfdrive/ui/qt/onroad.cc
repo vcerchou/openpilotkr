@@ -397,7 +397,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.fillRect(0, 0, width(), header_h, bg);
 
   QString speedLimitStr = (speedLimit > 1) ? QString::number(std::nearbyint(speedLimit)) : "–";
-  QString speedStr = QString::number(std::nearbyint(speed));
+  QString speedStr = "100"; //QString::number(std::nearbyint(speed));
   QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(setSpeed)) : "–";
 
   // Draw outer box + border to contain set speed and speed limit
@@ -1265,6 +1265,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
+    rpm = 3600;
+    count = 18;
     if (rpm > 1) {
       startAngle = 225 * 16;
       spanAngle = int(fmax(-45, (-15*count))) * 16;

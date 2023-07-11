@@ -247,7 +247,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   // engage-ability icon
   //if (uiState()->scene.enabled) {
   if (true) {
-    drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, uiState()->scene.angleSteers);
+    drawIcon(p, rect().right() - radius / 2, radius / 2, img, 1.0, true, uiState()->scene.angleSteers);
   } else if (!uiState()->scene.comma_stock_ui) {
     QString gear_text = "0";
     switch(int(uiState()->scene.getGearShifter)) {

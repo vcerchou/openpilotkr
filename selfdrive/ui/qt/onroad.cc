@@ -242,7 +242,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   p.setRenderHint(QPainter::Antialiasing);
 
   //QPoint center(btn_size / 2, btn_size / 2);
-  QPixmap img = isChecked() ? experimental_img : engage_img;
+  QPixmap img = !isChecked() ? experimental_img : engage_img;
 
   // engage-ability icon
   //if (uiState()->scene.enabled) {
@@ -259,7 +259,7 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
       case 7 : gear_text = "B"; p.setPen(whiteColor(255)); break;
       default: gear_text = QString::number(int(uiState()->scene.getGearShifter), 'f', 0); p.setPen(whiteColor(255)); break;
     }
-    debugText(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s + 70, gear_text, 255, 190, true);
+    debugText(p, rect().right() - radius / 2, radius / 2 + 70, gear_text, 255, 190, true);
   }
 }
 
@@ -414,7 +414,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
-  QRect set_speed_rect(top_x, bdr_s, rect_width, rect_height);
+  QRect set_speed_rect(top_x, bdr_s*2, rect_width, rect_height);
   p.setPen(QPen(whiteColor(75), 6));
   p.setBrush(blackColor(166));
   drawRoundedRect(p, set_speed_rect, top_radius, top_radius, bottom_radius, bottom_radius);
@@ -741,7 +741,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // opkr debug info(right panel)
     int width_r = 180;
     int sp_xr = rect().right() - bdr_s - width_r / 2 - 10;
-    int sp_yr = bdr_s + 275;
+    int sp_yr = bdr_s + 260;
     int num_r = 1;
     num_r = num_r + 1;
     if (s->scene.gpsAccuracyUblox != 0.00) {num_r = num_r + 2;}
@@ -844,55 +844,55 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     if ((s->scene.tpmsPressureFl < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFl < 2.2 && s->scene.tpmsUnit == 2)) {
       p.setPen(yellowColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else if (s->scene.tpmsPressureFl > 50) {
       p.setPen(whiteColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, "N/A", 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, "N/A", 200, font_size);
     } else if ((s->scene.tpmsPressureFl > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFl > 2.8 && s->scene.tpmsUnit == 2)) {
       p.setPen(redColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else {
       p.setPen(greenColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, QString::number(s->scene.tpmsPressureFl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
     if ((s->scene.tpmsPressureFr < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFr < 2.2 && s->scene.tpmsUnit == 2)) {
       p.setPen(yellowColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else if (s->scene.tpmsPressureFr > 50) {
       p.setPen(whiteColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, "N/A", 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, "N/A", 200, font_size);
     } else if ((s->scene.tpmsPressureFr > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureFr > 2.8 && s->scene.tpmsUnit == 2)) {
       p.setPen(redColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else {
       p.setPen(greenColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+55, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+60, QString::number(s->scene.tpmsPressureFr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
     if ((s->scene.tpmsPressureRl < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRl < 2.2 && s->scene.tpmsUnit == 2)) {
       p.setPen(yellowColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else if (s->scene.tpmsPressureRl > 50) {
       p.setPen(whiteColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, "N/A", 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, "N/A", 200, font_size);
     } else if ((s->scene.tpmsPressureRl > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRl > 2.8 && s->scene.tpmsUnit == 2)) {
       p.setPen(redColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else {
       p.setPen(greenColor(200));
-      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr-(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRl, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
     if ((s->scene.tpmsPressureRr < 32 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRr < 2.2 && s->scene.tpmsUnit == 2)) {
       p.setPen(yellowColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else if (s->scene.tpmsPressureRr > 50) {
       p.setPen(whiteColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, "N/A", 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, "N/A", 200, font_size);
     } else if ((s->scene.tpmsPressureRr > 45 && s->scene.tpmsUnit != 2) || (s->scene.tpmsPressureRr > 2.8 && s->scene.tpmsUnit == 2)) {
       p.setPen(redColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     } else {
       p.setPen(greenColor(200));
-      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+95, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
+      debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
   }
 
@@ -1259,43 +1259,45 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // int rpm = 3600;
     // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0),  yp = interp(xp, [x0, x1], [y0, y1])
     int count = int(floor(0 + ((18-0) / (max_rpm-0)) * (rpm-0))); // min:0, max:18
-    int arpm_width = 330;
-    int arpm_height = 330;
-    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+20, arpm_width, arpm_height);
+    int arpm_width = 350;
+    int arpm_height = 350;
+    QRectF rectangle(s->fb_w/2-arpm_width/2, bdr_s+30, arpm_width, arpm_height);
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
     rpm = 3600;
     count = 18;
     if (rpm > 1) {
+      configFont(p, "Inter", 30, "Regular");
+      p.drawText(QRect(s->fb_w/2-arpm_width/2, bdr_s+50, arpm_width, arpm_height/4), Qt::AlignCenter, QString::number(rpm));
       startAngle = 225 * 16;
       spanAngle = int(fmax(-45, (-15*count))) * 16;
-      p.setPen(QPen(QBrush(QColor(25, 127, 54, 200)),55,Qt::SolidLine,Qt::FlatCap));
+      p.setPen(QPen(QBrush(QColor(25, 127, 54, 200)),50,Qt::SolidLine,Qt::FlatCap));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 180 * 16;
       spanAngle = int(fmax(-45, -15*(fmax(0, count-3)))) * 16;
-      p.setPen(QPen(QBrush(QColor(34, 177, 76, 200)),55,Qt::SolidLine,Qt::FlatCap));
+      p.setPen(QPen(QBrush(QColor(34, 177, 76, 200)),50,Qt::SolidLine,Qt::FlatCap));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 135 * 16;
       spanAngle = int(fmax(-45, -15*(fmax(0, count-6)))) * 16;
-      p.setPen(QPen(QBrush(QColor(0, 255, 0, 200)),55,Qt::SolidLine,Qt::FlatCap));
+      p.setPen(QPen(QBrush(QColor(0, 255, 0, 200)),50,Qt::SolidLine,Qt::FlatCap));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 90 * 16;
       spanAngle = int(fmax(-45, -15*(fmax(0, count-9)))) * 16;
-      p.setPen(QPen(QBrush(QColor(255, 201, 14, 200)),55,Qt::SolidLine,Qt::FlatCap));
+      p.setPen(QPen(QBrush(QColor(255, 201, 14, 200)),50,Qt::SolidLine,Qt::FlatCap));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 45 * 16;
       spanAngle = int(fmax(-45, -15*(fmax(0, count-12)))) * 16;
-      p.setPen(QPen(QBrush(QColor(255, 127, 39, 200)),55,Qt::SolidLine,Qt::FlatCap));
+      p.setPen(QPen(QBrush(QColor(255, 127, 39, 200)),50,Qt::SolidLine,Qt::FlatCap));
       p.drawArc(rectangle, startAngle, spanAngle);
 
       startAngle = 0 * 16;
       spanAngle = int(fmax(-45, -15*(fmax(0, count-15)))) * 16;
-      p.setPen(QPen(QBrush(QColor(255, 0, 0, 200)),55,Qt::SolidLine,Qt::FlatCap));
+      p.setPen(QPen(QBrush(QColor(255, 0, 0, 200)),50,Qt::SolidLine,Qt::FlatCap));
       p.drawArc(rectangle, startAngle, spanAngle);
     }
   }

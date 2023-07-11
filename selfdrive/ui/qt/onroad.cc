@@ -242,11 +242,10 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   p.setRenderHint(QPainter::Antialiasing);
 
   //QPoint center(btn_size / 2, btn_size / 2);
-  QPixmap img = !isChecked() ? experimental_img : engage_img;
+  QPixmap img = isChecked() ? experimental_img : engage_img;
 
   // engage-ability icon
-  //if (uiState()->scene.enabled) {
-  if (true) {
+  if (uiState()->scene.enabled) {
     drawIcon(p, rect().right() - radius / 2, radius / 2, img, 1.0, true, uiState()->scene.angleSteers);
   } else if (!uiState()->scene.comma_stock_ui) {
     QString gear_text = "0";
@@ -398,7 +397,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.fillRect(0, 0, width(), header_h, bg);
 
   QString speedLimitStr = (speedLimit > 1) ? QString::number(std::nearbyint(speedLimit)) : "–";
-  QString speedStr = "100"; //QString::number(std::nearbyint(speed));
+  QString speedStr = QString::number(std::nearbyint(speed));
   QString setSpeedStr = is_cruise_set ? QString::number(std::nearbyint(setSpeed)) : "–";
 
   // Draw outer box + border to contain set speed and speed limit
@@ -964,11 +963,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     float bw = 0;
     float bx = 0;
     float bh = 0;
-    //if (s->scene.leftBlinker) {
-    s->scene.blinker_blinkingrate = 60;
-    if (true) {
+    if (s->scene.leftBlinker) {
       bw = 250;
-      bx = s->fb_w/2 - bw/2 - 50;
+      bx = s->fb_w/2 - bw/2 - 65;
       bh = 400;
       QPointF leftbsign1[] = {{bx, bh/4}, {bx-bw/4, bh/4}, {bx-bw/2, bh/2}, {bx-bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx-bw/4, bh/2}};
       bx -= 125;
@@ -989,10 +986,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.drawPolygon(leftbsign3, std::size(leftbsign3));
       }
     }
-    //if (s->scene.rightBlinker) {
-    if (true) {
+    if (s->scene.rightBlinker) {
       bw = 250;
-      bx = s->fb_w/2 - bw/2 + bw + 50;
+      bx = s->fb_w/2 - bw/2 + bw + 65;
       bh = 400;
       QPointF rightbsign1[] = {{bx, bh/4}, {bx+bw/4, bh/4}, {bx+bw/2, bh/2}, {bx+bw/4, bh/4+bh/2}, {bx, bh/4+bh/2}, {bx+bw/4, bh/2}};
       bx += 125;
@@ -1269,8 +1265,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int startAngle = 225 * 16;
     int spanAngle = -0 * 16;
 
-    rpm = 3600;
-    count = 18;
     if (rpm > 1) {
       configFont(p, "Inter", 40, "Regular");
       p.drawText(QRect(s->fb_w/2-arpm_width/2, bdr_s+30, arpm_width, arpm_height/4), Qt::AlignCenter, QString::number(rpm));

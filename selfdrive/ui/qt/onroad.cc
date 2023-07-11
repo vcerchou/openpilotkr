@@ -706,7 +706,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     } else if ((int(s->scene.angleSteers) < -30) || (int(s->scene.angleSteers) > 30)) {
       p.setPen(orangeColor(200));
     }
-    debugText(p, sp_xl, sp_yl, QString::number(s->scene.angleSteers, 'f', 0), 150, 57);
+    if (s->scene.angleSteers < 10) {
+      debugText(p, sp_xl, sp_yl, QString::number(s->scene.angleSteers, 'f', 1), 150, 57);
+    } else {
+      debugText(p, sp_xl, sp_yl, QString::number(s->scene.angleSteers, 'f', 0), 150, 57);
+    }
     p.setPen(whiteColor(200));
     debugText(p, sp_xl, sp_yl + 35, QString("STER ANG"), 150, 27);
     p.translate(sp_xl + 90, sp_yl + 20);

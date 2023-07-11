@@ -245,7 +245,8 @@ void ExperimentalButton::paintEvent(QPaintEvent *event) {
   QPixmap img = isChecked() ? experimental_img : engage_img;
 
   // engage-ability icon
-  if (uiState()->scene.enabled) {
+  //if (uiState()->scene.enabled) {
+  if (true) {
     drawIcon(p, rect().right() - radius / 2 - bdr_s, radius / 2 + bdr_s, img, 1.0, true, uiState()->scene.angleSteers);
   } else if (!uiState()->scene.comma_stock_ui) {
     QString gear_text = "0";

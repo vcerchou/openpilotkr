@@ -289,7 +289,7 @@ class CarController:
     self.vFutureA = hud_control.vFutureA
 
     path_plan = self.NC.update_lateralPlan()
-    if frame % 10 == 0:
+    if self.frame % 10 == 0:
       self.model_speed = path_plan.modelSpeed
 
     self.sm.update(0)

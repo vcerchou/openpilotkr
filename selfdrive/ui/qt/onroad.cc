@@ -382,7 +382,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   //const int us_sign_height = 186;
   //const int eu_sign_size = 176;
 
-  const QSize default_size = {172, 204};
+  const QSize default_size = {184, 202};
   QSize set_speed_size = default_size;
   //if (is_metric || has_eu_speed_limit) set_speed_size.rwidth() = 200;
   //if (has_us_speed_limit && speedLimitStr.size() >= 3) set_speed_size.rwidth() = 223;

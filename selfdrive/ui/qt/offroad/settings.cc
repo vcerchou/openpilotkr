@@ -713,12 +713,6 @@ SettingsWindow::SettingsWindow(QWidget *parent) : QFrame(parent) {
 
   sidebar_layout->addSpacing(30);
 
-#ifdef ENABLE_MAPS
-  auto map_panel = new MapPanel(this);
-  panels.push_back({tr("Navigation"), map_panel});
-  QObject::connect(map_panel, &MapPanel::closeSettings, this, &SettingsWindow::closeSettings);
-#endif
-
   const int padding = 0;
   nav_btns = new QButtonGroup(this);
   for (auto &[name, panel] : panels) {

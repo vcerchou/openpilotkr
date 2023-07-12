@@ -379,8 +379,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   // Draw outer box + border to contain set speed and speed limit
   const int sign_margin = 12;
-  const int us_sign_height = 186;
-  const int eu_sign_size = 176;
+  //const int us_sign_height = 186;
+  //const int eu_sign_size = 176;
 
   const QSize default_size = {172, 204};
   QSize set_speed_size = default_size;

@@ -66,7 +66,7 @@ def auth_redirect_link(method):
   }[method]
 
   params = {
-    'redirect_uri': f"http://opkr.o-r.kr:3000/v2/auth/{provider_id}/redirect/",
+    'redirect_uri': f"https://api.comma.ai/v2/auth/{provider_id}/redirect/",
     'state': f'service,localhost:{PORT}',
   }
 

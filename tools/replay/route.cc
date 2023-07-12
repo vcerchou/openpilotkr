@@ -45,7 +45,7 @@ bool Route::loadFromServer() {
 
     loop.exit(success ? loadFromJson(json) : 0);
   });
-  http.sendRequest("http://opkr.o-kr.kr:3000/v1/route/" + route_.str + "/files");
+  http.sendRequest("https://api.commadotai.com/v1/route/" + route_.str + "/files");
   return loop.exec();
 }
 

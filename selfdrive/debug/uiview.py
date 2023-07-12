@@ -7,15 +7,17 @@ from selfdrive.manager.process_config import managed_processes
 
 if __name__ == "__main__":
   CP = car.CarParams(notCar=True)
+  Params().put("CarParams", CP.to_bytes())
 
-  procs = ['camerad']
+  procs = ['camerad', 'ui', 'modeld', 'calibrationd']
   for p in procs:
     managed_processes[p].start()
 
-  pm = messaging.PubMaster(['deviceState', 'pandaStates'])
+  pm = messaging.PubMaster(['controlsState', 'deviceState', 'pandaStates', 'carParams'])
 
-  msgs = {s: messaging.new_message(s) for s in ['deviceState']}
+  msgs = {s: messaging.new_message(s) for s in ['controlsState', 'deviceState', 'carParams']}
   msgs['deviceState'].deviceState.started = True
+  msgs['carParams'].carParams.openpilotLongitudinalControl = True
 
   msgs['pandaStates'] = messaging.new_message('pandaStates', 1)
   msgs['pandaStates'].pandaStates[0].ignitionLine = True

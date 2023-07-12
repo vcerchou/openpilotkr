@@ -1268,7 +1268,7 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, fl
     p.setPen(Qt::NoPen);
     p.setBrush(QColor(0, 0, 0, 166));
     p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
-    p.setOpacity(isDown() ? 0.8 : 1.0);
+    p.setOpacity(opacity);
     p.save();
     p.translate(x, y);
     p.rotate(-angle);
@@ -1419,18 +1419,19 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
 
   painter.save();
 
+  int radius = 30;
   if (scene.enabled) {
     drawIcon(painter, rect().right() - radius / 2, radius / 2, scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";
     switch(int(scene.getGearShifter)) {
-      case 1 : gear_text = "P"; p.setPen(QColor(200, 200, 255, 255)); break;
-      case 2 : gear_text = "D"; p.setPen(greenColor(255)); break;
-      case 3 : gear_text = "N"; p.setPen(whiteColor(255)); break;
-      case 4 : gear_text = "R"; p.setPen(redColor(255)); break;
-      case 5 : gear_text = "M"; p.setPen(greenColor(255)); break;
-      case 7 : gear_text = "B"; p.setPen(whiteColor(255)); break;
-      default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); p.setPen(whiteColor(255)); break;
+      case 1 : gear_text = "P"; painter.setPen(QColor(200, 200, 255, 255)); break;
+      case 2 : gear_text = "D"; painter.setPen(greenColor(255)); break;
+      case 3 : gear_text = "N"; painter.setPen(whiteColor(255)); break;
+      case 4 : gear_text = "R"; painter.setPen(redColor(255)); break;
+      case 5 : gear_text = "M"; painter.setPen(greenColor(255)); break;
+      case 7 : gear_text = "B"; painter.setPen(whiteColor(255)); break;
+      default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); painter.setPen(whiteColor(255)); break;
     }
     debugText(painter, rect().right() - radius / 2, radius / 2 + 70, gear_text, 255, 190, true);
   } else {

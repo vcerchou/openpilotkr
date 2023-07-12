@@ -1419,7 +1419,7 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
   painter.save();
 
   if (true) {
-    drawIcon(painter, rect().right() - radius / 2, radius / 2, scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
+    drawIcon(painter, rect().right() - radius / 2 - 15, radius / 2 + 10, scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";
     switch(int(scene.getGearShifter)) {
@@ -1431,9 +1431,9 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
       case 7 : gear_text = "B"; painter.setPen(whiteColor(255)); break;
       default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); painter.setPen(whiteColor(255)); break;
     }
-    debugText(painter, rect().right() - radius / 2 - 15, radius / 2 + 80, gear_text, 255, 190, true);
+    debugText(painter, rect().right() - radius / 2 - 15, radius / 2 + 70 + 10, gear_text, 255, 190, true);
   } else {
-    drawIcon(painter, rect().right() - radius / 2, radius / 2, engage_img, greyColor(100), 0.7);
+    drawIcon(painter, rect().right() - radius / 2 - 15, radius / 2 + 10, engage_img, greyColor(100), 0.7);
   }
 
   painter.restore();

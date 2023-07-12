@@ -679,11 +679,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // opkr debug info(right panel)
     int width_r = 180;
     int sp_xr = rect().right() - UI_BORDER_SIZE - width_r / 2 - 10;
-    int sp_yr = UI_BORDER_SIZE + 260;
+    int sp_yr = UI_BORDER_SIZE + 255;
     int num_r = 1;
     num_r = num_r + 1;
     if (s->scene.gpsAccuracyUblox != 0.00) {num_r = num_r + 2;}
-    QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 200, width_r, 104*num_r);  
+    QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 195, width_r, 104*num_r);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(right_panel, 20, 20);
@@ -1418,7 +1418,7 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
 
   painter.save();
 
-  if (true) {
+  if (scene.enabled) {
     drawIcon(painter, rect().right() - radius / 2 - 15, radius / 2 + 10, scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";

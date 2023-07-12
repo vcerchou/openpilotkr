@@ -373,6 +373,7 @@ class CarState(CarStateBase):
     # save the entire LKAS11 and CLU11
     self.lkas11 = copy.copy(cp_cam.vl["LKAS11"])
     self.clu11 = copy.copy(cp.vl["CLU11"])
+    self.steer_state = cp.vl["MDPS12"]["CF_Mdps_ToiActive"]  # 0 NOT ACTIVE, 1 ACTIVE
     self.prev_cruise_buttons = self.cruise_buttons[-1]
     self.cruise_buttons.extend(cp.vl_all["CLU11"]["CF_Clu_CruiseSwState"])
     self.main_buttons.extend(cp.vl_all["CLU11"]["CF_Clu_CruiseSwMain"])
@@ -388,7 +389,6 @@ class CarState(CarStateBase):
 
     self.autoHold = ret.brakeHoldActive
     self.brake_error = cp.vl["TCS13"]["ACCEnable"] == 3 # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
-    self.steer_state = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiActive"] #0 NOT ACTIVE, 1 ACTIVE
     self.lead_distance = cp_scc.vl["SCC11"]["ACC_ObjDist"] if not self.no_radar else 0
 
     ret.radarDistance = cp_scc.vl["SCC11"]["ACC_ObjDist"] if not self.no_radar else 0
@@ -947,7 +947,6 @@ class CarState(CarStateBase):
         ("NEW_SIGNAL_1", "SCC_CONTROL"),
         ("MainMode_ACC", "SCC_CONTROL"),
         ("ACCMode", "SCC_CONTROL"),
-        ("CRUISE_INACTIVE", "SCC_CONTROL"),
         ("ZEROS_9", "SCC_CONTROL"),
         ("CRUISE_STANDSTILL", "SCC_CONTROL"),
         ("ZEROS_5", "SCC_CONTROL"),

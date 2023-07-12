@@ -290,7 +290,7 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
 
-  engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size + 5, img_size + 5});
+  engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
   experimental_img = loadPixmap("../assets/img_experimental.svg", {img_size + 5, img_size + 5});
 }
 
@@ -1262,7 +1262,6 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QB
 
 void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation, float angle) {
   // opkr
-  int radius = 30;
   if (rotation) {
     p.setOpacity(opacity);
     p.setPen(Qt::NoPen);
@@ -1272,7 +1271,7 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, fl
     p.save();
     p.translate(x, y);
     p.rotate(-angle);
-    //img.scaled(105,105);
+    img.scaled(105,105);
     QRect r = img.rect();
     r.moveCenter(QPoint(0,0));
     p.drawPixmap(r, img);
@@ -1419,7 +1418,6 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
 
   painter.save();
 
-  int radius = 30;
   if (scene.enabled) {
     drawIcon(painter, rect().right() - radius / 2, radius / 2, scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {

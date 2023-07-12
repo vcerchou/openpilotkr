@@ -119,6 +119,9 @@ private:
   float dist_rel = 0;
   float vel_rel = 0;
 
+  const int radius = 180;
+  const int img_size = (radius / 2) * 1.5;
+
 protected:
   void paintGL() override;
   void initializeGL() override;

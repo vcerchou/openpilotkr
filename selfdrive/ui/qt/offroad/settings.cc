@@ -12,10 +12,6 @@
 
 #include "selfdrive/ui/qt/offroad/networking.h"
 
-#ifdef ENABLE_MAPS
-#include "selfdrive/ui/qt/maps/map_settings.h"
-#endif
-
 #include "common/params.h"
 #include "common/watchdog.h"
 #include "common/util.h"
@@ -150,7 +146,6 @@ void TogglesPanel::updateToggles() {
                                   .arg(tr("New Driving Visualization"))
                                   .arg(tr("The driving visualization will transition to the road-facing wide-angle camera at low speeds to better show some turns. The Experimental mode logo will also be shown in the top right corner."));
 
-  long_personality_setting->setEnabled(false);
   const bool is_release = params.getBool("IsReleaseBranch");
   auto cp_bytes = params.get("CarParamsPersistent");
   if (!cp_bytes.empty()) {
@@ -162,10 +157,7 @@ void TogglesPanel::updateToggles() {
       params.remove("ExperimentalLongitudinalEnabled");
     }
     op_long_toggle->setVisible(CP.getExperimentalLongitudinalAvailable() && !is_release);
-
-    const bool op_long = CP.getOpenpilotLongitudinalControl() && !CP.getExperimentalLongitudinalAvailable();
-    const bool exp_long_enabled = CP.getExperimentalLongitudinalAvailable() && params.getBool("ExperimentalLongitudinalEnabled");
-    if (op_long || exp_long_enabled) {
+    if (hasLongitudinalControl(CP)) {
       // normal description and toggle
       e2e_toggle->setEnabled(true);
       e2e_toggle->setDescription(e2e_description);
@@ -173,6 +165,7 @@ void TogglesPanel::updateToggles() {
     } else {
       // no long for now
       e2e_toggle->setEnabled(false);
+      long_personality_setting->setEnabled(false);
       params.remove("ExperimentalMode");
 
       const QString unavailable = tr("Experimental mode is currently unavailable on this car since the car's stock ACC is used for longitudinal control.");
@@ -181,7 +174,7 @@ void TogglesPanel::updateToggles() {
                           tr("openpilot longitudinal control may come in a future update.");
       if (CP.getExperimentalLongitudinalAvailable()) {
         if (is_release) {
-          long_desc = unavailable + " " + tr("An experimental version of openpilot longitudinal control can be tested, along with Experimental mode, on non-release branches.");
+          long_desc = unavailable + " " + tr("An alpha version of openpilot longitudinal control can be tested, along with Experimental mode, on non-release branches.");
         } else {
           long_desc = tr("Enable experimental longitudinal control to allow Experimental mode.");
         }
@@ -283,6 +276,9 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   power_layout->addWidget(poweroff_btn);
   QObject::connect(poweroff_btn, &QPushButton::clicked, this, &DevicePanel::poweroff);
 
+  if (!Hardware::PC()) {
+    connect(uiState(), &UIState::offroadTransition, poweroff_btn, &QPushButton::setVisible);
+  }
   setStyleSheet(R"(
     QPushButton {
       height: 120px;

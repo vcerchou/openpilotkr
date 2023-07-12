@@ -19,7 +19,7 @@ class OnroadAlerts : public QWidget {
 
 public:
   OnroadAlerts(QWidget *parent = 0) : QWidget(parent) {};
-  void updateAlert(const Alert &a, const QColor &color);
+  void updateAlert(const Alert &a);
 
 protected:
   void paintEvent(QPaintEvent*) override;
@@ -49,14 +49,13 @@ protected:
 
 private:
   void paintEvent(QPaintEvent *event) override;
-  void drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation = false, float angle = 0);
-  void debugText(QPainter &p, int x, int y, const QString &text, int alpha = 255, int fontsize = 30, bool bold = false);
+  void changeMode();
 
   Params params;
   QPixmap engage_img;
   QPixmap experimental_img;
-  const int radius = 180;
-  const int img_size = (radius / 2) * 1.5;
+  bool experimental_mode;
+  bool engageable;
 };
 
 // container window for the NVG UI
@@ -148,6 +147,9 @@ public:
   OnroadWindow(QWidget* parent = 0);
   bool isMapVisible() const { return map && map->isVisible(); }
 
+signals:
+  void mapWindowShown();
+
 private:
   void paintEvent(QPaintEvent *event);
   void mousePressEvent(QMouseEvent* e) override;
@@ -156,6 +158,7 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
+  bool navDisabled = false;
 
 private slots:
   void offroadTransition(bool offroad);

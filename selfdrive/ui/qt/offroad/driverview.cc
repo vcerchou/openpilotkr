@@ -62,7 +62,7 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
   if (!frame_updated) {
     p.setPen(Qt::white);
     p.setRenderHint(QPainter::TextAntialiasing);
-    configFont(p, "Inter", 100, "Bold");
+    p.setFont(InterFont(100, QFont::Bold));
     p.drawText(geometry(), Qt::AlignCenter, tr("camera starting"));
     return;
   }
@@ -105,7 +105,7 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
     p.setPen(QColor(0xff, 0xff, 0xff));
     p.setOpacity(1.0);
     p.setRenderHint(QPainter::TextAntialiasing);
-    configFont(p, "Open Sans", 50, "Regular");
+    p.setFont(InterFont(50, QFont::Bold));
 
     p.drawText(1050, 50, "faceProb:  " + QString::number(driver_data.getFaceProb(), 'f', 2));
 

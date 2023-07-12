@@ -184,7 +184,5 @@ class LongitudinalPlanner:
     longitudinalPlan.lead0Obstacle = self.mpc.lead_0_obstacle.tolist()
     longitudinalPlan.lead1Obstacle = self.mpc.lead_1_obstacle.tolist()
     longitudinalPlan.cruiseTarget = self.mpc.cruise_target.tolist()
-    longitudinalPlan.stopLine = self.mpc.stopline.tolist()
-    longitudinalPlan.stoplineProb = self.mpc.stop_prob
 
     pm.send('longitudinalPlan', plan_send)

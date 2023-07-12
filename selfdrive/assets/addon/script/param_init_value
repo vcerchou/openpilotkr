@@ -139,7 +139,6 @@ AvoidLKASFaultBeyond:0
 UseStockDecelOnSS:0
 AnimatedRPM:1
 AnimatedRPMMax:3600
-ShowStopLine:0
 NoSmartMDPS:0
 MultipleLateralUse:2
 MultipleLateralOpS:3,3,0

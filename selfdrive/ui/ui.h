@@ -308,8 +308,6 @@ typedef struct UIScene {
     float lead0[13] = {0};
     float lead1[13] = {0};
     float cruisetg[13] = {0};
-    float stopline[13] = {0};
-    float stopprob;
   } longitudinalPlan;
 
 

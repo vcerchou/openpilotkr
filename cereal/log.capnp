@@ -16,12 +16,12 @@ struct Map(Key, Value) {
     value @1 :Value;
   }
 }
-  
+
 enum LongitudinalPersonality {
-    aggressive @0;
-    standard @1;
-    relaxed @2;
-  }
+  aggressive @0;
+  standard @1;
+  relaxed @2;
+}
 
 struct InitData {
   kernelArgs @0 :List(Text);
@@ -132,7 +132,6 @@ struct FrameData {
   frameIdSensor @25 :UInt32;
 
   frameType @7 :FrameType;
-  frameLength @3 :Int32;
 
   # Timestamps
   timestampEof @2 :UInt64;
@@ -167,6 +166,7 @@ struct FrameData {
     ox03c10 @2;
   }
 
+  frameLengthDEPRECATED @3 :Int32;
   globalGainDEPRECATED @5 :Int32;
   androidCaptureResultDEPRECATED @9 :AndroidCaptureResult;
   lensPosDEPRECATED @11 :Int32;
@@ -333,6 +333,7 @@ struct DeviceState @0xa4d8b5af2aa492eb {
   nvmeTempC @35 :List(Float32);
   modemTempC @36 :List(Float32);
   pmicTempC @39 :List(Float32);
+  maxTempC @44 :Float32;  # max of other temps, used to control fan
   thermalZones @38 :List(ThermalZone);
   thermalStatus @14 :ThermalStatus;
 
@@ -521,6 +522,10 @@ struct PandaState @0xa7649e2575e4591e {
     canfdEnabled @18 :Bool;
     brsEnabled @19 :Bool;
     canfdNonIso @20 :Bool;
+    irq0CallRate @21 :UInt32;
+    irq1CallRate @22 :UInt32;
+    irq2CallRate @23 :UInt32;
+    canCoreResetCnt @24 :UInt32;
 
     enum LecErrorCode {
       noError @0;
@@ -908,12 +913,13 @@ struct ModelDataV2 {
   leadsV3 @18 :List(LeadDataV3);
 
   meta @12 :MetaData;
+  confidence @23: ConfidenceClass;
 
   # Model perceived motion
   temporalPose @21 :Pose;
 
-  # predicted stop line
-  stopLine @22 :StopLineData;
+  navEnabled @22 :Bool;
+
 
   struct LeadDataV2 {
     prob @0 :Float32; # probability that car is your lead at time t
@@ -944,28 +950,6 @@ struct ModelDataV2 {
     aStd @10 :List(Float32);
   }
 
-  struct StopLineData {
-    prob @0 :Float32;
-
-    x @1 :Float32;
-    xStd @2 :Float32;
-    y @3 :Float32;
-    yStd @4 :Float32;
-    z @5 :Float32;
-    zStd @6 :Float32;
-
-    roll @7 :Float32;
-    rollStd @8 :Float32;
-    pitch @9 :Float32;
-    pitchStd @10 :Float32;
-    yaw @11 :Float32;
-    yawStd @12 :Float32;
-
-    speedAtLine @13 :Float32;
-    speedAtLineStd @14 :Float32;
-    secondsUntilLine @15 :Float32;
-    secondsUntilLineStd @16 :Float32;
-  }
 
   struct MetaData {
     engagedProb @0 :Float32;
@@ -978,6 +962,12 @@ struct ModelDataV2 {
     brakeDisengageProbDEPRECATED @2 :Float32;
     gasDisengageProbDEPRECATED @3 :Float32;
     steerOverrideProbDEPRECATED @4 :Float32;
+  }
+
+  enum ConfidenceClass {
+    red @0;
+    yellow @1;
+    green @2;
   }
 
   struct DisengagePredictions {
@@ -1065,8 +1055,6 @@ struct LongitudinalPlan @0xe00b5b3eba12876c {
   lead0Obstacle @40 :List(Float64) = [0.];
   lead1Obstacle @41 :List(Float64) = [0.];
   cruiseTarget @42 :List(Float64) = [0.];
-  stopLine @43 :List(Float64) = [0.];
-  stoplineProb @44 :Float32;
 
   enum LongitudinalPlanSource {
     cruise @0;
@@ -1137,15 +1125,22 @@ struct LateralPlan @0xe1e9318e2ae8b51e {
   curvatureRates @28 :List(Float32);
 
   solverExecutionTime @30 :Float32;
+  solverCost @32 :Float32;
+  solverState @33 :SolverState;
+
+  struct SolverState {
+    x @0 :List(List(Float32));
+    u @1 :List(Float32);
+  }
 
   # opkr
-  outputScale @32 :Float32;
-  standstillElapsedTime @33 :Float32;
-  vCruiseSet @34 :Float32;
-  vCurvature @35 :Float32;
-  lanelessMode @36 :Bool;
-  modelSpeed @37 :Float32;
-  totalCameraOffset @38 :Float32;
+  outputScale @34 :Float32;
+  standstillElapsedTime @35 :Float32;
+  vCruiseSet @36 :Float32;
+  vCurvature @37 :Float32;
+  lanelessMode @38 :Bool;
+  modelSpeed @39 :Float32;
+  totalCameraOffset @40 :Float32;
 
   enum Desire {
     none @0;
@@ -1319,6 +1314,8 @@ struct GnssMeasurements {
     svId @1 :UInt8;
     type @2 :EphemerisType;
     source @3 :EphemerisSource;
+    gpsWeek @4 : UInt16;
+    tow @5 :Float64;
   }
 
   struct CorrectedMeasurement {
@@ -1891,6 +1888,9 @@ struct QcomGnss @0xde94674b07ae51c1 {
     elevationDot @20 :Float32;
     elevationUncertainty @21 :Float32;
     velocityCoeff @22 :List(Float64);
+
+    gpsWeek @23 :UInt16;
+    gpsTow @24 :Float64;
   }
 }
 
@@ -2040,6 +2040,7 @@ struct LiveParametersData {
   stiffnessFactorStd @12 :Float32;
   steerRatioStd @13 :Float32;
   roll @14 :Float32;
+  filterState @15 :LiveLocationKalman.Measurement;
 
   yawRateDEPRECATED @7 :Float32;
 }

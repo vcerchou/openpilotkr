@@ -243,19 +243,12 @@ class LongitudinalMpc:
 
     self.ms_to_spd = CV.MS_TO_KPH if Params().get_bool("IsMetric") else CV.MS_TO_MPH
 
-    self.stop_line = Params().get_bool("ShowStopLine")
-
     self.lo_timer = 0 
 
     self.lead_0_obstacle = np.zeros(13, dtype=np.float64)
     self.lead_1_obstacle = np.zeros(13, dtype=np.float64)
     self.e2e_x = np.zeros(13, dtype=np.float64)
     self.cruise_target = np.zeros(13, dtype=np.float64)
-    self.stopline = np.zeros(13, dtype=np.float64)
-    self.stop_prob = 0.0
-
-    self.on_stopping = False
-    self.on_stopping_timer = 0
 
   def reset(self):
     # self.solver = AcadosOcpSolverCython(MODEL_NAME, ACADOS_SOLVER_TYPE, N)
@@ -366,8 +359,6 @@ class LongitudinalMpc:
     t_follow = get_T_FOLLOW(personality)
     v_ego = self.x0[1]
 
-    stopping = model.stopLine.prob > 0.5 if self.stop_line else False
-
     # opkr
     self.lo_timer += 1
     if self.lo_timer > 200:
@@ -403,8 +394,6 @@ class LongitudinalMpc:
 
     self.params[:,0] = MIN_ACCEL
     self.params[:,1] = self.max_a
-
-    stopline = (model.stopLine.x + 5.0) * np.ones(N+1) if stopping else 400 * np.ones(N+1)
 
     # Update in ACC mode or ACC/e2e blend
     if self.mode == 'acc':
@@ -458,8 +447,6 @@ class LongitudinalMpc:
     self.lead_0_obstacle = lead_0_obstacle[:]
     self.lead_1_obstacle = lead_1_obstacle[:]
     self.cruise_target = cruise_obstacle[:]
-    self.stopline = stopline[:]
-    self.stop_prob = model.stopLine.prob
 
 
     self.run()

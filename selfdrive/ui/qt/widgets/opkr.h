@@ -813,18 +813,6 @@ public:
   }
 };
 
-class ShowStopLineToggle : public ToggleControl {
-  Q_OBJECT
-
-public:
-  ShowStopLineToggle() : ToggleControl(tr("Show Stop Line"), tr("Show stop line on the screen."), "../assets/offroad/icon_shell.png", Params().getBool("ShowStopLine")) {
-    QObject::connect(this, &ShowStopLineToggle::toggleFlipped, [=](int state) {
-      bool status = state ? true : false;
-      Params().putBool("ShowStopLine", status);
-    });
-  }
-};
-
 class NoSmartMDPSToggle : public ToggleControl {
   Q_OBJECT
 

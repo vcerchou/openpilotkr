@@ -205,7 +205,6 @@ def manager_init() -> None:
     ("UseStockDecelOnSS", "0"),
     ("AnimatedRPM", "1"),
     ("AnimatedRPMMax", "3600"),
-    ("ShowStopLine", "0"),
     ("RoutineDriveOption", "OPKR"),
     ("SshEnabled", "1"),
     ("UserSpecificFeature", "0"),

@@ -331,10 +331,6 @@ static void update_state(UIState *s) {
     for (int i = 0; i < std::size(scene.longitudinalPlan.cruisetg); i++) {
       scene.longitudinalPlan.cruisetg[i] = lop_data.getCruiseTarget()[i];
     }
-    for (int i = 0; i < std::size(scene.longitudinalPlan.stopline); i++) {
-      scene.longitudinalPlan.stopline[i] = lop_data.getStopLine()[i];
-    }
-    scene.longitudinalPlan.stopprob = lop_data.getStoplineProb();
   }
   // opkr
   if (sm.updated("liveENaviData")) {

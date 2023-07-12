@@ -3774,17 +3774,6 @@ This may take up to a minute.</source>
     </message>
 </context>
 <context>
-    <name>ShowStopLineToggle</name>
-    <message>
-        <source>Show Stop Line</source>
-        <translation>정지선 표시</translation>
-    </message>
-    <message>
-        <source>Show stop line on the screen.</source>
-        <translation>화면에 정지선을 표시합니다.</translation>
-    </message>
-</context>
-<context>
     <name>NoSmartMDPSToggle</name>
     <message>
         <source>No Smart MDPS</source>

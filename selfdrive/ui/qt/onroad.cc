@@ -1262,6 +1262,7 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QB
 
 void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation, float angle) {
   // opkr
+  int radius = 30;
   if (rotation) {
     p.setOpacity(opacity);
     p.setPen(Qt::NoPen);
@@ -1282,6 +1283,7 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, fl
     p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
     p.drawPixmap(x - img_size / 2, y - img_size / 2, img);
   }
+}
 
 void AnnotatedCameraWidget::initializeGL() {
   CameraWidget::initializeGL();

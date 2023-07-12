@@ -464,7 +464,6 @@ GitPullCancel::GitPullCancel(const QString &confirm_text, const QString &cancel_
         QStringList hash = str.split(",");
         if (ConfirmationDialog::confirm2(tr("This will run below command: git reset --hard ") + hash[0], this)) {
           QString cmd0 = "git reset --hard " + hash[0];
-          QProcess::execute("sudo pkill -f thermald");
           QProcess::execute("rm -f /data/openpilot/prebuilt");
           QProcess::execute("git clean -d -f -f");
           QProcess::execute(cmd0);

@@ -19,7 +19,6 @@ if [ "$?" == "0" ]; then
   git pull origin $BRANCH
 
   if [ "$HASH" != "$REMOTE_HASH" ]; then
-    sudo pkill -f thermald
     if [ -f "/data/openpilot/prebuilt" ]; then
       sleep 1
       sudo rm -f /data/openpilot/prebuilt

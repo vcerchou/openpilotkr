@@ -11,7 +11,6 @@ sed -i "4s/.*/const int HYUNDAI_MAX_RATE_UP \= ${MAX_RATE_UP}\;/g" /data/openpil
 sed -i "5s/.*/const int HYUNDAI_MAX_RATE_DOWN \= ${MAX_RATE_DOWN}\;/g" /data/openpilot/panda/board/safety/safety_hyundai.h
 
 if [ -f "/data/openpilot/prebuilt" ]; then
-  sudo pkill -f thermald
   rm -f /data/openpilot/prebuilt
 fi
 sudo reboot

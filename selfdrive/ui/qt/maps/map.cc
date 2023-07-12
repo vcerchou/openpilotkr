@@ -710,5 +710,5 @@ void MapETA::updateETA(float s, float s_typical, float d) {
   setMask(mask);
 
   // Center
-  move(static_cast<QWidget*>(parent())->width() / 2 - width() / 2, 1080 - height() - bdr_s*2);
+  move(static_cast<QWidget*>(parent())->width() / 2 - width() / 2, 1080 - height() - UI_BORDER_SIZE*2);
 }

@@ -351,8 +351,10 @@ SwitchOpenpilot::SwitchOpenpilot() : ButtonControl(tr("Change Repo/Branch"), "",
               QString cmd1 = "mv /data/openpilot /data/openpilot_" + as;
               QString tcmd = "git clone --progress -b " + githubbranch + " --single-branch https://github.com/" + githubid + "/" + githubrepo + ".git /data/openpilot";
               QString cmd3 = "rm -f /data/openpilot_" + as + "/prebuilt";
+			  QString cmd4 = "touch /data/opkr_compiling";
               QProcess::execute(cmd1);
               QProcess::execute(cmd3);
+			  QProcess::execute(cmd4);
               textMsgProcess = new QProcess(this);
               outbox = new QMessageBox(this);
               outbox->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");

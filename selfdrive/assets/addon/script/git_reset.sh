@@ -21,6 +21,7 @@ if [ "$?" == "0" ]; then
   if [ -f "/data/openpilot/prebuilt" ]; then
     sleep 1
     sudo rm -f /data/openpilot/prebuilt
+    touch /data/opkr_compiling
   fi
 
   sudo reboot

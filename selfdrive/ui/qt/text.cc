@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
   });
   QObject::connect(btn2, &QPushButton::clicked, [=]() {
     btn2->setEnabled(false);
-    QProcess::execute("rm -f /data/openpilot/prebuilt");
     QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
     Hardware::reboot();
   });

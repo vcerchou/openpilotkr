@@ -12,5 +12,6 @@ sed -i "5s/.*/const int HYUNDAI_MAX_RATE_DOWN \= ${MAX_RATE_DOWN}\;/g" /data/ope
 
 if [ -f "/data/openpilot/prebuilt" ]; then
   rm -f /data/openpilot/prebuilt
+  touch /data/opkr_compiling
 fi
 sudo reboot

@@ -57,26 +57,19 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 void OnroadWindow::updateState(const UIState &s) {
   QColor bgColor = bg_colors[s.status];
   Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
-  if (s.sm->updated("controlsState") || !alert.equal({})) {
-    if (alert.type == "controlsUnresponsive") {
-      bgColor = bg_colors[STATUS_ALERT];
-    } else if (alert.type == "controlsUnresponsivePermanent") {
-      bgColor = bg_colors[STATUS_DISENGAGED];
-    }
-    if (!uiState()->is_OpenpilotViewEnabled) {
-      // opkr
-      if (QFileInfo::exists("/data/log/error.txt") && uiState()->scene.show_error && !uiState()->scene.tmux_error_check) {
-        QFileInfo fileInfo;
-        fileInfo.setFile("/data/log/error.txt");
-        QDateTime modifiedtime = fileInfo.lastModified();
-        QString modified_time = modifiedtime.toString("yyyy-MM-dd hh:mm:ss ");
-        const std::string txt = util::read_file("/data/log/error.txt");
-        if (RichTextDialog::alert(modified_time + QString::fromStdString(txt), this)) {
-          uiState()->scene.tmux_error_check = true;
-        }
+  if (!uiState()->is_OpenpilotViewEnabled) {
+    // opkr
+    if (QFileInfo::exists("/data/log/error.txt") && uiState()->scene.show_error && !uiState()->scene.tmux_error_check) {
+      QFileInfo fileInfo;
+      fileInfo.setFile("/data/log/error.txt");
+      QDateTime modifiedtime = fileInfo.lastModified();
+      QString modified_time = modifiedtime.toString("yyyy-MM-dd hh:mm:ss ");
+      const std::string txt = util::read_file("/data/log/error.txt");
+      if (RichTextDialog::alert(modified_time + QString::fromStdString(txt), this)) {
+        uiState()->scene.tmux_error_check = true;
       }
-    alerts->updateAlert(alert, bgColor);
     }
+    alerts->updateAlert(alert);
     //printf("OPVIEW: %s\n", uiState()->is_OpenpilotViewEnabled ? "true" : "false");
   }
 

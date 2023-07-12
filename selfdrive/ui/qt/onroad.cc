@@ -285,10 +285,13 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->setMargin(UI_BORDER_SIZE);
   main_layout->setSpacing(0);
 
-  experimental_btn = new ExperimentalButton(this);
-  main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
+  //experimental_btn = new ExperimentalButton(this);
+  //main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
 
   dm_img = loadPixmap("../assets/img_driver_face.png", {img_size + 5, img_size + 5});
+
+  engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size + 5, img_size + 5});
+  experimental_img = loadPixmap("../assets/img_experimental.svg", {img_size + 5, img_size + 5});
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {
@@ -336,7 +339,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("status", s.status);
 
   // update engageability/experimental mode button
-  experimental_btn->updateState(s);
+  //experimental_btn->updateState(s);
 
   // update DM icon
   auto dm_state = sm["driverMonitoringState"].getDriverMonitoringState();
@@ -1257,6 +1260,29 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QB
   p.setOpacity(1.0);
 }
 
+void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation, float angle) {
+  // opkr
+  if (rotation) {
+    p.setOpacity(opacity);
+    p.setPen(Qt::NoPen);
+    p.setBrush(QColor(0, 0, 0, 166));
+    p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
+    p.setOpacity(isDown() ? 0.8 : 1.0);
+    p.save();
+    p.translate(x, y);
+    p.rotate(-angle);
+    //img.scaled(105,105);
+    QRect r = img.rect();
+    r.moveCenter(QPoint(0,0));
+    p.drawPixmap(r, img);
+    p.restore();
+  } else {
+    p.setOpacity(opacity);
+    p.setPen(Qt::NoPen);
+    p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
+    p.drawPixmap(x - img_size / 2, y - img_size / 2, img);
+  }
+
 void AnnotatedCameraWidget::initializeGL() {
   CameraWidget::initializeGL();
   qInfo() << "OpenGL version:" << QString((const char*)glGetString(GL_VERSION));
@@ -1386,6 +1412,32 @@ void AnnotatedCameraWidget::drawDriverState(QPainter &painter, const UIState *s)
   painter.restore();
 }
 
+void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) {
+  const UIScene &scene = s->scene;
+
+  painter.save();
+
+  if (scene.enabled) {
+    drawIcon(painter, rect().right() - radius / 2, radius / 2, scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
+  } else if (!scene.comma_stock_ui) {
+    QString gear_text = "0";
+    switch(int(scene.getGearShifter)) {
+      case 1 : gear_text = "P"; p.setPen(QColor(200, 200, 255, 255)); break;
+      case 2 : gear_text = "D"; p.setPen(greenColor(255)); break;
+      case 3 : gear_text = "N"; p.setPen(whiteColor(255)); break;
+      case 4 : gear_text = "R"; p.setPen(redColor(255)); break;
+      case 5 : gear_text = "M"; p.setPen(greenColor(255)); break;
+      case 7 : gear_text = "B"; p.setPen(whiteColor(255)); break;
+      default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); p.setPen(whiteColor(255)); break;
+    }
+    debugText(painter, rect().right() - radius / 2, radius / 2 + 70, gear_text, 255, 190, true);
+  } else {
+    drawIcon(painter, rect().right() - radius / 2, radius / 2, engage_img, greyColor(100), 0.7);
+  }
+
+  painter.restore();
+}
+
 void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState::LeadData::Reader &lead_data, const QPointF &vd) {
   painter.save();
 
@@ -1443,7 +1495,6 @@ void AnnotatedCameraWidget::drawLead(QPainter &painter, const cereal::RadarState
 
   painter.restore();
 }
-
 
 void AnnotatedCameraWidget::debugText(QPainter &p, int x, int y, const QString &text, int alpha, int fontsize, bool bold) {
   if (bold) {
@@ -1551,6 +1602,8 @@ void AnnotatedCameraWidget::paintGL() {
     update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
     drawDriverState(painter, s);
   }
+
+  drawWheelState(painter, s);
 
   drawHud(painter);
 

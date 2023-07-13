@@ -709,6 +709,23 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         }
       }
       p.resetMatrix();
+    } else {
+      sp_yl = sp_yl + j_num;
+      if (s->scene.charge_meter > 0) {
+        p.setPen(yellowColor(230));
+        debugText(p, sp_xl, sp_yl, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
+        p.setPen(whiteColor(200));
+        debugText(p, sp_xl, sp_yl + 35, QString("MAIN BAT"), 150, 27);
+      } else {
+        p.setPen(yellowColor(230));
+        debugText(p, sp_xl, sp_yl, "-", 150, 57);
+        p.setPen(whiteColor(200));
+        debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
+      }
+      p.translate(sp_xl + 90, sp_yl + 20);
+      p.rotate(-90);
+      p.setPen(whiteColor(200));
+      p.drawText(0, 0, "GAP");
     }
 
     // opkr debug info(right panel)

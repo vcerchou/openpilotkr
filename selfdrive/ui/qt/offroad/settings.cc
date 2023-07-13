@@ -470,8 +470,8 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   layout->setSpacing(30);
 
   // OPKR
-  layout->addWidget(new AutoShutdown());
-  layout->addWidget(new ForceShutdown());
+  //layout->addWidget(new AutoShutdown());
+  //layout->addWidget(new ForceShutdown());
   layout->addWidget(new VolumeControl());
   layout->addWidget(new BrightnessControl());
   layout->addWidget(new AutoScreenOff());
@@ -497,19 +497,19 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
     }
   });
   layout->addWidget(realdatadelbtn);
-  layout->addWidget(new MonitoringMode());
-  layout->addWidget(new MonitorEyesThreshold());
-  layout->addWidget(new NormalEyesThreshold());
-  layout->addWidget(new BlinkThreshold());
+  //layout->addWidget(new MonitoringMode());
+  //layout->addWidget(new MonitorEyesThreshold());
+  //layout->addWidget(new NormalEyesThreshold());
+  //layout->addWidget(new BlinkThreshold());
   layout->addWidget(new OPKRNaviSelect());
   layout->addWidget(new ExternalDeviceIP());
-  layout->addWidget(new OPKRServerSelect());
-  layout->addWidget(new OPKRServerAPI());
+  //layout->addWidget(new OPKRServerSelect());
+  //layout->addWidget(new OPKRServerAPI());
   layout->addWidget(new OPKRMapboxStyle());
   layout->addWidget(new OPKRBottomTextView());
   layout->addWidget(new RPMAnimatedToggle());
   layout->addWidget(new RPMAnimatedMaxValue());
-  layout->addWidget(new OSMOfflineUseToggle());
+  //layout->addWidget(new OSMOfflineUseToggle());
 }
 DrivingPanel::DrivingPanel(QWidget *parent) : QFrame(parent) {
   QVBoxLayout *layout = new QVBoxLayout(this);
@@ -590,7 +590,7 @@ DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new GearDToggle());
   layout->addWidget(new SteerWarningFixToggle());
   layout->addWidget(new IgnoreCanErroronISGToggle());
-  layout->addWidget(new FCA11MessageToggle());
+  //layout->addWidget(new FCA11MessageToggle());
   layout->addWidget(new UFCModeEnabledToggle());
   layout->addWidget(new StockLKASEnabledatDisenagedStatusToggle());
   layout->addWidget(new JoystickModeToggle());
@@ -599,8 +599,8 @@ DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {
 
   layout->addWidget(horizontal_line());
   layout->addWidget(new CarSelectCombo());
-  layout->addWidget(horizontal_line());
-  layout->addWidget(new CPandaGroup());
+  //layout->addWidget(horizontal_line());
+  //layout->addWidget(new CPandaGroup());
 }
 
 TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
@@ -624,20 +624,20 @@ TuningPanel::TuningPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new LiveSteerRatioToggle());
   layout->addWidget(new LiveSRPercent());
   layout->addWidget(new SRBaseControl());
-  layout->addWidget(new SRMaxControl());
+  //layout->addWidget(new SRMaxControl());
 
   layout->addWidget(horizontal_line());
-  layout->addWidget(new VariableSteerMaxToggle());
+  //layout->addWidget(new VariableSteerMaxToggle());
   layout->addWidget(new SteerMax());
-  layout->addWidget(new VariableSteerDeltaToggle());
+  //layout->addWidget(new VariableSteerDeltaToggle());
   layout->addWidget(new SteerDeltaUp());
   layout->addWidget(new SteerDeltaDown());
 
   layout->addWidget(horizontal_line());
 
   //layout->addWidget(new LabelControl("〓〓〓〓〓〓〓〓【 CONTROL 】〓〓〓〓〓〓〓〓", ""));
- // layout->addWidget(new LateralControl());
-  layout->addWidget(new LiveTunePanelToggle());
+  //layout->addWidget(new LateralControl());
+  //layout->addWidget(new LiveTunePanelToggle());
 
   layout->addWidget(new CLateralControlGroup());
   layout->addWidget(horizontal_line());

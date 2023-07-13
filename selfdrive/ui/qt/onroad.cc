@@ -6,6 +6,8 @@
 #include <QMouseEvent>
 #include <QFileInfo>
 #include <QDateTime>
+#include <QProcess>
+#include <QTimer>
 
 #include "common/timing.h"
 #include "selfdrive/ui/qt/util.h"
@@ -57,16 +59,17 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 void OnroadWindow::updateState(const UIState &s) {
   QColor bgColor = bg_colors[s.status];
   Alert alert = Alert::get(*(s.sm), s.scene.started_frame);
-  if (!uiState()->is_OpenpilotViewEnabled) {
+  if (!s.is_OpenpilotViewEnabled) {
     // opkr
-    if (QFileInfo::exists("/data/log/error.txt") && uiState()->scene.show_error && !uiState()->scene.tmux_error_check) {
+    if (QFileInfo::exists("/data/log/error.txt") && s.scene.show_error) {
       QFileInfo fileInfo;
       fileInfo.setFile("/data/log/error.txt");
       QDateTime modifiedtime = fileInfo.lastModified();
       QString modified_time = modifiedtime.toString("yyyy-MM-dd hh:mm:ss ");
       const std::string txt = util::read_file("/data/log/error.txt");
       if (RichTextDialog::alert(modified_time + QString::fromStdString(txt), this)) {
-        uiState()->scene.tmux_error_check = true;
+        QProcess::execute("rm -f /data/log/error.txt");
+        QTimer::singleShot(500, []() {});
       }
     }
     alerts->updateAlert(alert);

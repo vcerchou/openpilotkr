@@ -255,7 +255,9 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
                                QWidget *parent) : QDialogBase(parent) {
   QFrame *container = new QFrame(this);
   container->setStyleSheet("QFrame { background-color: #1B1B1B; }");
-  QVBoxLayout *main_layout = new QVBoxLayout(container);
+  QGridLayout *main_layout = new QGridLayout(container);
+
+  //QVBoxLayout *main_layout = new QVBoxLayout(container);
   main_layout->setContentsMargins(20, 20, 20, 20);
 
   QLabel *prompt = new QLabel(prompt_text, this);
@@ -266,8 +268,8 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
   ScrollView *scroll_view = new ScrollView(prompt, this);
   scroll_view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-  main_layout->addStretch(0);
-  main_layout->addWidget(scroll_view);
+  main_layout->addWidget(scroll_view, 0, 0, -1, -1);
+
   main_layout->addSpacing(35);
 
   QHBoxLayout *btn_layout = new QHBoxLayout();
@@ -275,7 +277,7 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
 
   // confirm button
   QPushButton* confirm_btn = new QPushButton(btn_text);
-  btn_layout->addWidget(confirm_btn);
+  btn_layout->addWidget(confirm_btn, 1, 0);
   QObject::connect(confirm_btn, &QPushButton::clicked, this, &RichTextDialog::accept);
 
   QVBoxLayout *outer_layout = new QVBoxLayout(this);

@@ -272,7 +272,7 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
 
   // confirm button
   QPushButton* confirm_btn = new QPushButton(btn_text);
-  main_layout->addWidget(confirm_btn);
+  main_layout->addWidget(confirm_btn, 1, 0);
   QObject::connect(confirm_btn, &QPushButton::clicked, this, &RichTextDialog::accept);
 
   QVBoxLayout *outer_layout = new QVBoxLayout(this);

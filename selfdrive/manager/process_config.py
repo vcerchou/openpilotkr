@@ -96,10 +96,9 @@ if EnableOSM:
   procs += [
     PythonProcess("mapd", "selfdrive.mapd.mapd", enabled=not PC, persistent=True),
   ]
-#if EnableExternalNavi:
-if False:
+if EnableExternalNavi:
   procs += [
-    PythonProcess("navid", "selfdrive.enavi.navi_external", persistent=True),
+    PythonProcess("navid", "selfdrive.enavi.navi_external"),
   ]
 
 managed_processes = {p.name: p for p in procs}

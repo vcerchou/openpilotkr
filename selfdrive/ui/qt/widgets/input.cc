@@ -266,12 +266,11 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
   ScrollView *scroll_view = new ScrollView(prompt, this);
   scroll_view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-  main_layout->addStretch(1);
+  main_layout->addStretch(0);
   main_layout->addWidget(scroll_view);
   main_layout->addSpacing(35);
 
   QHBoxLayout *btn_layout = new QHBoxLayout();
-  btn_layout->setSpacing(30);
   main_layout->addLayout(btn_layout);
 
   // confirm button

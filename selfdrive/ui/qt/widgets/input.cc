@@ -270,14 +270,9 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
 
   main_layout->addWidget(scroll_view, 0, 0, -1, -1);
 
-  main_layout->addSpacing(35);
-
-  QHBoxLayout *btn_layout = new QHBoxLayout();
-  main_layout->addLayout(btn_layout);
-
   // confirm button
   QPushButton* confirm_btn = new QPushButton(btn_text);
-  btn_layout->addWidget(confirm_btn);
+  main_layout->addWidget(confirm_btn);
   QObject::connect(confirm_btn, &QPushButton::clicked, this, &RichTextDialog::accept);
 
   QVBoxLayout *outer_layout = new QVBoxLayout(this);

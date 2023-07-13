@@ -655,25 +655,58 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     sp_yl = sp_yl + j_num;
     debugText(p, sp_xl, sp_yl, QString::number(s->scene.steerRatio, 'f', 2), 150, 57);
     debugText(p, sp_xl, sp_yl + 35, QString("SteerRatio"), 150, 27);
-    // cruise gap for long
-    if (s->scene.longitudinal_control) {
+
+    // gear step and cruise gap
+    if (0 < s->scene.gear_step && s->scene.gear_step < 9) {
       sp_yl = sp_yl + j_num;
-      if (s->scene.controls_state.getEnabled()) {
-        if (s->scene.cruise_gap == s->scene.dynamic_tr_mode) {
-          debugText(p, sp_xl, sp_yl, "AUT", 150, 57);
+      if (s->scene.charge_meter > 0) {
+        p.setPen(yellowColor(230));
+        debugText(p, sp_xl, sp_yl, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
+        p.setPen(whiteColor(200));
+        debugText(p, sp_xl, sp_yl + 35, QString("MAIN BAT"), 150, 27);
+      } else {
+        p.setPen(yellowColor(230));
+        debugText(p, sp_xl, sp_yl, "S " + QString::number(s->scene.gear_step, 'f', 0), 150, 57);
+        p.setPen(whiteColor(200));
+        debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
+      }
+
+      p.translate(sp_xl + 90, sp_yl + 20);
+      p.rotate(-90);
+      if (s->scene.cruise_gap == 1) {
+        if (s->scene.gap_by_speed_on) {
+          p.setPen(QColor(0, 180, 255, 220));
+          p.drawText(0, 0, "■");
         } else {
-          debugText(p, sp_xl, sp_yl, QString::number(s->scene.cruise_gap, 'f', 0), 150, 57);
+          p.setPen(redColor(200));
+          p.drawText(0, 0, "■");
+        }
+      } else if (s->scene.cruise_gap == 2) {
+        if (s->scene.gap_by_speed_on) {
+          p.setPen(QColor(0, 180, 255, 220));
+          p.drawText(0, 0, "■■");
+        } else {
+          p.setPen(redColor(200));
+          p.drawText(0, 0, "■■");
+        }
+      } else if (s->scene.cruise_gap == 3) {
+        if (s->scene.gap_by_speed_on) {
+          p.setPen(QColor(0, 180, 255, 220));
+          p.drawText(0, 0, "■■■");
+        } else {
+          p.setPen(greenColor(200));
+          p.drawText(0, 0, "■■■");
         }
       } else {
-        debugText(p, sp_xl, sp_yl, "-", 150, 57);
+        if (s->scene.gap_by_speed_on) {
+          p.setPen(QColor(0, 180, 255, 220));
+          p.drawText(0, 0, "■■■■");
+        } else {
+          p.setPen(whiteColor(200));
+          p.drawText(0, 0, "■■■■");
+        }
       }
-      debugText(p, sp_xl, sp_yl + 35, QString("CruiseGap"), 150, 27);
-      if (s->scene.cruise_gap == s->scene.dynamic_tr_mode) {
-        p.translate(sp_xl + 90, sp_yl + 20);
-        p.rotate(-90);
-        p.drawText(0, 0, QString::number(s->scene.dynamic_tr_value, 'f', 0));
-        p.resetMatrix();
-      }
+      p.resetMatrix();
     }
 
     // opkr debug info(right panel)

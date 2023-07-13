@@ -232,6 +232,8 @@ def manager_init() -> None:
     ("CruiseSetwithRoadLimitSpeedEnabled", "0"),
     ("CruiseSetwithRoadLimitSpeedOffset", "0"),
     ("OpkrLiveFriction", "1"),
+    ("ExternalDeviceIP", ""),
+    ("ExternalDeviceIPNow", ""),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

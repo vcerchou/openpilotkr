@@ -49,7 +49,11 @@ def navid_thread(end_event, nv_queue):
   ip_bind = False
  
   check_connection = False
-  ip_count = int(len(Params().get("ExternalDeviceIP", encoding="utf8").split(',')))
+  try:
+    ip_count = int(len(Params().get("ExternalDeviceIP", encoding="utf8").split(',')))
+  except:
+    ip_count = 0
+    pass
   is_metric = Params().get_bool("IsMetric")
   navi_selection = int(Params().get("OPKRNaviSelect", encoding="utf8"))
 

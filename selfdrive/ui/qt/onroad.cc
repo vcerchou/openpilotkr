@@ -673,39 +673,39 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(whiteColor(200));
         debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
       }
-      p.translate(sp_xl + 105, sp_yl + 20);
+      p.translate(sp_xl + 90, sp_yl + 20);
       p.rotate(-90);
       if (s->scene.cruise_gap == 1) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(0, 0, "■");
+          p.drawText(10, 0, "■");
         } else {
           p.setPen(redColor(200));
-          p.drawText(0, 0, "■");
+          p.drawText(10, 0, "■");
         }
       } else if (s->scene.cruise_gap == 2) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(0, 0, "■■");
+          p.drawText(10, 0, "■■");
         } else {
           p.setPen(redColor(200));
-          p.drawText(0, 0, "■■");
+          p.drawText(10, 0, "■■");
         }
       } else if (s->scene.cruise_gap == 3) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(0, 0, "■■■");
+          p.drawText(10, 0, "■■■");
         } else {
           p.setPen(greenColor(200));
-          p.drawText(0, 0, "■■■");
+          p.drawText(10, 0, "■■■");
         }
       } else {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(0, 0, "■■■■");
+          p.drawText(10, 0, "■■■■");
         } else {
           p.setPen(whiteColor(200));
-          p.drawText(0, 0, "■■■■");
+          p.drawText(10, 0, "■■■■");
         }
       }
     p.resetMatrix();

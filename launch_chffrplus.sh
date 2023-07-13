@@ -15,7 +15,7 @@ function agnos_init {
   else
     if [ -f "/data/params/d/PutPrebuiltOn" ]; then
       PREBUILT_CHECK=$(cat /data/params/d/PutPrebuiltOn)
-      if [ "$PREBUILT_CHECK" == "1" ] && [ ! -f "/data/openpilot/prebuilt"]; then
+      if [[ "$PREBUILT_CHECK" == "1" && ! -f "/data/openpilot/prebuilt" ]]; then
         touch /data/openpilot/prebuilt
       fi
     fi

@@ -708,7 +708,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
           p.drawText(0, 0, "■■■■");
         }
       }
-      p.resetMatrix();
     } else {
       sp_yl = sp_yl + j_num;
       if (s->scene.charge_meter > 0) {
@@ -727,6 +726,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setPen(whiteColor(200));
       p.drawText(0, 0, "GAP");
     }
+    p.resetMatrix();
 
     // opkr debug info(right panel)
     int width_r = 180;

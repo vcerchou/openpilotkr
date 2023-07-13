@@ -47,7 +47,7 @@ procs = [
   DaemonProcess("manage_athenad", "selfdrive.athena.manage_athenad", "AthenadPid"),
   NativeProcess("dmonitoringmodeld", "selfdrive/modeld", ["./dmonitoringmodeld"], enabled=(not PC or WEBCAM), callback=driverview),
   NativeProcess("encoderd", "system/loggerd", ["./encoderd"]),
-  NativeProcess("loggerd", "system/loggerd", ["./loggerd"], onroad=False, callback=logging),
+  #NativeProcess("loggerd", "system/loggerd", ["./loggerd"], onroad=False, callback=logging),
   NativeProcess("modeld", "selfdrive/modeld", ["./modeld"]),
   NativeProcess("mapsd", "selfdrive/navd", ["./mapsd"]),
   NativeProcess("navmodeld", "selfdrive/modeld", ["./navmodeld"]),
@@ -59,7 +59,7 @@ procs = [
   PythonProcess("calibrationd", "selfdrive.locationd.calibrationd"),
   PythonProcess("torqued", "selfdrive.locationd.torqued"),
   PythonProcess("controlsd", "selfdrive.controls.controlsd"),
-  PythonProcess("deleter", "system.loggerd.deleter", offroad=True),
+  #PythonProcess("deleter", "system.loggerd.deleter", offroad=True),
   PythonProcess("dmonitoringd", "selfdrive.monitoring.dmonitoringd", enabled=(not PC or WEBCAM), callback=driverview),
   PythonProcess("laikad", "selfdrive.locationd.laikad"),
   PythonProcess("rawgpsd", "system.sensord.rawgps.rawgpsd", enabled=TICI, onroad=False, callback=qcomgps),
@@ -85,9 +85,11 @@ if EnableLogger:
   procs += [
     NativeProcess("logcatd", "system/logcatd", ["./logcatd"]),
     PythonProcess("logmessaged", "system.logmessaged", offroad=True),
+    NativeProcess("loggerd", "system/loggerd", ["./loggerd"], onroad=False, callback=logging),
   ]
 if EnableUploader:
   procs += [
+    PythonProcess("deleter", "system.loggerd.deleter", offroad=True),
     PythonProcess("uploader", "system.loggerd.uploader", offroad=True),
   ]
 if EnableOSM:

@@ -58,7 +58,7 @@ def navid_thread(end_event, nv_queue):
   mtom1 = False
   mtom_dist_last = 0
 
-  if navi_selection == 5:
+  if navi_selection == 2:
     waze_alert_id = 0
     waze_alert_distance = "0"
     waze_road_speed_limit = 0
@@ -94,7 +94,7 @@ def navid_thread(end_event, nv_queue):
       is_highway = 0
       is_tunnel = 0
 
-      if navi_selection == 5:
+      if navi_selection == 2:
         if (count % int(7. / DT_TRML)) == 0 and int(waze_current_speed) > 2:
           waze_alert_id = 0
           waze_alert_distance = "0"
@@ -326,7 +326,7 @@ def navid_thread(end_event, nv_queue):
         navi_msg.liveENaviData.opkr8 = str(opkr_8)
         navi_msg.liveENaviData.opkr9 = str(opkr_9)
 
-      if navi_selection == 5:
+      if navi_selection == 2:
         navi_msg.liveENaviData.wazeAlertId = int(waze_alert_id)
 
         if waze_is_metric:

@@ -590,8 +590,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int width_l = 180;
     int sp_xl = rect().left() + UI_BORDER_SIZE + width_l / 2 - 10;
     int sp_yl = UI_BORDER_SIZE + 275;
-    int num_l = 4;
-    if (s->scene.longitudinal_control) {num_l = num_l + 1;}
+    int num_l = 5;
     QRect left_panel(rect().left() + UI_BORDER_SIZE, UI_BORDER_SIZE + 215, width_l, 104*num_l);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
@@ -787,7 +786,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int tpms_width = 180;
     int tpms_sp_xr = rect().right() - UI_BORDER_SIZE - tpms_width / 2;
     int tpms_sp_yr = sp_yr + j_num - 5;
-    QRect tpms_panel(rect().right() - UI_BORDER_SIZE - tpms_width, tpms_sp_yr - 25, tpms_width, 130);  
+    QRect tpms_panel(rect().right() - UI_BORDER_SIZE - tpms_width, tpms_sp_yr - 25, tpms_width, 135);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(tpms_panel, 20, 20);
@@ -811,7 +810,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     if (s->scene.tpmsUnit != 0) {
       debugText(p, tpms_sp_xr, tpms_sp_yr+15, (s->scene.tpmsUnit == 2) ? "TPMS(bar)" : "TPMS(psi)", 150, 33);
-      font_size = (s->scene.tpmsUnit == 2) ? 45 : 40;
+      font_size = (s->scene.tpmsUnit == 2) ? 45 : 37;
     } else {
       debugText(p, tpms_sp_xr, tpms_sp_yr+15, "TPMS(psi)", 150, 33);
       font_size = 45;

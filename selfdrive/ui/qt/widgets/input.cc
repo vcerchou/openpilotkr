@@ -262,11 +262,11 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
   prompt->setWordWrap(true);
   prompt->setAlignment(Qt::AlignLeft);
   prompt->setStyleSheet("font-size: 40px; font-weight: light; color: #C9C9C9; margin: 25px;");
-  prompt->addStretch(1);
 
   ScrollView *scroll_view = new ScrollView(prompt, this);
   scroll_view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
+  main_layout->addStretch(1);
   main_layout->addWidget(scroll_view);
   main_layout->addSpacing(35);
 

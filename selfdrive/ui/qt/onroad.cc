@@ -65,7 +65,6 @@ void OnroadWindow::updateState(const UIState &s) {
       QDateTime modifiedtime = fileInfo.lastModified();
       QString modified_time = modifiedtime.toString("yyyy-MM-dd hh:mm:ss ");
       const std::string txt = util::read_file("/data/log/error.txt");
-      printf("%s", txt.c_str());
       if (RichTextDialog::alert(modified_time + QString::fromStdString(txt), this)) {
         uiState()->scene.tmux_error_check = true;
       }

@@ -259,7 +259,7 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
   main_layout->setContentsMargins(20, 20, 20, 20);
 
   QLabel *prompt = new QLabel(prompt_text, this);
-  prompt->setWordWrap(true);
+  //prompt->setWordWrap(true);
   prompt->setAlignment(Qt::AlignLeft);
   prompt->setTextFormat(Qt::RichText);
   prompt->setStyleSheet("font-size: 40px; font-weight: light; color: #C9C9C9; margin: 25px;");

@@ -590,7 +590,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int width_l = 180;
     int sp_xl = rect().left() + UI_BORDER_SIZE + width_l / 2 - 10;
     int sp_yl = UI_BORDER_SIZE + 275;
-    int num_l = 5;
+    int num_l = 4;
+    if (0 < s->scene.gear_step && s->scene.gear_step < 9) num_l = num_l + 1;
     QRect left_panel(rect().left() + UI_BORDER_SIZE, UI_BORDER_SIZE + 215, width_l, 104*num_l);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
@@ -672,7 +673,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(whiteColor(200));
         debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
       }
-
       p.translate(sp_xl + 90, sp_yl + 20);
       p.rotate(-90);
       if (s->scene.cruise_gap == 1) {
@@ -708,25 +708,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
           p.drawText(0, 0, "■■■■");
         }
       }
-    } else {
-      sp_yl = sp_yl + j_num;
-      if (s->scene.charge_meter > 0) {
-        p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
-        p.setPen(whiteColor(200));
-        debugText(p, sp_xl, sp_yl + 35, QString("MAIN BAT"), 150, 27);
-      } else {
-        p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl, "-", 150, 57);
-        p.setPen(whiteColor(200));
-        debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
-      }
-      p.translate(sp_xl + 90, sp_yl + 20);
-      p.rotate(-90);
-      p.setPen(whiteColor(200));
-      p.drawText(0, 0, "GAP");
-    }
     p.resetMatrix();
+    }
 
     // opkr debug info(right panel)
     int width_r = 180;

@@ -258,16 +258,17 @@ RichTextDialog::RichTextDialog(const QString &prompt_text, const QString &btn_te
   QVBoxLayout *main_layout = new QVBoxLayout(container);
   main_layout->setContentsMargins(20, 20, 20, 20);
 
-  QLabel *title = new QLabel(tr("ERROR"), this);
-  title->setAlignment(Qt::AlignHCenter);
-  title->setStyleSheet("font-size: 50px; font-weight: bold; color: #AEFF82;");
-  main_layout->addWidget(title, 0, Qt::AlignTop | Qt::AlignHCenter);
-
   QLabel *prompt = new QLabel(prompt_text, this);
   prompt->setWordWrap(true);
   prompt->setAlignment(Qt::AlignLeft);
   prompt->setStyleSheet("font-size: 40px; font-weight: light; color: #C9C9C9; margin: 25px;");
-  main_layout->addWidget(new ScrollView(prompt, this), 1, Qt::AlignTop);
+  prompt->addStretch(1);
+
+  ScrollView *scroll_view = new ScrollView(prompt, this);
+  scroll_view->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+  main_layout->addWidget(scroll_view);
+  main_layout->addSpacing(35);
 
   QHBoxLayout *btn_layout = new QHBoxLayout();
   btn_layout->setSpacing(30);

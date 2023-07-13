@@ -673,7 +673,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(whiteColor(200));
         debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
       }
-      p.translate(sp_xl + 90, sp_yl + 20);
+      p.translate(sp_xl + 90, sp_yl + 30);
       p.rotate(-90);
       if (s->scene.cruise_gap == 1) {
         if (s->scene.gap_by_speed_on) {

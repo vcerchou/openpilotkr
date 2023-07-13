@@ -11,7 +11,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 function agnos_init {
   # prebuilt recreate
   if [ -f "/data/opkr_compiling" ]; then
-    sudo rm /data/opkr_compiling
+    rm /data/opkr_compiling
+    rm /data/openpilot/prebuilt
   else
     if [ -f "/data/params/d/PutPrebuiltOn" ]; then
       PREBUILT_CHECK=$(cat /data/params/d/PutPrebuiltOn)

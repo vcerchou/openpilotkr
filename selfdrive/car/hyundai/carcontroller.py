@@ -243,6 +243,8 @@ class CarController:
     self.e2e_standstill_timer = 0
     self.e2e_standstill_timer_buf = 0
 
+    self.experimental_long_enabled = self.c_params.get_bool("ExperimentalLongitudinalEnabled")
+
     self.str_log2 = 'MultiLateral'
     if CP.lateralTuning.which() == 'pid':
       self.str_log2 = 'T={:0.2f}/{:0.3f}/{:0.2f}/{:0.5f}'.format(CP.lateralTuning.pid.kpV[1], CP.lateralTuning.pid.kiV[1], CP.lateralTuning.pid.kdV[0], CP.lateralTuning.pid.kf)
@@ -942,23 +944,23 @@ class CarController:
       #       if (self.frame - self.last_button_frame) * DT_CTRL >= 0.15:
       #         self.last_button_frame = self.frame
 
-      # if self.frame % 2 == 0 and self.CP.openpilotLongitudinalControl and not self.longcontrol:
-      #   # TODO: unclear if this is needed
-      #   jerk = 3.0 if actuators.longControlState == LongCtrlState.pid else 1.0
-      #   can_sends.extend(hyundaican.create_acc_commands(self.packer, CC.enabled, accel, jerk, int(self.frame / 2),
-      #                                                   hud_control.leadVisible, set_speed_in_units, stopping, CC.cruiseControl.override))
+      if self.frame % 2 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled:
+        # TODO: unclear if this is needed
+        jerk = 3.0 if actuators.longControlState == LongCtrlState.pid else 1.0
+        can_sends.extend(hyundaican.create_acc_commands(self.packer, CC.enabled, accel, jerk, int(self.frame / 2),
+                                                        hud_control.leadVisible, set_speed_in_units, stopping, CC.cruiseControl.override))
 
       # 20 Hz LFA MFA message
       if self.frame % 5 == 0 and self.CP.flags & HyundaiFlags.SEND_LFA.value:
         can_sends.append(hyundaican.create_lfahda_mfc(self.packer, CC.enabled))
 
-      # # 5 Hz ACC options
-      # if self.frame % 20 == 0 and self.CP.openpilotLongitudinalControl and not self.longcontrol:
-      #   can_sends.extend(hyundaican.create_acc_opt(self.packer))
+      # 5 Hz ACC options
+      if self.frame % 20 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled:
+        can_sends.extend(hyundaican.create_acc_opt(self.packer))
 
-      # # 2 Hz front radar options
-      # if self.frame % 50 == 0 and self.CP.openpilotLongitudinalControl and not self.longcontrol:
-      #   can_sends.append(hyundaican.create_frt_radar_opt(self.packer))
+      # 2 Hz front radar options
+      if self.frame % 50 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled:
+        can_sends.append(hyundaican.create_frt_radar_opt(self.packer))
 
 
       if self.CP.sccBus != 0 and self.counter_init and self.longcontrol:

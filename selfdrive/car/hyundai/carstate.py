@@ -63,8 +63,6 @@ class CarState(CarStateBase):
     
     self.steer_anglecorrection = float(int(Params().get("OpkrSteerAngleCorrection", encoding="utf8")) * 0.1)
     self.gear_correction = Params().get_bool("JustDoGearD")
-    self.fca11_message = Params().get_bool("FCA11Message")
-    self.rd_conf = Params().get_bool("RadarDisable")
     self.brake_check = False
     self.cancel_check = False
     

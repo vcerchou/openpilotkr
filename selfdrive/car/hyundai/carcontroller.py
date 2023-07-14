@@ -120,7 +120,7 @@ class CarController:
     self.stopped = False
     self.stoppingdist = float(Decimal(self.c_params.get("StoppingDist", encoding="utf8"))*Decimal('0.1'))
 
-    self.longcontrol = self.CP.openpilotLongitudinalControl and not self.c_params.get_bool("RadarDisable")
+    self.longcontrol = self.CP.openpilotLongitudinalControl
     #self.scc_live is true because CP.radarUnavailable is False
     self.scc_live = not self.CP.radarUnavailable
 
@@ -207,7 +207,6 @@ class CarController:
     self.gap_by_spd_on_sw_cnt = 0
     self.gap_by_spd_on_sw_cnt2 = 0
 
-    self.radar_disabled_conf = self.c_params.get_bool("RadarDisable")
     self.prev_cruiseButton = 0
     self.gapsettingdance = 4
     self.lead_visible = False

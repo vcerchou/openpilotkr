@@ -310,9 +310,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   float v_cruise =  cs.getVCruiseCluster() == 0.0 ? cs.getVCruise() : cs.getVCruiseCluster();
   float set_speed = cs_alive ? v_cruise : SET_SPEED_NA;
   bool cruise_set = set_speed > 0 && (int)set_speed != SET_SPEED_NA;
-  if (cruise_set && !s.scene.is_metric) {
-    set_speed *= KM_TO_MILE;
-  }
+  // if (cruise_set && !s.scene.is_metric) {
+  //   set_speed *= KM_TO_MILE;
+  // }
 
   // Handle older routes where vEgoCluster is not set
   float v_ego;

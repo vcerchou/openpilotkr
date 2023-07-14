@@ -716,10 +716,10 @@ class Controls:
     # Check which actuators can be enabled
     standstill = CS.vEgo <= max(self.CP.minSteerSpeed, MIN_LATERAL_CONTROL_SPEED) or CS.standstill
     CC.latActive = self.active and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
-                   (CS.vEgo < self.CP.minSteerSpeed and self.no_mdps_mods) and (not standstill or self.joystick_mode) and not self.lkas_temporary_off
+                   not (CS.vEgo < self.CP.minSteerSpeed and self.no_mdps_mods) and (not standstill or self.joystick_mode) and not self.lkas_temporary_off
     CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
 
-    print('CON_latActive={}'.format(CC.latActive))
+    #print('CON_latActive={}'.format(CC.latActive))
 
     actuators = CC.actuators
     actuators.longControlState = self.LoC.long_control_state

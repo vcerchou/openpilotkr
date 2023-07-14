@@ -231,46 +231,39 @@ class CarState(CarStateBase):
     elif self.driverAcc_time:
       self.driverAcc_time -= 1
 
-    # # cruise state
-    # if self.CP.openpilotLongitudinalControl and self.CP.sccBus == 0:
-    #   # These are not used for engage/disengage since openpilot keeps track of state using the buttons
-    #   ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0
-    #   ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1
-    #   ret.cruiseState.standstill = False
-    # else:
-    #   ret.cruiseState.available = cp_cruise.vl["SCC11"]["MainMode_ACC"] == 1
-    #   ret.cruiseState.enabled = cp_cruise.vl["SCC12"]["ACCMode"] != 0
-    #   ret.cruiseState.standstill = cp_cruise.vl["SCC11"]["SCCInfoDisplay"] == 4.
-    #   ret.cruiseState.speed = cp_cruise.vl["SCC11"]["VSetDis"] * speed_conv
-
-    # cruise state
-    ret.cruiseState.enabled = (cp_scc.vl["SCC12"]["ACCMode"] != 0) if not self.no_radar else \
-                                      cp.vl["LVR12"]["CF_Lvr_CruiseSet"] != 0
-    ret.cruiseState.available = (cp_scc.vl["SCC11"]["MainMode_ACC"] != 0) if not self.no_radar else \
-                                      cp.vl["EMS16"]["CRUISE_LAMP_M"] != 0
-    ret.cruiseState.standstill = cp_scc.vl["SCC11"]["SCCInfoDisplay"] == 4. if not self.no_radar else False
-    self.cruiseState_standstill = ret.cruiseState.standstill
     self.is_set_speed_in_mph = bool(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
     ret.isMph = self.is_set_speed_in_mph
-    
-    self.acc_active = (cp_scc.vl["SCC12"]['ACCMode'] != 0)
-    self.cruise_active = self.acc_active
-    if self.cruise_active:
-      self.brake_check = False
-      self.cancel_check = False
+
+    # cruise state
+    if self.CP.openpilotLongitudinalControl and self.CP.sccBus <= 0:
+      # These are not used for engage/disengage since openpilot keeps track of state using the buttons
+      ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0 or cp.vl["EMS16"]["CRUISE_LAMP_M"] != 0
+      ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1 or cp.vl["LVR12"]["CF_Lvr_CruiseSet"] != 0
+      ret.cruiseState.standstill = False
+    else:
+      ret.cruiseState.available = cp_scc.vl["SCC11"]["MainMode_ACC"] != 0
+      ret.cruiseState.enabled = cp_scc.vl["SCC12"]["ACCMode"] != 0
+      ret.cruiseState.standstill = cp_scc.vl["SCC11"]["SCCInfoDisplay"] == 4.
+
+      self.acc_active = cp_scc.vl["SCC12"]['ACCMode'] != 0
+      self.cruise_active = self.acc_active
+      if self.cruise_active:
+        self.brake_check = False
+        self.cancel_check = False
+      self.cruiseState_standstill = ret.cruiseState.standstill
+
+      set_speed = self.cruise_speed_button()
+      if ret.cruiseState.enabled and (self.brake_check == False or self.cancel_check == False):
+        speed_conv = CV.MPH_TO_MS if self.is_set_speed_in_mph else CV.KPH_TO_MS
+        ret.cruiseState.speed = set_speed * speed_conv if not self.no_radar else \
+                                          cp.vl["LVR12"]["CF_Lvr_CruiseSet"] * speed_conv
+      else:
+        ret.cruiseState.speed = 0
 
     ret.cruiseState.accActive = self.acc_active
     ret.cruiseState.gapSet = cp.vl["SCC11"]['TauGapSet']
     ret.cruiseState.cruiseSwState = self.cruise_buttons[-1]
     ret.cruiseState.modeSel = self.cruise_set_mode
-
-    set_speed = self.cruise_speed_button()
-    if ret.cruiseState.enabled and (self.brake_check == False or self.cancel_check == False):
-      speed_conv = CV.MPH_TO_MS if self.is_set_speed_in_mph else CV.KPH_TO_MS
-      ret.cruiseState.speed = set_speed * speed_conv if not self.no_radar else \
-                                         cp.vl["LVR12"]["CF_Lvr_CruiseSet"] * speed_conv
-    else:
-      ret.cruiseState.speed = 0
 
     self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
     self.prev_cruise_buttons = self.cruise_buttons[-1]
@@ -390,8 +383,7 @@ class CarState(CarStateBase):
     self.autoHold = ret.brakeHoldActive
     self.brake_error = cp.vl["TCS13"]["ACCEnable"] == 3 # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     self.lead_distance = cp_scc.vl["SCC11"]["ACC_ObjDist"] if not self.no_radar else 0
-
-    ret.radarDistance = cp_scc.vl["SCC11"]["ACC_ObjDist"] if not self.no_radar else 0
+    ret.radarDistance = self.lead_distance
     self.lkas_error = cp_cam.vl["LKAS11"]["CF_Lkas_LdwsSysState"] == 7
     if not self.lkas_error:
       self.lkas_button_on = cp_cam.vl["LKAS11"]["CF_Lkas_LdwsSysState"]

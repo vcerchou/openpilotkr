@@ -224,6 +224,10 @@ class CarInterface(CarInterfaceBase):
         ret.mass = 3957 * CV.LB_TO_KG + STD_CARGO_KG
       else:
         ret.mass = 4537 * CV.LB_TO_KG + STD_CARGO_KG
+    elif candidate == CAR.KIA_CARNIVAL_4TH_GEN:
+      ret.mass = 2087. + STD_CARGO_KG
+      ret.wheelbase = 3.09
+      ret.steerRatio = 14.23
 
     # Genesis
     elif candidate == CAR.GENESIS_GV60_EV_1ST_GEN:
@@ -339,6 +343,18 @@ class CarInterface(CarInterfaceBase):
     # *** feature detection ***
     if candidate in CANFD_CAR:
       ret.enableBsm = 0x1e5 in fingerprint[CAN.ECAN]
+      ret.mdpsBus = 0
+      ret.sasBus = 0
+      ret.sccBus = 0
+      ret.fcaBus = 0
+      ret.bsmAvailable = False
+      ret.lfaAvailable = False
+      ret.lvrAvailable = False
+      ret.evgearAvailable = False
+      ret.emsAvailable = False
+      ret.autoHoldAvailable = False
+      ret.lfaHdaAvailable = False
+      ret.navAvailable = False
     else:
       ret.enableBsm = 0x58b in fingerprint[0]
       ret.mdpsBus = 1 if 593 in fingerprint[1] and 1296 not in fingerprint[1] else 0
@@ -350,24 +366,9 @@ class CarInterface(CarInterfaceBase):
       ret.lvrAvailable = True if 871 in fingerprint[0] else False
       ret.evgearAvailable = True if 882 in fingerprint[0] else False
       ret.emsAvailable = True if 608 and 809 in fingerprint[0] else False
-
-      ret.radarUnavailable = ret.sccBus == -1
-      ret.openpilotLongitudinalControl = Params().get_bool("RadarDisable") or ret.sccBus == 2        
-      ret.pcmCruise = not ret.radarUnavailable
-
       ret.autoHoldAvailable = 1151 in fingerprint[0]
       ret.lfaHdaAvailable = 1157 in fingerprint[0]
       ret.navAvailable = 1348 in fingerprint[0]
-
-      if not ret.openpilotLongitudinalControl:
-        ret.radarUnavailable = ret.sccBus == -1
-
-      if ret.sccBus == 2:
-        ret.scc13Available = 1290 in fingerprint[0] or 1290 in fingerprint[2]
-        ret.scc14Available = 905 in fingerprint[0] or 905 in fingerprint[2]
-        ret.openpilotLongitudinalControl = True
-        ret.radarUnavailable = False
-        ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
 
     # *** panda safety config ***
     if candidate in CANFD_CAR:
@@ -386,13 +387,21 @@ class CarInterface(CarInterfaceBase):
       if candidate in LEGACY_SAFETY_MODE_CAR:
         # these cars require a special panda safety mode due to missing counters and checksums in the messages
         ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
-      if ret.mdpsBus == 2 or ret.openpilotLongitudinalControl or params.get_bool("UFCModeEnabled"):
-        ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
       else:
         ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundai, 0)]
 
       if candidate in CAMERA_SCC_CAR:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_CAMERA_SCC
+
+      if ret.sccBus == 2:
+        ret.scc13Available = 1290 in fingerprint[0] or 1290 in fingerprint[2]
+        ret.scc14Available = 905 in fingerprint[0] or 905 in fingerprint[2]
+        ret.openpilotLongitudinalControl = True
+        ret.radarUnavailable = False
+        ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
+        ret.pcmCruise = True
+      else:
+        ret.pcmCruise = not ret.openpilotLongitudinalControl
 
     if ret.openpilotLongitudinalControl:
       ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_LONG
@@ -422,7 +431,7 @@ class CarInterface(CarInterfaceBase):
       disable_ecu(logcan, sendcan, bus=bus, addr=addr, com_cont_req=b'\x28\x83\x01')
 
     # for blinkers
-    if CP.flags & HyundaiFlags.ENABLE_BLINKERS:
+    if CP.flags & HyundaiFlags.ENABLE_BLINKERS and Params().get_bool("RadarDisable"):
       disable_ecu(logcan, sendcan, bus=CanBus(CP).ECAN, addr=0x7B1, com_cont_req=b'\x28\x83\x01')
 
   def _update(self, c):
@@ -443,7 +452,8 @@ class CarInterface(CarInterfaceBase):
     # On some newer model years, the CANCEL button acts as a pause/resume button based on the PCM state
     # To avoid re-engaging when openpilot cancels, check user engagement intention via buttons
     # Main button also can trigger an engagement on these cars
-    allow_enable = any(btn in ENABLE_BUTTONS for btn in self.CS.cruise_buttons) or any(self.CS.main_buttons)
+    allow_enable = any(btn in ENABLE_BUTTONS for btn in self.CS.cruise_buttons) or any(self.CS.main_buttons) \
+                   or self.CP.carFingerprint in CANFD_CAR
     events = self.create_common_events(ret, pcm_enable=self.CS.CP.pcmCruise, allow_enable=allow_enable)
 
     # low speed steer alert hysteresis logic (only for cars with steer cut off above 10 m/s)

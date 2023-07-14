@@ -719,6 +719,8 @@ class Controls:
                    (CS.vEgo < self.CP.minSteerSpeed and self.no_mdps_mods) and (not standstill or self.joystick_mode) and not self.lkas_temporary_off
     CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
 
+    print('CON_latActive={}'.format(CC.latActive))
+
     actuators = CC.actuators
     actuators.longControlState = self.LoC.long_control_state
 

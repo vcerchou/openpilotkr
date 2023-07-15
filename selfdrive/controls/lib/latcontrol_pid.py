@@ -37,7 +37,7 @@ class LatControlPID(LatControl):
       self.steerKd = float(Decimal(self.params.get("PidKd", encoding="utf8")) * Decimal('0.01'))
       self.pid = PIDController(([0., 9.], [0.1, self.steerKpV]),
                           ([0., 9.], [0.01, self.steerKiV]),
-                          k_f=self.steerKf, k_d=self.steerKd
+                          k_f=self.steerKf, k_d=self.steerKd,
                           pos_limit=self.steer_max, neg_limit=-self.steer_max)
       self.mpc_frame = 0
 

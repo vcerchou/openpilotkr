@@ -9,19 +9,6 @@ source "$BASEDIR/launch_env.sh"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 function agnos_init {
-  # prebuilt recreate
-  if [ -f "/data/opkr_compiling" ]; then
-    rm /data/opkr_compiling
-    rm /data/openpilot/prebuilt
-  else
-    if [ -f "/data/params/d/PutPrebuiltOn" ]; then
-      PREBUILT_CHECK=$(cat /data/params/d/PutPrebuiltOn)
-      if [[ "$PREBUILT_CHECK" == "1" && ! -f "/data/openpilot/prebuilt" ]]; then
-        touch /data/openpilot/prebuilt
-      fi
-    fi
-  fi
-
   # wait longer for weston to come up
   if [ -f "$BASEDIR/prebuilt" ]; then
     sleep 3

@@ -46,9 +46,6 @@ SteerDeltaUpBaseAdj:3
 SteerDeltaUpAdj:3
 SteerDeltaDownBaseAdj:7
 SteerDeltaDownAdj:7
-OpkrBatteryChargingControl:1
-OpkrBatteryChargingMin:50
-OpkrBatteryChargingMax:60
 LeftCurvOffsetAdj:0
 RightCurvOffsetAdj:0
 DebugUi1:0
@@ -147,8 +144,6 @@ MultipleLateralOpA:3,3,0
 MultipleLateralAng:20,35
 StoppingDist:38
 SpeedCameraOffset:0
-HoldForSetting:1
-RTShield:1
 OSMOfflineUse:0
 StopAtStopSign:0
 VarCruiseSpeedFactor:10

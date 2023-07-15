@@ -102,7 +102,7 @@ class CarState(CarStateBase):
   def cruise_speed_button(self):
     if self.prev_acc_active != self.acc_active:
       self.prev_acc_active = self.acc_active
-      self.cruise_set_speed_kph = self.clu_Vanz
+      self.cruise_set_speed_kph = max(20 if self.is_set_speed_in_mph else 30, self.clu_Vanz)
 
     set_speed_kph = self.cruise_set_speed_kph
     if not self.cruise_active:
@@ -120,7 +120,7 @@ class CarState(CarStateBase):
       if self.cruise_buttons[-1] == Buttons.RES_ACCEL:   # up 
         self.cruise_set_speed_kph = self.VSetDis
       else:
-        self.cruise_set_speed_kph = self.clu_Vanz
+        self.cruise_set_speed_kph = max(20 if self.is_set_speed_in_mph else 30, self.clu_Vanz)
       return self.cruise_set_speed_kph
     elif self.prev_acc_set_btn != self.acc_active:
       self.prev_acc_set_btn = self.acc_active
@@ -140,10 +140,7 @@ class CarState(CarStateBase):
     if self.cruise_buttons[-1] == Buttons.RES_ACCEL:   # up 
       set_speed_kph += 1
     elif self.cruise_buttons[-1] == Buttons.SET_DECEL:  # dn
-      if self.gasPressed:
-        set_speed_kph = self.clu_Vanz + 1
-      else:
-        set_speed_kph -= 1
+      set_speed_kph -= 1
 
     if set_speed_kph < 30 and not self.is_set_speed_in_mph:
       set_speed_kph = 30

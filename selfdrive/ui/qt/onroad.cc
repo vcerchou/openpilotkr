@@ -1276,11 +1276,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   if (s->scene.cal_view) {
     p.setPen(QPen(Qt::white, 3));
-    for (int i = 0; i < 10; i++) {
-      p.drawLine(0, (i*108), s->fb_w, (i*108));
+    for (int i = 0; i <= 10; i++) {
+      p.drawLine(0, (i*105), s->fb_w, (i*105));
     }
-    for (int i = 0; i < 16; i++) {
-      p.drawLine((i*120), 0, (i*120), s->fb_h);
+    for (int i = 0; i <= 15; i++) {
+      p.drawLine((i*142), 0, (i*142), s->fb_h);
     }
   }
 

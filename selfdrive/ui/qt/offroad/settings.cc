@@ -570,7 +570,7 @@ DrivingPanel::DrivingPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new OPKREdgeOffset());
   layout->addWidget(new ToAvoidLKASFaultToggle());
   layout->addWidget(new ToAvoidLKASFault());
-  layout->addWidget(new SpeedCameraOffsetToggle());
+  layout->addWidget(new SetSpeedByFive());
 }
 
 DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {

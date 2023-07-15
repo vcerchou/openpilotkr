@@ -103,6 +103,7 @@ void  CLateralControlGroup::FrameTORQUE(QVBoxLayout *layout)
     layout->addWidget(new TorqueKf());
     layout->addWidget(new TorqueKi());
     layout->addWidget(new TorqueFriction());
+    layout->addWidget(new TorqueUseLiveFriction());
     layout->addWidget(new TorqueUseAngle());
     layout->addWidget(new TorqueAngDeadZone());
 }

@@ -3920,6 +3920,17 @@ This may take up to a minute.</source>
     </message>
 </context>
 <context>
+    <name>TorqueUseLiveFriction</name>
+    <message>
+        <source>UseLiveFriction</source>
+        <translation>라이브 Friction 사용</translation>
+    </message>
+    <message>
+        <source>Use Live Friction</source>
+        <translation>토크 사용시 Friction을 실시간으로 변하는 값을 사용합니다.</translation>
+    </message>
+</context>
+<context>
     <name>DepartChimeAtResume</name>
     <message>
         <source>Depart Chime at Resume</source>
@@ -4022,6 +4033,17 @@ This may take up to a minute.</source>
     <message>
         <source>Run OPKR Debug Mode</source>
         <translation>OPKR 디버그 모드를 실행합니다.</translation>
+    </message>
+</context>
+<context>
+    <name>SetSpeedByFive</name>
+    <message>
+        <source>SetSpeed Change by 5</source>
+        <translation>MAX 설정속도 5단위 증감</translation>
+    </message>
+    <message>
+        <source>MAX Speed can be adjusted by 5. Cruise Set Speed will be set as same with MAX quickly.</source>
+        <translation>MAX 스피드를 5씩 증감합니다. 크루즈 스피드도 다른 조건이 없다면 같이 동기화 됩니다.</translation>
     </message>
 </context>
 </TS>

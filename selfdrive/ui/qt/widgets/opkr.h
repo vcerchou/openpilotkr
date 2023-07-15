@@ -909,6 +909,18 @@ public:
   }
 };
 
+class TorqueUseLiveFriction : public ToggleControl {
+  Q_OBJECT
+
+public:
+  TorqueUseLiveFriction() : ToggleControl(tr("UseLiveFriction"), tr("Use Live Friction"), "../assets/offroad/icon_shell.png", Params().getBool("OpkrLiveFriction")) {
+    QObject::connect(this, &TorqueUseLiveFriction::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OpkrLiveFriction", status);
+    });
+  }
+};
+
 class DepartChimeAtResume : public ToggleControl {
   Q_OBJECT
 
@@ -958,6 +970,18 @@ public:
       } else {
         uiState()->scene.OPKR_Debug = false;
       }
+    });
+  }
+};
+
+class SetSpeedByFive : public ToggleControl {
+  Q_OBJECT
+
+public:
+  SetSpeedByFive() : ToggleControl(tr("SetSpeed Changed by 5"), tr("MAX Speed can be adjusted by 5. Cruise Set Speed will be set as same with MAX quickly."), "../assets/offroad/icon_shell.png", Params().getBool("SetSpeedFive")) {
+    QObject::connect(this, &CruiseSetwiSetSpeedByFivethRoadLimitSpeed::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("SetSpeedFive", status);
     });
   }
 };

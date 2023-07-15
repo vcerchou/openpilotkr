@@ -468,7 +468,9 @@ class NaviControl():
       else:
         navi_speed = min(cruiseState_speed, kph_set_vEgo)
       self.safetycam_speed = navi_speed
-      if CS.cruise_set_mode != 5:
+      if CS.cruise_set_mode == 0:
+        self.ctrl_speed = cruiseState_speed
+      elif CS.cruise_set_mode != 5:
         self.ctrl_speed = self.auto_speed_control(CS, navi_speed, path_plan) # lead, curve speed
       else:
         self.ctrl_speed = navi_speed # navi speed

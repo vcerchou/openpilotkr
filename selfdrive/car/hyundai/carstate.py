@@ -63,6 +63,7 @@ class CarState(CarStateBase):
     
     self.steer_anglecorrection = float(int(Params().get("OpkrSteerAngleCorrection", encoding="utf8")) * 0.1)
     self.gear_correction = Params().get_bool("JustDoGearD")
+    self.set_spd_five = Params().get_bool("SetSpeedFive")
     self.brake_check = False
     self.cancel_check = False
     
@@ -102,8 +103,10 @@ class CarState(CarStateBase):
   def cruise_speed_button(self):
     if self.prev_acc_active != self.acc_active:
       self.prev_acc_active = self.acc_active
-      self.cruise_set_speed_kph = max(20 if self.is_set_speed_in_mph else 30, self.clu_Vanz)
-
+      if self.set_spd_five:
+        self.cruise_set_speed_kph = max(20 if self.is_set_speed_in_mph else 30, math.ceil(self.clu_Vanz/5)*5)
+      else:
+        self.cruise_set_speed_kph = max(20 if self.is_set_speed_in_mph else 30, self.clu_Vanz)
     set_speed_kph = self.cruise_set_speed_kph
     if not self.cruise_active:
       if self.prev_clu_CruiseSwState != self.cruise_buttons[-1]:
@@ -138,9 +141,15 @@ class CarState(CarStateBase):
     self.prev_clu_CruiseSwState = self.cruise_buttons[-1]
 
     if self.cruise_buttons[-1] == Buttons.RES_ACCEL:   # up 
-      set_speed_kph += 1
+      if self.set_spd_five:
+        set_speed_kph += 5
+      else:
+        set_speed_kph += 1
     elif self.cruise_buttons[-1] == Buttons.SET_DECEL:  # dn
-      set_speed_kph -= 1
+      if self.set_spd_five:
+        set_speed_kph -= 5
+      else:
+        set_speed_kph -= 1
 
     if set_speed_kph < 30 and not self.is_set_speed_in_mph:
       set_speed_kph = 30
@@ -148,7 +157,7 @@ class CarState(CarStateBase):
       set_speed_kph = 20
 
     self.cruise_set_speed_kph = set_speed_kph
-    return  set_speed_kph
+    return set_speed_kph
 
   def get_tpms(self, unit, fl, fr, rl, rr):
     factor = 0.72519 if unit == 1 else 0.1 if unit == 2 else 1 # 0:psi, 1:kpa, 2:bar

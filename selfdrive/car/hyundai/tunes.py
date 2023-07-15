@@ -99,16 +99,15 @@ def set_lat_tune(tune, name, max_lat_accel=2.5, FRICTION=.1):
     # 4. PID
     PidKp = float(Decimal(params.get("PidKp", encoding="utf8")) * Decimal('0.01'))
     PidKi = float(Decimal(params.get("PidKi", encoding="utf8")) * Decimal('0.001'))
-    PidKd = float(Decimal(params.get("PidKd", encoding="utf8")) * Decimal('0.01'))
     PidKf = float(Decimal(params.get("PidKf", encoding="utf8")) * Decimal('0.00001'))
+    PidKd = float(Decimal(params.get("PidKd", encoding="utf8")) * Decimal('0.01'))
 
     tune.atom.pid.kpBP = [0., 9.]
     tune.atom.pid.kpV = [0.1, PidKp]
     tune.atom.pid.kiBP = [0., 9.]
     tune.atom.pid.kiV = [0.01, PidKi]
-    tune.atom.pid.kdBP = [0.]
-    tune.atom.pid.kdV = [PidKd]
     tune.atom.pid.kf = PidKf
+    tune.atom.pid.kd = PidKd
 
   elif name == LatTunes.TORQUE:
     TorqueKp = float(Decimal(params.get("TorqueKp", encoding="utf8")) * Decimal('0.1'))
@@ -183,9 +182,8 @@ def set_lat_tune(tune, name, max_lat_accel=2.5, FRICTION=.1):
       tune.pid.kpV = [0.1, PidKp]
       tune.pid.kiBP = [0., 9.]
       tune.pid.kiV = [0.01, PidKi]
-      tune.pid.kdBP = [0.]
-      tune.pid.kdV = [PidKd]
       tune.pid.kf = PidKf
+      tune.pid.kd = PidKd
     elif name == LatTunes.PID_A:
       tune.init('pid')
       tune.pid.kiBP = [0.0]

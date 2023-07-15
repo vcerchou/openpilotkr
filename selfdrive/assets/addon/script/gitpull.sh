@@ -20,9 +20,8 @@ if [ "$?" == "0" ]; then
 
   if [ "$HASH" != "$REMOTE_HASH" ]; then
     if [ -f "/data/openpilot/prebuilt" ]; then
-      sleep 1
-      sudo rm -f /data/openpilot/prebuilt
       touch /data/opkr_compiling
+      sleep 1
     fi
     sudo reboot
   fi

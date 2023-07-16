@@ -82,7 +82,7 @@ class NaviControl():
     return path_plan
 
   def button_status(self, CS):
-    if not CS.cruise_active or CS.cruise_buttons != Buttons.NONE: 
+    if not CS.cruise_active or CS.cruise_buttons[-1] != Buttons.NONE: 
       self.wait_timer2 = 80 
     elif self.wait_timer2: 
       self.wait_timer2 -= 1

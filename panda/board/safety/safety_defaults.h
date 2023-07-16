@@ -94,8 +94,8 @@ static int nooutput_tx_lin_hook(int lin_num, uint8_t *data, int len) {
   return false;
 }
 
-static int default_fwd_hook(int bus_num, int addr) {
-
+static int default_fwd_hook(int bus_num, CANPacket_t *to_fwd) {
+  int addr = GET_ADDR(to_fwd);
   int bus_fwd = -1;
 
   if (bus_num == 0 && (HKG_forward_bus1 || HKG_forward_bus2 || HKG_forward_obd)) {

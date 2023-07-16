@@ -141,7 +141,7 @@ class CarState(CarStateBase):
         set_speed_kph = 20
 
       self.cruise_set_speed_kph = set_speed_kph
-      return set_speed_kph
+    return set_speed_kph
 
   def get_tpms(self, unit, fl, fr, rl, rr):
     factor = 0.72519 if unit == 1 else 0.1 if unit == 2 else 1 # 0:psi, 1:kpa, 2:bar

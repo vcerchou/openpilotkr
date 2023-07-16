@@ -595,6 +595,7 @@ class CarController:
         self.cut_in_control = self.NC.cutInControl
         self.driver_scc_set_control = self.NC.driverSccSetControl
         btn_signal = self.NC.update(CS, path_plan)
+        print('btn_signal={}'.format(btn_signal))
         if self.opkr_cruisegap_auto_adj and not self.gap_by_spd_on:
           # gap restore
           if self.switch_timer > 0:

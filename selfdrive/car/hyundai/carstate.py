@@ -87,6 +87,7 @@ class CarState(CarStateBase):
     # acc button 
     self.prev_acc_active = False
     self.prev_acc_set_btn = False
+    self.prev_cruise_btn = False
     self.acc_active = False
     self.cruise_set_speed_kph = 0
     self.cruise_set_mode = int(Params().get("CruiseStatemodeSelInit", encoding="utf8"))
@@ -108,7 +109,10 @@ class CarState(CarStateBase):
       self.cruise_set_speed_kph = self.VSetDis
       return self.cruise_set_speed_kph
 
-    if self.prev_cruise_buttons != self.cruise_buttons[-1]:
+    if self.prev_cruise_btn == self.cruise_buttons[-1]:
+      return self.cruise_set_speed_kph
+    elif self.prev_cruise_btn != self.cruise_buttons[-1]:
+      self.prev_cruise_btn = self.cruise_buttons[-1]
       if not self.cruise_active:
         if self.cruise_buttons[-1] == Buttons.GAP_DIST:  # mode change
           self.cruise_set_mode += 1
@@ -141,6 +145,9 @@ class CarState(CarStateBase):
         set_speed_kph = 20
 
       self.cruise_set_speed_kph = set_speed_kph
+    else:
+      self.prev_cruise_btn = False
+
     return set_speed_kph
 
   def get_tpms(self, unit, fl, fr, rl, rr):

@@ -180,8 +180,6 @@ void safety_tick(const addr_checks *rx_checks) {
       if (lagging || !is_msg_valid(rx_checks->check, i)) {
         rx_checks_invalid = true;
       }
-      printf("lagging: %s\n",lagging?"true":"false");
-      printf("msg_valid: %s\n",is_msg_valid(rx_checks->check, i)?"true":"false");
     }
   }
 

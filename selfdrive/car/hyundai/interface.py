@@ -465,8 +465,6 @@ class CarInterface(CarInterfaceBase):
     #if self.low_speed_alert:
     #  events.add(car.CarEvent.EventName.belowSteerSpeed)
 
-    if self.CC.longcontrol and self.CS.brake_error:
-      events.add(EventName.brakeUnavailable)
     #if abs(ret.steeringAngle) > 90. and EventName.steerTempUnavailable not in events.events:
     #  events.add(EventName.steerTempUnavailable)
     # if self.ufc_mode_enabled and EventName.pedalPressed in events.events:

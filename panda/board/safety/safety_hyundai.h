@@ -313,6 +313,7 @@ static int hyundai_tx_hook(CANPacket_t *to_send) {
 
   int tx = 1;
   int addr = GET_ADDR(to_send);
+  int bus = GET_BUS(to_send);
 
   if (hyundai_longitudinal) {
     tx = msg_allowed(to_send, HYUNDAI_LONG_TX_MSGS, sizeof(HYUNDAI_LONG_TX_MSGS)/sizeof(HYUNDAI_LONG_TX_MSGS[0]));
@@ -412,7 +413,6 @@ static int hyundai_fwd_hook(int bus_num, int addr) {
 
   int bus_fwd = -1;
 
-  int addr = GET_ADDR(to_fwd);
   int fwd_to_bus1 = -1;
   if (HKG_forward_bus1 || HKG_forward_obd){fwd_to_bus1 = 1;}
 

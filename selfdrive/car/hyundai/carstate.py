@@ -260,7 +260,7 @@ class CarState(CarStateBase):
         ret.cruiseState.speed = 0
 
     ret.cruiseState.accActive = self.acc_active
-    ret.cruiseState.gapSet = cp_scc.vl["SCC11"]['TauGapSet']
+    ret.cruiseState.gapSet = cp.vl["SCC11"]['TauGapSet']
     ret.cruiseState.cruiseSwState = self.cruise_buttons[-1]
     ret.cruiseState.modeSel = self.cruise_set_mode
 
@@ -498,6 +498,8 @@ class CarState(CarStateBase):
 
       ("CYL_PRES", "ESP12"),
 
+      ("AVH_STAT", "ESP11"),
+
       ("CF_Clu_CruiseSwState", "CLU11"),
       ("CF_Clu_CruiseSwMain", "CLU11"),
       ("CF_Clu_SldMainSW", "CLU11"),
@@ -520,12 +522,51 @@ class CarState(CarStateBase):
       ("DriverBraking", "TCS13"),
       ("StandStill", "TCS13"),
       ("PBRAKE_ACT", "TCS13"),
+      ("CF_VSM_Avail", "TCS13"),
 
       ("ESC_Off_Step", "TCS15"),
       ("AVH_LAMP", "TCS15"),
 
       ("CF_Lvr_CruiseSet", "LVR12"),
       ("CRUISE_LAMP_M", "EMS16"),
+
+      ("MainMode_ACC", "SCC11"),
+      ("SCCInfoDisplay", "SCC11"),
+      ("AliveCounterACC", "SCC11"),
+      ("VSetDis", "SCC11"),
+      ("ObjValid", "SCC11"),
+      ("DriverAlertDisplay", "SCC11"),
+      ("TauGapSet", "SCC11"),
+      ("ACC_ObjStatus", "SCC11"),
+      ("ACC_ObjLatPos", "SCC11"),
+      ("ACC_ObjDist", "SCC11"), #TK211X value is 204.6
+      ("ACC_ObjRelSpd", "SCC11"),
+      ("Navi_SCC_Curve_Status", "SCC11"),
+      ("Navi_SCC_Curve_Act", "SCC11"),
+      ("Navi_SCC_Camera_Act", "SCC11"),
+      ("Navi_SCC_Camera_Status", "SCC11"),
+
+      ("ACCMode", "SCC12"),
+      ("CF_VSM_Prefill", "SCC12"),
+      ("CF_VSM_DecCmdAct", "SCC12"),
+      ("CF_VSM_HBACmd", "SCC12"),
+      ("CF_VSM_Warn", "SCC12"),
+      ("CF_VSM_Stat", "SCC12"),
+      ("CF_VSM_BeltCmd", "SCC12"),
+      ("ACCFailInfo", "SCC12"),
+      ("StopReq", "SCC12"),
+      ("CR_VSM_DecCmd", "SCC12"),
+      ("aReqRaw", "SCC12"), #aReqMax
+      ("TakeOverReq", "SCC12"),
+      ("PreFill", "SCC12"),
+      ("aReqValue", "SCC12"), #aReqMin
+      ("CF_VSM_ConfMode", "SCC12"),
+      ("AEB_Failinfo", "SCC12"),
+      ("AEB_Status", "SCC12"),
+      ("AEB_CmdAct", "SCC12"),
+      ("AEB_StopReq", "SCC12"),
+      ("CR_VSM_Alive", "SCC12"),
+      ("CR_VSM_ChkSum", "SCC12"),
 
       ("UNIT", "TPMS11"),
       ("PRESSURE_FL", "TPMS11"),
@@ -549,74 +590,25 @@ class CarState(CarStateBase):
       ("CGW4", 5),
       ("WHL_SPD11", 50),
     ]
-
-    if not CP.openpilotLongitudinalControl:
-      signals += [
-        ("MainMode_ACC", "SCC11"),
-        ("SCCInfoDisplay", "SCC11"),
-        ("AliveCounterACC", "SCC11"),
-        ("VSetDis", "SCC11"),
-        ("ObjValid", "SCC11"),
-        ("DriverAlertDisplay", "SCC11"),
-        ("TauGapSet", "SCC11"),
-        ("ACC_ObjStatus", "SCC11"),
-        ("ACC_ObjLatPos", "SCC11"),
-        ("ACC_ObjDist", "SCC11"), #TK211X value is 204.6
-        ("ACC_ObjRelSpd", "SCC11"),
-        ("Navi_SCC_Curve_Status", "SCC11"),
-        ("Navi_SCC_Curve_Act", "SCC11"),
-        ("Navi_SCC_Camera_Act", "SCC11"),
-        ("Navi_SCC_Camera_Status", "SCC11"),
-
-        ("ACCMode", "SCC12"),
-        ("CF_VSM_Prefill", "SCC12"),
-        ("CF_VSM_DecCmdAct", "SCC12"),
-        ("CF_VSM_HBACmd", "SCC12"),
-        ("CF_VSM_Warn", "SCC12"),
-        ("CF_VSM_Stat", "SCC12"),
-        ("CF_VSM_BeltCmd", "SCC12"),
-        ("ACCFailInfo", "SCC12"),
-        ("StopReq", "SCC12"),
-        ("CR_VSM_DecCmd", "SCC12"),
-        ("aReqRaw", "SCC12"), #aReqMax
-        ("TakeOverReq", "SCC12"),
-        ("PreFill", "SCC12"),
-        ("aReqValue", "SCC12"), #aReqMin
-        ("CF_VSM_ConfMode", "SCC12"),
-        ("AEB_Failinfo", "SCC12"),
-        ("AEB_Status", "SCC12"),
-        ("AEB_CmdAct", "SCC12"),
-        ("AEB_StopReq", "SCC12"),
-        ("CR_VSM_Alive", "SCC12"),
-        ("CR_VSM_ChkSum", "SCC12"),
-
-        ("SCCDrvModeRValue", "SCC13"),
-        ("SCC_Equip", "SCC13"),
-        ("AebDrvSetStatus", "SCC13"),
-
-        ("JerkUpperLimit", "SCC14"),
-        ("JerkLowerLimit", "SCC14"),
-        ("ComfortBandUpper", "SCC14"),
-        ("ComfortBandLower", "SCC14"),
-      ]
+    if CP.sccBus == 0 and CP.pcmCruise:
       checks += [
         ("SCC11", 50),
         ("SCC12", 50),
       ]
 
-      if CP.flags & HyundaiFlags.USE_FCA.value:
-        signals += [
-          ("FCA_CmdAct", "FCA11"),
-          ("CF_VSM_Warn", "FCA11"),
-          ("CF_VSM_DecCmdAct", "FCA11"),
-        ]
-        checks.append(("FCA11", 50))
-      else:
-        signals += [
-          ("AEB_CmdAct", "SCC12"),
-          ("CF_VSM_Warn", "SCC12"),
-          ("CF_VSM_DecCmdAct", "SCC12"),
-        ]
+    if CP.flags & HyundaiFlags.USE_FCA.value:
+      signals += [
+        ("FCA_CmdAct", "FCA11"),
+        ("CF_VSM_Warn", "FCA11"),
+        ("CF_VSM_DecCmdAct", "FCA11"),
+      ]
+      checks.append(("FCA11", 50))
+    else:
+      signals += [
+        ("AEB_CmdAct", "SCC12"),
+        ("CF_VSM_Warn", "SCC12"),
+        ("CF_VSM_DecCmdAct", "SCC12"),
+      ]
 
     if CP.mdpsBus == 0:
       signals += [

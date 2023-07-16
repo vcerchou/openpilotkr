@@ -111,7 +111,7 @@ class VCruiseHelper:
             self.v_cruise_kph_last = self.v_cruise_kph
             self.v_cruise_cluster_kph = self.v_cruise_kph
             print('print1: v_cruise_kph={} v_cruise_kph_last={}'.format(self.v_cruise_kph, self.v_cruise_kph_last))
-          elif CS.cruiseButtons == Buttons.RES_ACCEL and self.variable_cruise and CS.cruiseState.modeSel != 0 and CS.vSetDis < (self.v_cruise_kph_last - 1) not self.setspdfive:
+          elif CS.cruiseButtons == Buttons.RES_ACCEL and self.variable_cruise and CS.cruiseState.modeSel != 0 and CS.vSetDis < (self.v_cruise_kph_last - 1) and not self.setspdfive:
             if self.cruise_road_limit_spd_enabled:
               self.cruise_road_limit_spd_switch = False
               self.cruise_road_limit_spd_switch_prev = self.sm['liveENaviData'].roadLimitSpeed

@@ -575,7 +575,6 @@ class CarState(CarStateBase):
 
       ("JerkUpperLimit", "SCC14"),
       ("JerkLowerLimit", "SCC14"),
-      ("SCCMode2", "SCC14"),
       ("ComfortBandUpper", "SCC14"),
       ("ComfortBandLower", "SCC14"),
 
@@ -767,7 +766,6 @@ class CarState(CarStateBase):
 
         ("JerkUpperLimit", "SCC14"),
         ("JerkLowerLimit", "SCC14"),
-        ("SCCMode2", "SCC14"),
         ("ComfortBandUpper", "SCC14"),
         ("ComfortBandLower", "SCC14")
       ]

@@ -246,8 +246,8 @@ class CarInterfaceBase(ABC):
     ret.canValid = all(cp.can_valid for cp in self.can_parsers if cp is not None)
     ret.canTimeout = any(cp.bus_timeout for cp in self.can_parsers if cp is not None)
     if not ret.canValid:
-      print('cp={} cp2={} cp_cam={} cp_adas={} cp_body={} cp_loopback={}'.format(self.cp.can_valid, \
-       self.cp2.can_valid, self.cp_cam.can_valid, self.cp_adas.can_valid, self.cp_body.can_valid, self.cp_loopback.can_valid))
+      print('cp={} cp2={} cp_cam={} cp_adas={} cp_body={} cp_loopback={}'.format(bool(self.cp), \
+       bool(self.cp2), bool(self.cp_cam), bool(self.cp_adas), bool(self.cp_body), bool(self.cp_loopback)))
 
     if ret.vEgoCluster == 0.0 and not self.v_ego_cluster_seen:
       ret.vEgoCluster = ret.vEgo

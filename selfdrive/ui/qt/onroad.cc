@@ -924,13 +924,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     int width = 500;
     int a_center = s->fb_w/2;
-    QRect ah_rect(a_center - width/2, y_pos, width, 145);
-    p.setBrush(Qt::NoBrush);
+    QRect ah_rect = QRect(a_center - width/2, y_pos, width, 145);
     p.setBrush(blackColor(80));
     p.setPen(QPen(QColor(255, 255, 255, 50), 10));
     p.drawRoundedRect(ah_rect, 20, 20);
+    p.setFont(InterFont(79, QFont::Bold));
     p.setPen(greenColor(150));
-    debugText(p, a_center, y_pos + 99, "AUTO HOLD", 150, 79, true);
+    p.drawText(ah_rect, Qt::AlignCenter, "AUTO HOLD");
   }
 
   // opkr blinker

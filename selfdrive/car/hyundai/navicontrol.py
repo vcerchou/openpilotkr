@@ -478,6 +478,5 @@ class NaviControl():
       # print('self.ctrl_speed={}  cruiseState_speed={}'.format(self.ctrl_speed, cruiseState_speed))      
 
       btn_signal = self.ascc_button_control(CS, self.ctrl_speed)
-      print('btn_signal={} ctrl_spd={}'.format(btn_signal, self.ctrl_speed))
 
     return btn_signal

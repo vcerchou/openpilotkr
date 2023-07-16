@@ -299,9 +299,6 @@ class CarController:
     self.vRel = self.sm['radarState'].leadOne.vRel #Vision Lead
     self.yRel = self.sm['radarState'].leadOne.yRel #Vision Lead
 
-    print('dRel={} vRel={} yRel={} stat1={} stat2={}'.format(self.dRel, self.vRel, self.yRel, self.sm['radarState'].leadOne.status, self.sm['radarState'].leadTwo.status))
-
-
     # steering torque
     if self.CP.smoothSteer.method == 1:
       new_steer = int(round(actuators.steer * self.params.STEER_MAX))

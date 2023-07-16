@@ -214,7 +214,8 @@ class CarState(CarStateBase):
     ret.steeringTorque = cp_mdps.vl["MDPS12"]["CR_Mdps_StrColTq"]
     ret.steeringTorqueEps = cp_mdps.vl["MDPS12"]["CR_Mdps_OutTq"]
     ret.steeringPressed = self.update_steering_pressed(abs(ret.steeringTorque) > self.params.STEER_THRESHOLD, 5)
-    ret.steerFaultTemporary = cp_mdps.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 or cp_mdps.vl["MDPS12"]["CF_Mdps_ToiFlt"] != 0
+    self.mdps_error_cnt += 1 if cp_mdps.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0 else -self.mdps_error_cnt
+    ret.steerFaultTemporary = self.mdps_error_cnt > 100 #cp_mdps.vl["MDPS12"]["CF_Mdps_ToiUnavail"] != 0
 
     self.VSetDis = cp_scc.vl["SCC11"]["VSetDis"]
     ret.vSetDis = self.VSetDis
@@ -548,9 +549,9 @@ class CarState(CarStateBase):
 
       ("ACCMode", "SCC12"),
       ("CF_VSM_Prefill", "SCC12"),
-      ("CF_VSM_DecCmdAct", "SCC12"),
+
       ("CF_VSM_HBACmd", "SCC12"),
-      ("CF_VSM_Warn", "SCC12"),
+
       ("CF_VSM_Stat", "SCC12"),
       ("CF_VSM_BeltCmd", "SCC12"),
       ("ACCFailInfo", "SCC12"),
@@ -563,10 +564,20 @@ class CarState(CarStateBase):
       ("CF_VSM_ConfMode", "SCC12"),
       ("AEB_Failinfo", "SCC12"),
       ("AEB_Status", "SCC12"),
-      ("AEB_CmdAct", "SCC12"),
+
       ("AEB_StopReq", "SCC12"),
       ("CR_VSM_Alive", "SCC12"),
       ("CR_VSM_ChkSum", "SCC12"),
+
+      ("SCCDrvModeRValue", "SCC13"),
+      ("SCC_Equip", "SCC13"),
+      ("AebDrvSetStatus", "SCC13"),
+
+      ("JerkUpperLimit", "SCC14"),
+      ("JerkLowerLimit", "SCC14"),
+      ("SCCMode2", "SCC14"),
+      ("ComfortBandUpper", "SCC14"),
+      ("ComfortBandLower", "SCC14"),
 
       ("UNIT", "TPMS11"),
       ("PRESSURE_FL", "TPMS11"),
@@ -682,8 +693,10 @@ class CarState(CarStateBase):
         ("LVR11", 100)
       ]
 
-    return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0, enforce_checks=False)
+    if CP.carFingerprint == CAR.SANTAFE_TM:
+      checks.remove(("TCS13", 50))
 
+    return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0, enforce_checks=False)
 
   @staticmethod
   def get_can2_parser(CP):
@@ -710,6 +723,61 @@ class CarState(CarStateBase):
         ("SAS_Speed", "SAS11")
       ]
       checks += [("SAS11", 100)]
+
+    if CP.sccBus == 1:
+      signals += [
+        ("MainMode_ACC", "SCC11"),
+        ("SCCInfoDisplay", "SCC11"),
+        ("AliveCounterACC", "SCC11"),
+        ("VSetDis", "SCC11"),
+        ("ObjValid", "SCC11"),
+        ("DriverAlertDisplay", "SCC11"),
+        ("TauGapSet", "SCC11"),
+        ("ACC_ObjStatus", "SCC11"),
+        ("ACC_ObjLatPos", "SCC11"),
+        ("ACC_ObjDist", "SCC11"),
+        ("ACC_ObjRelSpd", "SCC11"),
+        ("Navi_SCC_Curve_Status", "SCC11"),
+        ("Navi_SCC_Curve_Act", "SCC11"),
+        ("Navi_SCC_Camera_Act", "SCC11"),
+        ("Navi_SCC_Camera_Status", "SCC11"),
+
+        ("ACCMode", "SCC12"),
+        ("CF_VSM_Prefill", "SCC12"),
+        ("CF_VSM_DecCmdAct", "SCC12"),
+        ("CF_VSM_HBACmd", "SCC12"),
+        ("CF_VSM_Warn", "SCC12"),
+        ("CF_VSM_Stat", "SCC12"),
+        ("CF_VSM_BeltCmd", "SCC12"),
+        ("ACCFailInfo", "SCC12"),
+        ("StopReq", "SCC12"),
+        ("CR_VSM_DecCmd", "SCC12"),
+        ("aReqRaw", "SCC12"), #aReqMax
+        ("TakeOverReq", "SCC12"),
+        ("PreFill", "SCC12"),
+        ("aReqValue", "SCC12"), #aReqMin
+        ("CF_VSM_ConfMode", "SCC12"),
+        ("AEB_Failinfo", "SCC12"),
+        ("AEB_Status", "SCC12"),
+        ("AEB_CmdAct", "SCC12"),
+        ("AEB_StopReq", "SCC12"),
+        ("CR_VSM_Alive", "SCC12"),
+        ("CR_VSM_ChkSum", "SCC12"),
+
+        ("SCCDrvModeRValue", "SCC13"),
+        ("SCC_Equip", "SCC13"),
+        ("AebDrvSetStatus", "SCC13"),
+
+        ("JerkUpperLimit", "SCC14"),
+        ("JerkLowerLimit", "SCC14"),
+        ("SCCMode2", "SCC14"),
+        ("ComfortBandUpper", "SCC14"),
+        ("ComfortBandLower", "SCC14")
+      ]
+      checks += [
+        ("SCC11", 50),
+        ("SCC12", 50)
+      ]
 
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 1, enforce_checks=False)
 
@@ -761,9 +829,9 @@ class CarState(CarStateBase):
 
         ("ACCMode", "SCC12"),
         ("CF_VSM_Prefill", "SCC12"),
-        ("CF_VSM_DecCmdAct", "SCC12"),
+
         ("CF_VSM_HBACmd", "SCC12"),
-        ("CF_VSM_Warn", "SCC12"),
+
         ("CF_VSM_Stat", "SCC12"),
         ("CF_VSM_BeltCmd", "SCC12"),
         ("ACCFailInfo", "SCC12"),
@@ -776,7 +844,7 @@ class CarState(CarStateBase):
         ("CF_VSM_ConfMode", "SCC12"),
         ("AEB_Failinfo", "SCC12"),
         ("AEB_Status", "SCC12"),
-        ("AEB_CmdAct", "SCC12"),
+
         ("AEB_StopReq", "SCC12"),
         ("CR_VSM_Alive", "SCC12"),
         ("CR_VSM_ChkSum", "SCC12"),

@@ -563,8 +563,8 @@ class CarController:
               if (self.frame - self.last_resume_frame) * DT_CTRL > 0.1:
                 self.standstill_res_button = True
                 # send 25 messages at a time to increases the likelihood of resume being accepted, value 25 is not acceptable at some cars.
-                can_sends.extend([create_clu11(self.packer, self.frame, CS.clu11, Buttons.RES_ACCEL)] * self.standstill_res_count) if not self.longcontrol \
-                else can_sends.extend([create_clu11(self.packer, self.frame, CS.clu11, Buttons.RES_ACCEL, clu11_speed, self.CP.sccBus)] * self.standstill_res_count)
+                can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, Buttons.RES_ACCEL)] * self.standstill_res_count) if not self.longcontrol \
+                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, Buttons.RES_ACCEL, clu11_speed, self.CP.sccBus)] * self.standstill_res_count)
                 self.last_resume_frame = self.frame
             self.standstill_fault_reduce_timer += 1
           # gap save after 1sec

@@ -42,9 +42,10 @@ const LongitudinalLimits HYUNDAI_LONG_LIMITS = {
 };
 
 const CanMsg HYUNDAI_TX_MSGS[] = {
-  {832, 0, 8}, {832, 1, 8}, // LKAS11 Bus 0, 1
-  {1265, 0, 4}, {1265, 1, 4}, {1265, 2, 4}, // CLU11 Bus 0, 1, 2
+  {832, 0, 8},  // LKAS11 Bus 0
+  {1265, 0, 4}, // CLU11 Bus 0
   {1157, 0, 4}, // LFAHDA_MFC Bus 0
+  {1265, 2, 4}, // CLU11 Bus 2
   {593, 2, 8},  // MDPS12 Bus 2
   {1056, 0, 8}, // SCC11 Bus 0
   {1057, 0, 8}, // SCC12 Bus 0
@@ -53,8 +54,6 @@ const CanMsg HYUNDAI_TX_MSGS[] = {
   {909, 0, 8},  // FCA11 Bus 0
   {1155, 0, 8}, // FCA12 Bus 0
   {1186, 0, 8}, // FRT_RADAR11 Bus 0
-  {790, 1, 8}, // EMS11, Bus 1
-  {2000, 0, 8},  // SCC_DIAG, Bus 0
 };
 
 const CanMsg HYUNDAI_LONG_TX_MSGS[] = {
@@ -92,8 +91,8 @@ AddrCheckStruct hyundai_addr_checks[] = {
   {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U},
            {881, 0, 8, .expected_timestep = 10000U}, { 0 }}},
   {.msg = {{902, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
+  //{.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
+  //{.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
 #define HYUNDAI_ADDR_CHECK_LEN (sizeof(hyundai_addr_checks) / sizeof(hyundai_addr_checks[0]))
 
@@ -110,8 +109,8 @@ AddrCheckStruct hyundai_long_addr_checks[] = {
   {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U},
            {881, 0, 8, .expected_timestep = 10000U}, { 0 }}},
   {.msg = {{902, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{1265, 0, 4, .check_checksum = false, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
+  //{.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
+  //{.msg = {{1265, 0, 4, .check_checksum = false, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
 #define HYUNDAI_LONG_ADDR_CHECK_LEN (sizeof(hyundai_long_addr_checks) / sizeof(hyundai_long_addr_checks[0]))
 
@@ -119,9 +118,9 @@ AddrCheckStruct hyundai_long_addr_checks[] = {
 AddrCheckStruct hyundai_legacy_addr_checks[] = {
   {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U},
            {881, 0, 8, .expected_timestep = 10000U}, { 0 }}},
-  {.msg = {{902, 0, 8, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{916, 0, 8, .expected_timestep = 10000U}, { 0 }, { 0 }}},
-  {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
+  {.msg = {{902, 0, 8, .expected_timestep = 20000U}, { 0 }, { 0 }}},
+  //{.msg = {{916, 0, 8, .expected_timestep = 10000U}, { 0 }, { 0 }}},
+  //{.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
 #define HYUNDAI_LEGACY_ADDR_CHECK_LEN (sizeof(hyundai_legacy_addr_checks) / sizeof(hyundai_legacy_addr_checks[0]))
 
@@ -139,8 +138,6 @@ static uint8_t hyundai_get_counter(CANPacket_t *to_push) {
     cnt = ((GET_BYTE(to_push, 3) >> 6) << 2) | (GET_BYTE(to_push, 1) >> 6);
   } else if (addr == 916) {
     cnt = (GET_BYTE(to_push, 1) >> 5) & 0x7U;
-  } else if (addr == 1057) {
-    cnt = GET_BYTE(to_push, 7) & 0xFU;
   } else {
     cnt = 0;
   }
@@ -157,8 +154,6 @@ static uint32_t hyundai_get_checksum(CANPacket_t *to_push) {
     chksum = ((GET_BYTE(to_push, 7) >> 6) << 2) | (GET_BYTE(to_push, 5) >> 6);
   } else if (addr == 916) {
     chksum = GET_BYTE(to_push, 6) & 0xFU;
-  } else if (addr == 1057) {
-    chksum = GET_BYTE(to_push, 7) >> 4;
   } else {
     chksum = 0;
   }
@@ -493,7 +488,7 @@ static const addr_checks* hyundai_init(uint16_t param) {
 }
 
 static const addr_checks* hyundai_legacy_init(uint16_t param) {
-  UNUSED(param);
+  hyundai_common_init(param);
   hyundai_legacy = true;
   hyundai_longitudinal = false;
   hyundai_camera_scc = false;

@@ -26,6 +26,13 @@ int OP_EMS_live = 0;
 int HKG_mdps_bus = -1;
 int HKG_scc_bus = -1;
 
+bool HKG_LCAN_on_bus1 = false;
+bool HKG_forward_bus1 = false;
+bool HKG_forward_obd = false;
+bool HKG_forward_bus2 = true;
+int HKG_LKAS_bus0_cnt = 0;
+int HKG_Lcan_bus1_cnt = 0;
+
 const SteeringLimits HYUNDAI_STEERING_LIMITS = HYUNDAI_LIMITS(384, 3, 7);
 const SteeringLimits HYUNDAI_STEERING_LIMITS_ALT = HYUNDAI_LIMITS(270, 2, 3);
 

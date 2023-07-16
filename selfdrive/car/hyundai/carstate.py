@@ -212,6 +212,8 @@ class CarState(CarStateBase):
         self.cluster_speed = math.floor(self.cluster_speed * CV.KPH_TO_MPH + CV.KPH_TO_MPH)
 
     ret.vEgoCluster = self.cluster_speed * speed_conv
+    
+    ret.standStill = self.CP.standStill
 
     ret.steeringAngleDeg = cp_sas.vl["SAS11"]["SAS_Angle"] - self.steer_anglecorrection
     ret.steeringRateDeg = cp_sas.vl["SAS11"]["SAS_Speed"]

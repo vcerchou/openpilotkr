@@ -223,7 +223,6 @@ static void update_state(UIState *s) {
     scene.cruise_gap = cs_data.getCruiseGapSet();
     scene.autoHold = cs_data.getAutoHold();
     scene.steer_warning = cs_data.getSteerFaultTemporary();
-    scene.stand_still = cs_data.getStandstill();
     scene.a_req_value = cs_data.getAReqValue();
     scene.engine_rpm = cs_data.getEngineRpm();
     scene.gear_step = cs_data.getGearStep();

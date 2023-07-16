@@ -232,6 +232,7 @@ def manager_init() -> None:
     ("ExternalDeviceIP", ""),
     ("ExternalDeviceIPNow", ""),
     ("SetSpeedFive", "0"),
+    ("OPKRLongAlt", "0"),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

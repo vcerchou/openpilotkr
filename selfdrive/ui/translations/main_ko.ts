@@ -3931,6 +3931,17 @@ This may take up to a minute.</source>
     </message>
 </context>
 <context>
+    <name>LongAlternative</name>
+    <message>
+        <source>Long Alternative</source>
+        <translation>롱컨트롤 대안</translation>
+    </message>
+    <message>
+        <source>Long Alternative to get throw away the cluster error.</source>
+        <translation>배선개조 롱컨트롤 사용 대안 옵션입니다.</translation>
+    </message>
+</context>
+<context>
     <name>DepartChimeAtResume</name>
     <message>
         <source>Depart Chime at Resume</source>

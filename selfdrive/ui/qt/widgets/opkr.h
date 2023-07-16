@@ -986,6 +986,18 @@ public:
   }
 };
 
+class LongAlternative : public ToggleControl {
+  Q_OBJECT
+
+public:
+  LongAlternative() : ToggleControl(tr("Long Alternative"), tr("Long Alternative to get throw away the cluster error."), "../assets/offroad/icon_shell.png", Params().getBool("OPKRLongAlt")) {
+    QObject::connect(this, &LongAlternative::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OPKRLongAlt", status);
+    });
+  }
+};
+
 // openpilot preview
 class OpenpilotView : public AbstractControl {
   Q_OBJECT

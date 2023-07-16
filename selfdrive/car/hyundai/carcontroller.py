@@ -244,6 +244,7 @@ class CarController:
     self.e2e_standstill_timer_buf = 0
 
     self.experimental_long_enabled = self.c_params.get_bool("ExperimentalLongitudinalEnabled")
+    self.long_alt = self.c_params.get_bool("OPKRLongAlt")
 
     self.str_log2 = 'MultiLateral'
     if CP.lateralTuning.which() == 'pid':

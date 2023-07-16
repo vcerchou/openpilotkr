@@ -63,7 +63,6 @@ class VCruiseHelper:
     self.osm_waze_speedlimit = 255
     self.pause_spdlimit = False
     self.osm_waze_off_spdlimit_init = False
-    self.v_cruise_kph_set_timer = 0
 
     self.navi_selection = int(self.params.get("OPKRNaviSelect", encoding="utf8"))
 
@@ -113,7 +112,6 @@ class VCruiseHelper:
             if self.cruise_road_limit_spd_enabled:
               self.cruise_road_limit_spd_switch = False
               self.cruise_road_limit_spd_switch_prev = self.sm['liveENaviData'].roadLimitSpeed
-            self.v_cruise_kph_set_timer = 30
             self.v_cruise_kph = self.v_cruise_kph_last
             self.v_cruise_cluster_kph = self.v_cruise_kph
             if round(CS.vSetDis)-1 > self.v_cruise_kph:
@@ -130,7 +128,6 @@ class VCruiseHelper:
             if self.cruise_road_limit_spd_enabled:
               self.cruise_road_limit_spd_switch = False
               self.cruise_road_limit_spd_switch_prev = self.sm['liveENaviData'].roadLimitSpeed
-            self.v_cruise_kph_set_timer = 30
             self.v_cruise_kph = round(CS.vEgo*m_unit)
             self.v_cruise_cluster_kph = self.v_cruise_kph
             if round(CS.vSetDis)-1 > self.v_cruise_kph:
@@ -143,7 +140,7 @@ class VCruiseHelper:
                 self.osm_waze_speedlimit = round(self.sm['liveENaviData'].wazeRoadSpeedLimit)
               elif self.osm_speedlimit_enabled:
                 self.osm_waze_speedlimit = round(self.sm['liveMapData'].speedLimit)
-          elif (CS.cruiseButtons == Buttons.RES_ACCEL and not self.v_cruise_kph_set_timer) or CS.cruiseButtons == Buttons.SET_DECEL:
+          elif CS.cruiseButtons == Buttons.RES_ACCEL or CS.cruiseButtons == Buttons.SET_DECEL:
             if self.cruise_road_limit_spd_enabled and CS.cruiseButtons == Buttons.SET_DECEL:
               self.cruise_road_limit_spd_switch = True
             elif self.cruise_road_limit_spd_enabled and CS.cruiseButtons == Buttons.RES_ACCEL:

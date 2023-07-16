@@ -140,12 +140,12 @@ class CarState(CarStateBase):
       return set_speed_kph
     self.prev_clu_CruiseSwState = self.cruise_buttons[-1]
 
-    if self.cruise_buttons[-1] == Buttons.RES_ACCEL:   # up 
+    if self.cruise_buttons[-1] == Buttons.RES_ACCEL and not self.cruiseState_standstill:   # up 
       if self.set_spd_five:
         set_speed_kph += 5
       else:
         set_speed_kph += 1
-    elif self.cruise_buttons[-1] == Buttons.SET_DECEL:  # dn
+    elif self.cruise_buttons[-1] == Buttons.SET_DECEL and not self.cruiseState_standstill:  # dn
       if self.set_spd_five:
         set_speed_kph -= 5
       else:

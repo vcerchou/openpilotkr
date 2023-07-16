@@ -138,6 +138,10 @@ static uint8_t hyundai_get_counter(CANPacket_t *to_push) {
     cnt = ((GET_BYTE(to_push, 3) >> 6) << 2) | (GET_BYTE(to_push, 1) >> 6);
   } else if (addr == 916) {
     cnt = (GET_BYTE(to_push, 1) >> 5) & 0x7U;
+  } else if (addr == 1057) {
+    cnt = GET_BYTE(to_push, 7) & 0xFU;
+  } else if (addr == 1265) {
+    cnt = (GET_BYTE(to_push, 3) >> 4) & 0xFU;
   } else {
     cnt = 0;
   }
@@ -154,6 +158,8 @@ static uint32_t hyundai_get_checksum(CANPacket_t *to_push) {
     chksum = ((GET_BYTE(to_push, 7) >> 6) << 2) | (GET_BYTE(to_push, 5) >> 6);
   } else if (addr == 916) {
     chksum = GET_BYTE(to_push, 6) & 0xFU;
+  } else if (addr == 1057) {
+    chksum = GET_BYTE(to_push, 7) >> 4;
   } else {
     chksum = 0;
   }

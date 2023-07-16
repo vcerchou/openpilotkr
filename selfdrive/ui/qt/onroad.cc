@@ -354,9 +354,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   // opkr
   bool over_sl = false;
   if (s.scene.navi_select == 2) {
-    over_sl = s.scene.limitSpeedCamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
+    over_sl = s.scene.limitSpeedCamera > 19 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
   } else if (s.scene.navi_select == 1 && (s.scene.mapSign != 20 && s.scene.mapSign != 21)) {
-    over_sl = s.scene.limitSpeedCamera > 21 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
+    over_sl = s.scene.limitSpeedCamera > 19 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
   }
 
   auto lead_one = sm["radarState"].getRadarState().getLeadOne();
@@ -372,6 +372,8 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
 
 void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.save();
+
+  UIState *s = uiState();
 
   // Header gradient
   QLinearGradient bg(0, UI_HEADER_HEIGHT - (UI_HEADER_HEIGHT / 2.5), 0, UI_HEADER_HEIGHT);
@@ -401,7 +403,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, 15), set_speed_size);
   p.setPen(QPen(whiteColor(75), 6));
-  p.setBrush(blackColor(166));
+  if (is_over_sl) {
+    p.setBrush(ochreColor(166));
+  } else if (!is_over_sl && s->scene.limitSpeedCamera > 19){
+    p.setBrush(greenColor(166));
+  } else if (s->scene.cruiseAccStatus) {
+    p.setBrush(blueColor(166));
+  } else {
+    p.setBrush(blackColor(166));
+  }
   drawRoundedRect(p, set_speed_rect, top_radius, top_radius, bottom_radius, bottom_radius);
 
   // Draw MAX
@@ -425,10 +435,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
   p.setFont(InterFont(40, QFont::DemiBold));
   p.setPen(max_color);
-  p.drawText(set_speed_rect.adjusted(0, 27, 0, 0), Qt::AlignTop | Qt::AlignHCenter, tr("MAX"));
+  p.drawText(set_speed_rect.adjusted(0, 27, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.cruiseAccStatus?QString::number(s->scene.vSetDis, 'f', 0):"MAX");
   p.setFont(InterFont(90, QFont::Bold));
   p.setPen(set_speed_color);
-  p.drawText(set_speed_rect.adjusted(0, 77, 0, 0), Qt::AlignTop | Qt::AlignHCenter, setSpeedStr);
+  p.drawText(set_speed_rect.adjusted(0, 77, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.ctrl_speed > 1?QString::number(s->scene.ctrl_speed, 'f', 0):setSpeedStr);
 
   const QRect sign_rect = set_speed_rect.adjusted(sign_margin, default_size.height(), -sign_margin, -sign_margin);
   // US/Canada (MUTCD style) sign
@@ -465,8 +475,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   //p.setFont(InterFont(66));
   //drawText(p, rect().center().x(), 290, speedUnit, 200);
 
-
-  UIState *s = uiState();
   // current speed
   float act_accel = (!s->scene.longitudinal_control)?s->scene.a_req_value:s->scene.accel;
   float gas_opacity = act_accel*255>255?255:act_accel*255;

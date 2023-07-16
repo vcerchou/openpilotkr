@@ -261,7 +261,7 @@ class CarState(CarStateBase):
         ret.cruiseState.speed = 0
 
     ret.cruiseState.accActive = self.acc_active
-    ret.cruiseState.gapSet = cp.vl["SCC11"]['TauGapSet']
+    ret.cruiseState.gapSet = cp_scc.vl["SCC11"]['TauGapSet']
     ret.cruiseState.cruiseSwState = self.cruise_buttons[-1]
     ret.cruiseState.modeSel = self.cruise_set_mode
 

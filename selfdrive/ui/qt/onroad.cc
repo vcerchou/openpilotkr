@@ -747,9 +747,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.resetMatrix();
     // sys temp
     sp_yr = sp_yr + j_num;
-    if (s->scene.ambientTemp > 60) {
+    if (s->scene.ambientTemp > 70) {
       p.setPen(redColor(200));
-    } else if (s->scene.ambientTemp > 50) {
+    } else if (s->scene.ambientTemp > 60) {
       p.setPen(orangeColor(200));
     } 
     debugText(p, sp_xr, sp_yr, QString::number(s->scene.ambientTemp, 'f', 0) + "°C", 150, 57);

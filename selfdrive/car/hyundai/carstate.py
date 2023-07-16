@@ -107,6 +107,8 @@ class CarState(CarStateBase):
         self.prev_acc_set_btn = self.acc_active
         self.cruise_set_speed_kph = self.VSetDis
         return self.cruise_set_speed_kph
+    
+    set_speed_kph = self.cruise_set_speed_kph
 
     if self.cruise_buttons[-1]:
       self.cruise_buttons_time += 1
@@ -120,11 +122,15 @@ class CarState(CarStateBase):
     if self.cruise_buttons[-1] == Buttons.RES_ACCEL and not self.cruiseState_standstill:   # up 
       if self.set_spd_five:
         set_speed_kph += 5
+        if set_speed_kph % 5 != 0:
+          round(set_speed_kph)
       else:
         set_speed_kph += 1
     elif self.cruise_buttons[-1] == Buttons.SET_DECEL and not self.cruiseState_standstill:  # dn
       if self.set_spd_five:
         set_speed_kph -= 5
+        if set_speed_kph % 5 != 0:
+          round(set_speed_kph)
       else:
         set_speed_kph -= 1
 

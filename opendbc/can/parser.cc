@@ -295,7 +295,7 @@ void CANParser::UpdateValid(uint64_t sec) {
     }
 
     const bool missing = state.last_seen_nanos == 0;
-    const bool timed_out = (sec - state.last_seen_nanos) > state.check_threshold && sec > 105000000000;
+    const bool timed_out = (sec - state.last_seen_nanos) > state.check_threshold;
     if (state.check_threshold > 0 && (missing || timed_out)) {
       if (show_missing && !bus_timeout) {
         if (missing) {

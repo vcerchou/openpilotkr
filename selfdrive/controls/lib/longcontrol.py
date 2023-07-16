@@ -110,6 +110,14 @@ class LongControl:
     self.pid.pos_limit = accel_limits[1]
 
     output_accel = self.last_output_accel
+
+    if radarState is None:
+      dRel = 150
+      vRel = 0
+    else:
+      dRel = radarState.leadOne.dRel
+      vRel = radarState.leadOne.vRel
+
     self.long_control_state = long_control_state_trans(self.CP, active, self.long_control_state, CS.vEgo,
                                                        v_target, v_target_1sec, CS.brakePressed,
                                                        CS.cruiseState.standstill)
@@ -175,7 +183,7 @@ class LongControl:
     if CP.sccBus != 0 and self.long_log:
       str_log3 = 'LS={:s}  LP={:s}  AQ/AR/AT/FA={:+04.2f}/{:+04.2f}/{:+04.2f}/{:+04.2f}  GB={}  ED/RD={:04.1f}/{:04.1f}  TG={:03.0f}/{:03.0f}'.format(self.long_stat, \
        self.long_plan_source, CP.aqValue, CP.aqValueRaw, a_target, self.last_output_accel, int(CS.gasPressed or CS.brakePressed), dRel, CS.radarDistance, \
-       (v_target*CV.MS_TO_MPH) if CS.isMph else (v_target*CV.MS_TO_KPH), (v_target_future*CV.MS_TO_MPH) if CS.isMph else (v_target_future*CV.MS_TO_KPH))
+       (v_target*CV.MS_TO_MPH) if CS.isMph else (v_target*CV.MS_TO_KPH), (v_target_1sec*CV.MS_TO_MPH) if CS.isMph else (v_target_1sec*CV.MS_TO_KPH))
       trace1.printf2('{}'.format(str_log3))
 
     return self.last_output_accel, a_target

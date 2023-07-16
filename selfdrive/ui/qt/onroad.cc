@@ -914,8 +914,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // opkr autohold
-  //if (s->scene.autoHold && s->scene.comma_stock_ui != 1) {
-  if (true) {
+  if (s->scene.autoHold && s->scene.comma_stock_ui != 1) {
     int y_pos = 0;
     if (s->scene.steer_warning && (s->scene.car_state.getVEgo() < 0.1 || s->scene.standStill) && s->scene.car_state.getSteeringAngleDeg() < 90) {
       y_pos = 500;

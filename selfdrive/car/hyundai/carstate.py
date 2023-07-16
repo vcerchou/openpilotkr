@@ -167,7 +167,6 @@ class CarState(CarStateBase):
     cp_mdps = cp2 if self.CP.mdpsBus == 1 else cp
     cp_sas = cp2 if self.CP.sasBus else cp
     cp_scc = cp_cam if self.CP.sccBus == 2 else cp2 if self.CP.sccBus == 1 else cp
-    print('sccBus={}'.format(self.CP.sccBus))
 
     self.prev_cruise_main_button = self.cruise_main_button
     self.prev_lkas_button_on = self.lkas_button_on

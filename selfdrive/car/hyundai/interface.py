@@ -393,6 +393,7 @@ class CarInterface(CarInterfaceBase):
       if candidate in CAMERA_SCC_CAR:
         ret.safetyConfigs[0].safetyParam |= Panda.FLAG_HYUNDAI_CAMERA_SCC
 
+      print('intSccBus={}'.format(ret.sccBus))
       if ret.sccBus == 2:
         ret.scc13Available = 1290 in fingerprint[0] or 1290 in fingerprint[2]
         ret.scc14Available = 905 in fingerprint[0] or 905 in fingerprint[2]

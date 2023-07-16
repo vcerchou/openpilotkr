@@ -290,6 +290,8 @@ class CarState(CarStateBase):
 
     if self.CP.autoHoldAvailable:
       ret.brakeHoldActive = cp.vl["TCS15"]["AVH_LAMP"] == 2  # 0 OFF, 1 ERROR, 2 ACTIVE, 3 READY
+      ret.autoHold = ret.brakeHoldActive
+
     ret.parkingBrake = cp.vl["TCS13"]["PBRAKE_ACT"] == 1
     ret.accFaulted = cp.vl["TCS13"]["ACCEnable"] != 0  # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
 
@@ -386,7 +388,6 @@ class CarState(CarStateBase):
     self.scc11init = copy.copy(cp.vl["SCC11"])
     self.scc12init = copy.copy(cp.vl["SCC12"])
 
-    self.autoHold = ret.brakeHoldActive
     self.brake_error = cp.vl["TCS13"]["ACCEnable"] == 3 # 0 ACC CONTROL ENABLED, 1-3 ACC CONTROL DISABLED
     self.lead_distance = cp_scc.vl["SCC11"]["ACC_ObjDist"] if not self.no_radar else 0
     ret.radarDistance = self.lead_distance

@@ -847,12 +847,12 @@ class CarController:
           except:
             pass
 
-      if CS.autoHold and not self.autohold_popup_switch:
+      if CS.out.autoHold and not self.autohold_popup_switch:
         self.autohold_popup_timer = 100
         self.autohold_popup_switch = True
-      elif CS.autoHold and self.autohold_popup_switch and self.autohold_popup_timer:
+      elif CS.out.autoHold and self.autohold_popup_switch and self.autohold_popup_timer:
         self.autohold_popup_timer -= 1
-      elif not CS.autoHold and self.autohold_popup_switch:
+      elif not CS.out.autoHold and self.autohold_popup_switch:
         self.autohold_popup_switch = False
         self.autohold_popup_timer = 0
 

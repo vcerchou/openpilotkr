@@ -163,7 +163,6 @@ int get_addr_check_index(CANPacket_t *to_push, AddrCheckStruct addr_list[], cons
 
 // 1Hz safety function called by main. Now just a check for lagging safety messages
 void safety_tick(const addr_checks *rx_checks) {
-  bool rx_checks_invalid = false;
   uint32_t ts = microsecond_timer_get();
   if (rx_checks != NULL) {
     for (int i=0; i < rx_checks->len; i++) {
@@ -180,8 +179,8 @@ void safety_tick(const addr_checks *rx_checks) {
       if (lagging || !is_msg_valid(rx_checks->check, i)) {
         rx_checks_invalid = true;
       }
-      print("lagging: %s\n",lagging?"true":"false");
-      print("msg_valid: %s\n",is_msg_valid(rx_checks->check, i)?"true":"false");
+      if (lagging) {print("lagging\n");}
+      if (is_msg_valid(rx_checks->check, i)) {print("msg valid\n");}
     }
   }
 

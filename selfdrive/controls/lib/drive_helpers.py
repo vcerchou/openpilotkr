@@ -96,11 +96,11 @@ class VCruiseHelper:
         self.update_button_timers(CS, enabled)
       else:
         m_unit = CV.MS_TO_KPH if self.is_kph else CV.MS_TO_MPH
+        print('lmt: r_lmt={} r_sw={} r_enabled={}'.format(int(self.sm['liveENaviData'].roadLimitSpeed), self.cruise_road_limit_spd_enabled, self.cruise_road_limit_spd_switch))
         if not self.CP.carName == "hyundai":
           self.v_cruise_kph = CS.cruiseState.speed * m_unit
           self.v_cruise_cluster_kph = CS.cruiseState.speedCluster * m_unit
         else:
-          print('check')
           t_speed = 30 if self.is_kph else 20
           if self.cruise_road_limit_spd_enabled and not self.cruise_road_limit_spd_switch and self.cruise_road_limit_spd_switch_prev != 0 and self.cruise_road_limit_spd_switch_prev != self.sm['liveENaviData'].roadLimitSpeed:
             self.cruise_road_limit_spd_switch = True

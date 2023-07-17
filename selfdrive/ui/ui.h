@@ -225,6 +225,7 @@ typedef struct UIScene {
   bool OPKR_Debug;
   bool rec_stat = false;
   bool experimental_mode = false;
+  bool low_ui_profile;
   // gps
   int satelliteCount;
   float gpsAccuracy;

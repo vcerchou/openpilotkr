@@ -1006,6 +1006,11 @@ public:
     QObject::connect(this, &LowUIProfile::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("LowUIProfile", status);
+      if (state) {
+        uiState()->scene.low_ui_profile = true;
+      } else {
+        uiState()->scene.low_ui_profile = false;
+      }
     });
   }
 };

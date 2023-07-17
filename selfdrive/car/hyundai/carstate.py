@@ -128,14 +128,14 @@ class CarState(CarStateBase):
         if self.set_spd_five:
           set_speed_kph += 5
           if set_speed_kph % 5 != 0:
-            round(set_speed_kph)
+            set_speed_kph = int(round(set_speed_kph/5)*5)
         else:
           set_speed_kph += 1
       elif self.cruise_buttons[-1] == Buttons.SET_DECEL and not self.cruiseState_standstill:  # dn
         if self.set_spd_five:
           set_speed_kph -= 5
           if set_speed_kph % 5 != 0:
-            round(set_speed_kph)
+            set_speed_kph = int(round(set_speed_kph/5)*5)
         else:
           set_speed_kph -= 1
 

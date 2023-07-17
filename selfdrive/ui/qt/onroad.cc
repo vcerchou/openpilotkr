@@ -404,11 +404,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, 15), set_speed_size);
   p.setPen(QPen(whiteColor(75), 6));
   if (is_over_sl) {
-    p.setBrush(ochreColor(166));
+    p.setBrush(ochreColor(128));
   } else if (!is_over_sl && s->scene.limitSpeedCamera > 19){
-    p.setBrush(greenColor(166));
+    p.setBrush(greenColor(128));
   } else if (s->scene.cruiseAccStatus) {
-    p.setBrush(blueColor(166));
+    p.setBrush(blueColor(128));
   } else {
     p.setBrush(blackColor(166));
   }
@@ -433,7 +433,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     max_color = QColor(0xa6, 0xa6, 0xa6, 0xff);
     set_speed_color = QColor(0x72, 0x72, 0x72, 0xff);
   }
-  p.setFont(InterFont(40, QFont::DemiBold));
+  p.setFont(InterFont(55, QFont::DemiBold));
   p.setPen(max_color);
   p.drawText(set_speed_rect.adjusted(0, 27, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.cruiseAccStatus?QString::number(s->scene.vSetDis, 'f', 0):"MAX");
   p.setFont(InterFont(90, QFont::Bold));
@@ -686,34 +686,34 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       if (s->scene.cruise_gap == 1) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-15, 0, "■");
+          p.drawText(-20, 0, "■");
         } else {
           p.setPen(redColor(200));
-          p.drawText(-15, 0, "■");
+          p.drawText(-20, 0, "■");
         }
       } else if (s->scene.cruise_gap == 2) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-15, 0, "■■");
+          p.drawText(-20, 0, "■■");
         } else {
           p.setPen(redColor(200));
-          p.drawText(-15, 0, "■■");
+          p.drawText(-20, 0, "■■");
         }
       } else if (s->scene.cruise_gap == 3) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-15, 0, "■■■");
+          p.drawText(-20, 0, "■■■");
         } else {
           p.setPen(greenColor(200));
-          p.drawText(-15, 0, "■■■");
+          p.drawText(-20, 0, "■■■");
         }
       } else {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-15, 0, "■■■■");
+          p.drawText(-20, 0, "■■■■");
         } else {
           p.setPen(whiteColor(200));
-          p.drawText(-15, 0, "■■■■");
+          p.drawText(-20, 0, "■■■■");
         }
       }
     p.resetMatrix();
@@ -1024,30 +1024,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       sl_opacity = 1;
     }
 
-    if (s->scene.limitSpeedCameraDist != 0) {
-      opacity = s->scene.limitSpeedCameraDist>600 ? 0 : (600 - s->scene.limitSpeedCameraDist) * 0.425;
-      p.setBrush(redColor(opacity/sl_opacity));
-      p.setPen(QPen(QColor(255, 255, 255, 100), 7));
-      p.drawRoundedRect(rect_d, 8, 8);
-      p.setFont(InterFont(55, QFont::Bold));
-      p.setPen(whiteColor(255));
-      if (s->scene.is_metric) {
-        if (s->scene.limitSpeedCameraDist < 1000) {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist, 'f', 0) + "m");
-        } else if (s->scene.limitSpeedCameraDist < 10000) {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist/1000, 'f', 2) + "km");
-        } else {
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist/1000, 'f', 1) + "km");
-        }
-      } else {
-        if ((s->scene.limitSpeedCameraDist*3.28084) < 1000) { // 0m~304m
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist*3.28084, 'f', 0) + "ft");
-        } else { // 305m~
-          p.drawText(rect_d, Qt::AlignCenter, QString::number(round(s->scene.limitSpeedCameraDist*0.000621*100)/100, 'f', 2) + "mi");
-        }
-      }
-    }
-
     if (s->scene.limitSpeedCamera > 19) {
       if (s->scene.speedlimit_signtype) {
         p.setBrush(whiteColor(255/sl_opacity));
@@ -1069,6 +1045,30 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.drawEllipse(rect_s);
         p.setPen(blackColor(255/sl_opacity));
         debugText(p, rect_si.center().x(), rect_si.center().y()+UI_BORDER_SIZE+(s->scene.limitSpeedCamera<100?25:15), QString::number(s->scene.limitSpeedCamera), 255/sl_opacity, s->scene.limitSpeedCamera<100?110:90, true);
+      }
+
+      if (s->scene.limitSpeedCameraDist != 0) {
+        opacity = s->scene.limitSpeedCameraDist>600 ? 0 : (600 - s->scene.limitSpeedCameraDist) * 0.425;
+        p.setBrush(redColor(opacity/sl_opacity));
+        p.setPen(QPen(QColor(255, 255, 255, 100), 7));
+        p.drawRoundedRect(rect_d, 8, 8);
+        p.setFont(InterFont(55, QFont::Bold));
+        p.setPen(whiteColor(255));
+        if (s->scene.is_metric) {
+          if (s->scene.limitSpeedCameraDist < 1000) {
+            p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist, 'f', 0) + "m");
+          } else if (s->scene.limitSpeedCameraDist < 10000) {
+            p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist/1000, 'f', 2) + "km");
+          } else {
+            p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist/1000, 'f', 1) + "km");
+          }
+        } else {
+          if ((s->scene.limitSpeedCameraDist*3.28084) < 1000) { // 0m~304m
+            p.drawText(rect_d, Qt::AlignCenter, QString::number(s->scene.limitSpeedCameraDist*3.28084, 'f', 0) + "ft");
+          } else { // 305m~
+            p.drawText(rect_d, Qt::AlignCenter, QString::number(round(s->scene.limitSpeedCameraDist*0.000621*100)/100, 'f', 2) + "mi");
+          }
+        }
       }
     }
   }

@@ -407,6 +407,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"OpkrLiveFriction", PERSISTENT},
     {"SetSpeedFive", PERSISTENT},
     {"OPKRLongAlt", PERSISTENT},
+    {"LowUIProfile", PERSISTENT},
 };
 
 } // namespace

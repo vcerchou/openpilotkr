@@ -998,6 +998,18 @@ public:
   }
 };
 
+class LowUIProfile : public ToggleControl {
+  Q_OBJECT
+
+public:
+  LowUIProfile() : ToggleControl(tr("Low UI Profile"), tr("Low UI Profile to get UI more visible at bottom side."), "../assets/offroad/icon_shell.png", Params().getBool("LowUIProfile")) {
+    QObject::connect(this, &LowUIProfile::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("LowUIProfile", status);
+    });
+  }
+};
+
 // openpilot preview
 class OpenpilotView : public AbstractControl {
   Q_OBJECT

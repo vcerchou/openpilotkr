@@ -4057,4 +4057,15 @@ This may take up to a minute.</source>
         <translation>MAX 스피드를 5씩 증감합니다. 크루즈 스피드도 다른 조건이 없다면 같이 동기화 됩니다.</translation>
     </message>
 </context>
+<context>
+    <name>LowUIProfile</name>
+    <message>
+        <source>Low UI Profile</source>
+        <translation>하단 UI 사용</translation>
+    </message>
+    <message>
+        <source>Low UI Profile to get UI more visible at bottom side.</source>
+        <translation>UI 일부 정보를 하단으로 이동하여 시야에 잘 보이도록 설정합니다. 속도계나 설정속도가 룸미러에 가려지는 경우 유용할 수 있습니다.</translation>
+    </message>
+</context>
 </TS>

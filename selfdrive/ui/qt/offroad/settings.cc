@@ -509,6 +509,7 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new OPKRBottomTextView());
   layout->addWidget(new RPMAnimatedToggle());
   layout->addWidget(new RPMAnimatedMaxValue());
+  layout->addWidget(new LowUIProfile());
   //layout->addWidget(new OSMOfflineUseToggle());
 }
 DrivingPanel::DrivingPanel(QWidget *parent) : QFrame(parent) {

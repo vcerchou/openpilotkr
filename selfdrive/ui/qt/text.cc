@@ -61,6 +61,7 @@ int main(int argc, char *argv[]) {
   });
   QObject::connect(btn2, &QPushButton::clicked, [=]() {
     btn2->setEnabled(false);
+    QProcess::execute("touch /data/opkr_compiling");
     QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
     Hardware::reboot();
   });
@@ -72,7 +73,9 @@ int main(int argc, char *argv[]) {
   });
   QObject::connect(btn4, &QPushButton::clicked, [=]() {
     btn4->setEnabled(false);
+    QProcess::execute("touch /data/opkr_compiling");
     QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
+    Hardware::reboot();
   });
   btn2->setFixedSize(400, 150);
   btn3->setFixedSize(400, 150);

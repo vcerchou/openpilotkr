@@ -19,10 +19,9 @@ if [ "$?" == "0" ]; then
   git pull origin $BRANCH
 
   if [ "$HASH" != "$REMOTE_HASH" ]; then
-    if [ -f "/data/openpilot/prebuilt" ]; then
-      touch /data/opkr_compiling
-      sleep 1
-    fi
+    touch /data/opkr_compiling
+    sleep 1
+
     sudo reboot
   fi
 fi

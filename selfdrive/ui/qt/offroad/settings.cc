@@ -393,7 +393,10 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
         fileInfo.setFile("/data/OPKR_Updates.txt");
         const std::string txt = util::read_file("/data/OPKR_Updates.txt");
         if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
-          if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");}
+          if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {
+            std::system("touch /data/opkr_compiling");
+            std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
+          }
         }
       } else {
         QString cmd1 = "wget https://raw.githubusercontent.com/openpilotkr/openpilot/"+QString::fromStdString(params.get("GitBranch"))+"/OPKR_Updates.txt -O /data/OPKR_Updates.txt";
@@ -404,7 +407,10 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
           fileInfo.setFile("/data/OPKR_Updates.txt");
           const std::string txt = util::read_file("/data/OPKR_Updates.txt");
           if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
-            if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");}
+            if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {
+              std::system("touch /data/opkr_compiling");
+              std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
+            }
           }
         }
       }

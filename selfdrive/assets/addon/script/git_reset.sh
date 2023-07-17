@@ -18,10 +18,8 @@ if [ "$?" == "0" ]; then
   git reset --hard origin/$CURRENT_BRANCH
   git pull origin $CURRENT_BRANCH
 
-  if [ -f "/data/openpilot/prebuilt" ]; then
-    touch /data/opkr_compiling
-    sleep 1
-  fi
+  touch /data/opkr_compiling
+  sleep 1
 
   sudo reboot
 fi

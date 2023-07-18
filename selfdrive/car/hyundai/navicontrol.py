@@ -76,11 +76,6 @@ class NaviControl():
     self.faststart = False
     self.safetycam_speed = 0
 
-  def update_lateralPlan(self):
-    self.sm.update(0)
-    path_plan = self.sm['lateralPlan']
-    return path_plan
-
   def button_status(self, CS):
     if not CS.cruise_active or CS.cruise_buttons[-1] != Buttons.NONE: 
       self.wait_timer2 = 80 
@@ -340,8 +335,11 @@ class NaviControl():
 
     return cruise_set_speed_kph
 
-  def auto_speed_control(self, CS, navi_speed, path_plan):
-    modelSpeed = path_plan.modelSpeed
+  def auto_speed_control(self, CS, navi_speed):
+
+    self.sm.update(0)
+
+    modelSpeed = self.sm['lateralPlan'].modelSpeed
     min_control_speed = 20 if CS.is_set_speed_in_mph else 30
     var_speed = navi_speed
     self.lead_0 = self.sm['radarState'].leadOne
@@ -415,7 +413,7 @@ class NaviControl():
       self.t_interval = 10 if CS.is_set_speed_in_mph else 7
 
     if CS.cruise_set_mode in (1,3,4) and self.curv_decel_option in (1,2):
-      if CS.out.vEgo * CV.MS_TO_KPH > 40 and modelSpeed < self.vision_curv_speed_c[-1] and path_plan.laneChangeState == LaneChangeState.off and \
+      if CS.out.vEgo * CV.MS_TO_KPH > 40 and modelSpeed < self.vision_curv_speed_c[-1] and self.sm['lateralPlan'].laneChangeState == LaneChangeState.off and \
        not (CS.out.leftBlinker or CS.out.rightBlinker):
         if CS.is_set_speed_in_mph:
           v_curv_speed = int(interp(modelSpeed, self.vision_curv_speed_c, self.vision_curv_speed_t)/2)*2
@@ -452,7 +450,7 @@ class NaviControl():
 
     return round(min(var_speed, v_curv_speed, o_curv_speed))
 
-  def update(self, CS, path_plan):
+  def update(self, CS):
     self.na_timer += 1
     if self.na_timer > 100:
       self.na_timer = 0
@@ -471,7 +469,7 @@ class NaviControl():
       if CS.cruise_set_mode == 0:
         self.ctrl_speed = cruiseState_speed
       elif CS.cruise_set_mode != 5:
-        self.ctrl_speed = self.auto_speed_control(CS, navi_speed, path_plan) # lead, curve speed
+        self.ctrl_speed = self.auto_speed_control(CS, navi_speed) # lead, curve speed
       else:
         self.ctrl_speed = navi_speed # navi speed
 

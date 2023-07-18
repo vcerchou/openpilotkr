@@ -156,6 +156,7 @@ class CarController:
     self.steerMax_Max = int(self.c_params.get("SteerMaxAdj", encoding="utf8"))
     self.steerDeltaUp_Max = int(self.c_params.get("SteerDeltaUpAdj", encoding="utf8"))
     self.steerDeltaDown_Max = int(self.c_params.get("SteerDeltaDownAdj", encoding="utf8"))
+    self.model_speed = 255.0
     self.model_speed_range = [30, 100, 255]
     self.steerMax_range = [self.steerMax_Max, self.steerMax_base, self.steerMax_base]
     self.steerDeltaUp_range = [self.steerDeltaUp_Max, self.steerDeltaUp_base, self.steerDeltaUp_base]
@@ -257,7 +258,7 @@ class CarController:
     elif CP.lateralTuning.which() == 'torque':
       self.str_log2 = 'T={:0.2f}/{:0.2f}/{:0.2f}/{:0.3f}'.format(CP.lateralTuning.torque.kp, CP.lateralTuning.torque.kf, CP.lateralTuning.torque.ki, CP.lateralTuning.torque.friction)
 
-    self.sm = messaging.SubMaster(['controlsState', 'radarState', 'longitudinalPlan'])
+    self.sm = messaging.SubMaster(['controlsState', 'radarState', 'lateralPlan', 'longitudinalPlan'])
 
 
   def smooth_steer( self, apply_torque, CS ):
@@ -284,17 +285,19 @@ class CarController:
 
 
   def update(self, CC, CS, now_nanos):
+
+    self.sm.update(0)
+
     actuators = CC.actuators
     hud_control = CC.hudControl
 
     self.vFuture = hud_control.vFuture
     self.vFutureA = hud_control.vFutureA
 
-    path_plan = self.NC.update_lateralPlan()
     if self.frame % 10 == 0:
-      self.model_speed = path_plan.modelSpeed
+      self.model_speed = self.sm['lateralPlan'].modelSpeed
 
-    self.sm.update(0)
+
     self.dRel = self.sm['radarState'].leadOne.dRel #Vision Lead
     self.vRel = self.sm['radarState'].leadOne.vRel #Vision Lead
     self.yRel = self.sm['radarState'].leadOne.yRel #Vision Lead
@@ -595,7 +598,7 @@ class CarController:
         self.curv_speed_control = self.NC.curvSpeedControl
         self.cut_in_control = self.NC.cutInControl
         self.driver_scc_set_control = self.NC.driverSccSetControl
-        btn_signal = self.NC.update(CS, path_plan)
+        btn_signal = self.NC.update(CS)
         if self.opkr_cruisegap_auto_adj and not self.gap_by_spd_on:
           # gap restore
           if self.switch_timer > 0:

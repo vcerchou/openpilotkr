@@ -289,6 +289,12 @@ static void update_state(UIState *s) {
   } else if ((s->sm->frame - s->sm->rcv_frame("pandaStates")) > 5*UI_FREQ) {
     scene.pandaType = cereal::PandaState::PandaType::UNKNOWN;
   }
+  if (sm.updated("ubloxGnss")) {
+    auto ub_data = sm["ubloxGnss"].getUbloxGnss();
+    if (ub_data.which() == cereal::UbloxGnss::MEASUREMENT_REPORT) {
+      scene.satelliteCount = ub_data.getMeasurementReport().getNumMeas();
+    }
+  }
   if (sm.updated("gpsLocationExternal")) {
     scene.gpsAccuracy = sm["gpsLocationExternal"].getGpsLocationExternal().getAccuracy();
     auto ge_data = sm["gpsLocationExternal"].getGpsLocationExternal();
@@ -297,7 +303,9 @@ static void update_state(UIState *s) {
     scene.bearingUblox = ge_data.getBearingDeg();
   }
   if (sm.updated("carParams")) {
-    scene.longitudinal_control = sm["carParams"].getCarParams().getOpenpilotLongitudinalControl();
+    auto cp_data = sm["carParams"].getCarParams();
+    scene.longitudinal_control = cp_data.getOpenpilotLongitudinalControl();
+    scene.steer_actuator_delay = cp_data.getSteerActuatorDelay();
   }
   if (sm.updated("wideRoadCameraState")) {
     float scale = (sm["wideRoadCameraState"].getWideRoadCameraState().getSensor() == cereal::FrameData::ImageSensor::AR0231) ? 6.0f : 1.0f;
@@ -497,8 +505,8 @@ UIState::UIState(QObject *parent) : QObject(parent) {
   sm = std::make_unique<SubMaster, const std::initializer_list<const char *>>({
     "modelV2", "controlsState", "liveCalibration", "radarState", "deviceState", "peripheralState", "roadCameraState",
     "pandaStates", "carParams", "driverMonitoringState", "carState", "liveLocationKalman", "driverStateV2",
-    "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "uiPlan",
-    "liveParameters", "gpsLocationExternal", "lateralPlan", "longitudinalPlan", "liveENaviData", "liveMapData",
+    "wideRoadCameraState", "managerState", "navInstruction", "navRoute", "uiPlan", "liveParameters",
+    "ubloxGnss", "gpsLocationExternal", "lateralPlan", "longitudinalPlan", "liveENaviData", "liveMapData",
   });
 
   Params params;

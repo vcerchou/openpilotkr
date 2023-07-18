@@ -964,7 +964,7 @@ class CarController:
         can_sends.append(hyundaican.create_frt_radar_opt(self.packer))
 
 
-      if self.CP.sccBus != 0 and self.counter_init and self.longcontrol:
+      if self.CP.sccBus != 0 and self.counter_init and self.longcontrol and not self.experimental_long_enabled:
         if self.frame % 2 == 0:
           self.scc12cnt += 1
           self.scc12cnt %= 0xF
@@ -1145,7 +1145,7 @@ class CarController:
           can_sends.append(hyundaican.create_scc13(self.packer, CS.scc13))
         if self.frame % 50 == 0:
           can_sends.append(hyundaican.create_scc42a(self.packer))
-      elif self.CP.sccBus != 0 and self.longcontrol:
+      elif self.CP.sccBus != 0 and self.longcontrol and not self.experimental_long_enabled:
         self.counter_init = True
         self.scc12cnt = CS.scc12init["CR_VSM_Alive"]
         self.scc11cnt = CS.scc11init["AliveCounterACC"]

@@ -497,7 +497,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   } else {
     p.setFont(InterFont(180, QFont::DemiBold));
-    uiText(p, rect().left()+50, height()-110, speedStr, 255, true);
+    uiText(p, rect().left()+45, height()-230, speedStr, 255, true);
   }
 
   if (!s->scene.low_ui_profile) {

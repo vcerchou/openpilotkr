@@ -41,7 +41,7 @@ class LatControlTorque(LatControl):
 
     self.live_tune_enabled = False
     self.lt_timer = 0
-    self.live_friction = self.params.get_bool("OpkrLiveFriction")
+    self.live_torque_params = self.params.get_bool("OpkrLiveTorque")
 
   def live_tune(self):
     self.mpc_frame += 1
@@ -54,17 +54,19 @@ class LatControlTorque(LatControl):
       self.use_steering_angle = self.params.get_bool('TorqueUseAngle')
       self.steering_angle_deadzone_deg = float(Decimal(self.params.get("TorqueAngDeadZone", encoding="utf8")) * Decimal('0.1'))
       self.pid = PIDController(self.kp, self.ki,
-                              k_f=self.kf, pos_limit=1.0, neg_limit=-1.0)
+                              k_f=self.kf, pos_limit=self.steer_max, neg_limit=-self.steer_max)
         
       self.mpc_frame = 0
 
   def update_live_torque_params(self, latAccelFactor, latAccelOffset, friction):
-    self.torque_params.latAccelFactor = latAccelFactor
-    self.torque_params.latAccelOffset = latAccelOffset
-    if self.live_friction:
+    if self.live_torque_params:
       self.torque_params.friction = friction
+      self.torque_params.latAccelFactor = latAccelFactor
+      self.torque_params.latAccelOffset = latAccelOffset
     else:
       self.torque_params.friction = self.friction
+      self.torque_params.latAccelFactor = self.max_lat_accel
+      self.torque_params.latAccelOffset = latAccelOffset
 
   def update(self, active, CS, VM, params, last_actuators, steer_limited, desired_curvature, desired_curvature_rate, llk):
     self.lt_timer += 1

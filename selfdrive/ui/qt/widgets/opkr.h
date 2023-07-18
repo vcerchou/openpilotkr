@@ -913,10 +913,10 @@ class TorqueUseLiveFriction : public ToggleControl {
   Q_OBJECT
 
 public:
-  TorqueUseLiveFriction() : ToggleControl(tr("UseLiveFriction"), tr("Use Live Friction"), "../assets/offroad/icon_shell.png", Params().getBool("OpkrLiveFriction")) {
+  TorqueUseLiveFriction() : ToggleControl(tr("Use LiveTorque"), tr("Use Live Torque"), "../assets/offroad/icon_shell.png", Params().getBool("OpkrLiveTorque")) {
     QObject::connect(this, &TorqueUseLiveFriction::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
-      Params().putBool("OpkrLiveFriction", status);
+      Params().putBool("OpkrLiveTorque", status);
     });
   }
 };

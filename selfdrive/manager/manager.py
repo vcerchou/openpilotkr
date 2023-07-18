@@ -228,7 +228,7 @@ def manager_init() -> None:
     ("CruiseGapBySpdGap", "1,2,3,4"),
     ("CruiseSetwithRoadLimitSpeedEnabled", "0"),
     ("CruiseSetwithRoadLimitSpeedOffset", "0"),
-    ("OpkrLiveFriction", "1"),
+    ("OpkrLiveTorque", "1"),
     ("ExternalDeviceIP", ""),
     ("ExternalDeviceIPNow", ""),
     ("SetSpeedFive", "0"),

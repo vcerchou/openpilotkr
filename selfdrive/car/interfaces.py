@@ -220,6 +220,7 @@ class CarInterfaceBase(ABC):
       TorqueFriction = float(Decimal(Params().get("TorqueFriction", encoding="utf8")) * Decimal('0.01'))
       TorqueUseAngle = Params().get_bool('TorqueUseAngle')
       TorqueLatAccelFactor = float(Decimal(Params().get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+      TorqueAngDeadZone = float(Decimal(Params().get("TorqueAngDeadZone", encoding="utf8")) * Decimal('0.1'))
 
       tune.torque.useSteeringAngle = TorqueUseAngle
       tune.torque.kp = TorqueKp
@@ -228,7 +229,7 @@ class CarInterfaceBase(ABC):
       tune.torque.friction = TorqueFriction
       tune.torque.latAccelFactor = TorqueLatAccelFactor
       tune.torque.latAccelOffset = 0.0
-      tune.torque.steeringAngleDeadzoneDeg = steering_angle_deadzone_deg
+      tune.torque.steeringAngleDeadzoneDeg = TorqueAngDeadZone
 
   @abstractmethod
   def _update(self, c: car.CarControl) -> car.CarState:

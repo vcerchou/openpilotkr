@@ -404,7 +404,7 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"CruiseSetwithRoadLimitSpeedEnabled", PERSISTENT},
     {"CruiseSetwithRoadLimitSpeedOffset", PERSISTENT},
     {"OPKRDebug", PERSISTENT},
-    {"OpkrLiveFriction", PERSISTENT},
+    {"OpkrLiveTorque", PERSISTENT},
     {"SetSpeedFive", PERSISTENT},
     {"OPKRLongAlt", PERSISTENT},
     {"LowUIProfile", PERSISTENT},

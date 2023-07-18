@@ -156,5 +156,5 @@ CruiseGapBySpdSpd:25,65,130
 CruiseGapBySpdGap:1,2,3,4
 CruiseSetwithRoadLimitSpeedEnabled:0
 CruiseSetwithRoadLimitSpeedOffset:0
-OpkrLiveFriction:1
+OpkrLiveTorque:1
 SetSpeedFive:0

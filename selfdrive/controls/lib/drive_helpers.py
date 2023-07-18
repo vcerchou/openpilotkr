@@ -168,7 +168,7 @@ class VCruiseHelper:
                 self.v_cruise_kph_last = self.v_cruise_kph
           elif self.variable_cruise and CS.cruiseState.modeSel != 0 and not (self.osm_speedlimit_enabled or self.navi_selection == 2):
             if self.sm['liveENaviData'].safetyDistance > 600: # temporary pause to limit spd in safety section
-              self.second2 += DT_CTRL
+              self.second2 += DT_MDL
               if CS.cruiseButtons == Buttons.GAP_DIST: # push gap 2 times quickly, this is toggle.
                 self.pause_spdlimit_push = True
                 self.second2 = 0.0

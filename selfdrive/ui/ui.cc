@@ -483,6 +483,7 @@ void UIState::updateStatus() {
     scene.do_not_disturb_mode = std::stoi(params.get("DoNotDisturbMode"));
     scene.depart_chime_at_resume = params.getBool("DepartChimeAtResume");
     scene.OPKR_Debug = params.getBool("OPKRDebug");
+    scene.low_ui_profile = params.getBool("LowUIProfile");
 
     if (scene.autoScreenOff > 0) {
       scene.nTime = scene.autoScreenOff * 60 * UI_FREQ;

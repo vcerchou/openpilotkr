@@ -497,7 +497,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   } else {
     p.setFont(InterFont(180, QFont::DemiBold));
-    uiText(p, rect().left().x()+50, height()-110, speedStr, 255, true);
+    uiText(p, rect().left()+50, height()-110, speedStr, 255, true);
   }
 
   if (!s->scene.low_ui_profile) {
@@ -1584,7 +1584,7 @@ void AnnotatedCameraWidget::uiText(QPainter &p, int x, int y, const QString &tex
   real_rect.moveCenter({x + real_rect.width() / 2, y - real_rect.height() / 2});
 
   if (!custom_color) {
-    p.setPen(QColor(0xff, 0xff, 0xff, 255));
+    p.setPen(QColor(0xff, 0xff, 0xff, alpha));
   }
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }

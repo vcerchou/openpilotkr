@@ -191,12 +191,14 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
   int h = alert_heights[alert.size];
 
   int margin = 40;
+  int margin_w = 150;
   int radius = 30;
   if (alert.size == cereal::ControlsState::AlertSize::FULL) {
     margin = 0;
+    margin_w = 0;
     radius = 0;
   }
-  QRect r = QRect(0 + margin, height() - h + margin, width() - margin*2, h - margin*2);
+  QRect r = QRect(0 + (uiState()->scene.low_ui_profile?margin_w:margin), height() - h + margin, width() - (uiState()->scene.low_ui_profile?margin_w:margin)*2, h - margin*2);
 
   QPainter p(this);
 
@@ -401,7 +403,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
-  QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, 15), set_speed_size);
+  QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, s->scene.low_ui_profile?height()-default_size.height()-15:15), set_speed_size);
   p.setPen(QPen(whiteColor(75), 6));
   if (is_over_sl) {
     p.setBrush(ochreColor(128));
@@ -491,13 +493,21 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   } else if (act_accel > 0 && act_accel < 3.0 && s->scene.comma_stock_ui != 1) {
     p.setPen(QColor((255-int(gas_opacity)), (255-int((act_accel*10))), (255-int(gas_opacity)), 255));
   }
-  debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
-  if (s->scene.brakeLights) {
-    p.setPen(redColor(200));
+  if (!s->scene.low_ui_profile) {
+    debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   } else {
-    p.setPen(whiteColor(255));
+    p.setFont(InterFont(180, QFont::DemiBold));
+    uiText(p, rect().left().x()+50, height()-110, speedStr, 255, true);
   }
-  debugText(p, rect().center().x(), s->scene.animated_rpm?315:280, speedUnit, 255, 50, true);
+
+  if (!s->scene.low_ui_profile) {
+    if (s->scene.brakeLights) {
+      p.setPen(redColor(200));
+    } else {
+      p.setPen(whiteColor(255));
+    }
+    debugText(p, rect().center().x(), s->scene.animated_rpm?315:280, speedUnit, 255, 50, true);
+  }
 
 
   // opkr
@@ -542,30 +552,32 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     uiText(p, ui_viz_rx, ui_viz_ry+400, "OS:" + QString::number(s->scene.output_scale, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.lProb, 'f', 2) + "|" + QString::number(s->scene.lateralPlan.rProb, 'f', 2));
 
-    QString szLaCMethod = "";
-    QString szLaCMethodCur = "";
-    switch(s->scene.lateralControlMethod) {
-      case 0: szLaCMethod = "PID"; break;
-      case 1: szLaCMethod = "INDI"; break;
-      case 2: szLaCMethod = "LQR"; break;
-      case 3: szLaCMethod = "TORQUE"; break;
-      case 4: szLaCMethod = "MULTI"; break;
-    }
-    switch((int)s->scene.multi_lat_selected) {
-      case 0: szLaCMethodCur = "PID"; break;
-      case 1: szLaCMethodCur = "INDI"; break;
-      case 2: szLaCMethodCur = "LQR"; break;
-      case 3: szLaCMethodCur = "TORQUE"; break;
-    }
-    if (!s->scene.animated_rpm) {
-      if (szLaCMethod != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+305, szLaCMethod);
-      if (s->scene.lateralControlMethod == 4) {
-        if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+345, szLaCMethodCur);
+    if (!s->scene.low_ui_profile) {
+      QString szLaCMethod = "";
+      QString szLaCMethodCur = "";
+      switch(s->scene.lateralControlMethod) {
+        case 0: szLaCMethod = "PID"; break;
+        case 1: szLaCMethod = "INDI"; break;
+        case 2: szLaCMethod = "LQR"; break;
+        case 3: szLaCMethod = "TORQUE"; break;
+        case 4: szLaCMethod = "MULTI"; break;
       }
-    } else {
-      if(szLaCMethod != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+340, szLaCMethod);
-      if (s->scene.lateralControlMethod == 4) {
-        if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+375, szLaCMethodCur);
+      switch((int)s->scene.multi_lat_selected) {
+        case 0: szLaCMethodCur = "PID"; break;
+        case 1: szLaCMethodCur = "INDI"; break;
+        case 2: szLaCMethodCur = "LQR"; break;
+        case 3: szLaCMethodCur = "TORQUE"; break;
+      }
+      if (!s->scene.animated_rpm) {
+        if (szLaCMethod != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+305, szLaCMethod);
+        if (s->scene.lateralControlMethod == 4) {
+          if( szLaCMethodCur != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+345, szLaCMethodCur);
+        }
+      } else {
+        if(szLaCMethod != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+340, szLaCMethod);
+        if (s->scene.lateralControlMethod == 4) {
+          if(szLaCMethodCur != "") drawText(p, ui_viz_rx_center, UI_BORDER_SIZE+375, szLaCMethodCur);
+        }
       }
     }
     if (s->scene.navi_select == 1) {
@@ -1433,7 +1445,7 @@ void AnnotatedCameraWidget::drawDriverState(QPainter &painter, const UIState *s)
   // base icon
   int offset = UI_BORDER_SIZE + btn_size / 2;
   int x = rightHandDM ? width() - offset : offset;
-  int y = height() - offset;
+  int y = scene.low_ui_profile?offset:(height() - offset);
   float opacity = dmActive ? 0.65 : 0.2;
   drawIcon(painter, x, y, dm_img, blackColor(70), opacity);
 
@@ -1554,7 +1566,7 @@ void AnnotatedCameraWidget::debugText(QPainter &p, int x, int y, const QString &
   if (bold) {
   	p.setFont(InterFont(fontsize, QFont::Bold));
   } else {
-  	p.setFont(InterFont(fontsize, QFont::Bold));
+  	p.setFont(InterFont(fontsize, QFont::DemiBold));
   }
   QFontMetrics fm(p.font());
   QRect init_rect = fm.boundingRect(text);
@@ -1565,13 +1577,15 @@ void AnnotatedCameraWidget::debugText(QPainter &p, int x, int y, const QString &
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
-void AnnotatedCameraWidget::uiText(QPainter &p, int x, int y, const QString &text, int alpha) {
+void AnnotatedCameraWidget::uiText(QPainter &p, int x, int y, const QString &text, int alpha, bool custom_color) {
   QFontMetrics fm(p.font());
   QRect init_rect = fm.boundingRect(text);
   QRect real_rect = fm.boundingRect(init_rect, 0, text);
   real_rect.moveCenter({x + real_rect.width() / 2, y - real_rect.height() / 2});
 
-  p.setPen(QColor(0xff, 0xff, 0xff, 255));
+  if (!custom_color) {
+    p.setPen(QColor(0xff, 0xff, 0xff, 255));
+  }
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 

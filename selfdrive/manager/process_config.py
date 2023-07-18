@@ -94,7 +94,7 @@ if EnableUploader:
   ]
 if EnableOSM:
   procs += [
-    PythonProcess("mapd", "selfdrive.mapd.mapd", enabled=not PC, persistent=True),
+    PythonProcess("mapd", "selfdrive.mapd.mapd", enabled=not PC),
   ]
 if EnableExternalNavi:
   procs += [

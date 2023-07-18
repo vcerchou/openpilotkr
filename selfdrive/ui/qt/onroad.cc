@@ -499,7 +499,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setFont(InterFont(180, QFont::DemiBold));
     uiText(p, rect().left()+45, height()-230, speedStr, 255, true);
   }
-
   if (!s->scene.low_ui_profile) {
     if (s->scene.brakeLights) {
       p.setPen(redColor(200));

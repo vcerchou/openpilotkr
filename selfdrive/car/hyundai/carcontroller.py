@@ -246,6 +246,7 @@ class CarController:
 
     self.experimental_long_enabled = self.c_params.get_bool("ExperimentalLongitudinalEnabled")
     self.long_alt = self.c_params.get_bool("OPKRLongAlt")
+    self.live_torque_params = self.c_params.get_bool("OpkrLiveTorque")
 
     self.str_log2 = 'MultiLateral'
     if CP.lateralTuning.which() == 'pid':
@@ -258,7 +259,7 @@ class CarController:
     elif CP.lateralTuning.which() == 'torque':
       self.str_log2 = 'T={:0.2f}/{:0.2f}/{:0.2f}/{:0.3f}'.format(CP.lateralTuning.torque.kp, CP.lateralTuning.torque.kf, CP.lateralTuning.torque.ki, CP.lateralTuning.torque.friction)
 
-    self.sm = messaging.SubMaster(['controlsState', 'radarState', 'lateralPlan', 'longitudinalPlan'])
+    self.sm = messaging.SubMaster(['controlsState', 'radarState', 'lateralPlan', 'longitudinalPlan', 'liveTorqueParameters'])
 
 
   def smooth_steer( self, apply_torque, CS ):
@@ -1196,6 +1197,9 @@ class CarController:
             self.str_log2 = 'T={:0.2f}/{:0.2f}/{:0.2f}/{:0.3f}'.format(float(Decimal(self.c_params.get("TorqueKp", encoding="utf8"))*Decimal('0.1'))/max_lat_accel, \
             float(Decimal(self.c_params.get("TorqueKf", encoding="utf8"))*Decimal('0.1'))/max_lat_accel, float(Decimal(self.c_params.get("TorqueKi", encoding="utf8"))*Decimal('0.1'))/max_lat_accel, \
             float(Decimal(self.c_params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')))
+        elif self.CP.lateralTuning.which() == 'torque' and self.live_torque_params:
+          torque_params = self.sm['liveTorqueParameters']
+          self.str_log2 = 'T={:0.2f}/{:0.2f}/{:0.3f}'.format(torque_params.latAccelFactorFiltered, torque_params.latAccelOffsetFiltered, torque_params.frictionCoefficientFiltered)
 
       trace1.printf1('{}  {}'.format(str_log1, self.str_log2))
 

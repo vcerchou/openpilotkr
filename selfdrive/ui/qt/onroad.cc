@@ -636,7 +636,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.rotate(-90);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(27, QFont::DemiBold));
-    p.drawText(0, 0, "m");
+    p.drawText(-10, 0, "m");
     p.resetMatrix();
 
     // lead spd
@@ -658,7 +658,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.rotate(-90);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(27, QFont::DemiBold));
-    if (s->scene.is_metric) {p.drawText(0, 0, "km/h");} else {p.drawText(0, 0, "mi/h");}
+    if (s->scene.is_metric) {p.drawText(-40, 0, "km/h");} else {p.drawText(0, 0, "mi/h");}
     p.resetMatrix();
 
     // steer angle
@@ -681,7 +681,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.rotate(-90);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(27, QFont::DemiBold));
-    p.drawText(30, 0, "°");
+    p.drawText(0, 0, "°");
     p.resetMatrix();
     // steer ratio
     if (!s->scene.low_ui_profile) {
@@ -772,7 +772,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.rotate(-90);
     p.setFont(InterFont(27, QFont::DemiBold));
     p.setPen(whiteColor(200));
-    p.drawText(0, 0, QString::number(s->scene.cpuPerc, 'f', 0) + "%");
+    p.drawText(-40, 0, QString::number(s->scene.cpuPerc, 'f', 0) + "%");
     p.resetMatrix();
 
     // sys temp
@@ -790,7 +790,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.rotate(-90);
     p.setFont(InterFont(27, QFont::DemiBold));
     p.setPen(whiteColor(200));
-    p.drawText(0, 0, QString::number(s->scene.fanSpeedRpm, 'f', 0));
+    p.drawText(-40, 0, QString::number(s->scene.fanSpeedRpm, 'f', 0));
     p.resetMatrix();
 
     // Ublox GPS accuracy
@@ -815,7 +815,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.rotate(-90);
       p.setFont(InterFont(27, QFont::DemiBold));
       p.setPen(whiteColor(200));
-      p.drawText(0, 0, QString::number(s->scene.satelliteCount, 'f', 0));
+      p.drawText(-10, 0, QString::number(s->scene.satelliteCount, 'f', 0));
       p.resetMatrix();
       // altitude
       num_r = num_r + 1;
@@ -826,7 +826,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);
       p.setFont(InterFont(27, QFont::DemiBold));
-      p.drawText(0, 0, "m");
+      p.drawText(-20, 0, "m");
       p.resetMatrix();
     }
 

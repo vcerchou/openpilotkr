@@ -403,7 +403,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int top_radius = 32;
   int bottom_radius = has_eu_speed_limit ? 100 : 32;
 
-  QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, s->scene.low_ui_profile?(height()-default_size.height()-15-150):15), set_speed_size);
+  QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, s->scene.low_ui_profile?(height()-default_size.height()-30-150):15), set_speed_size);
   p.setPen(QPen(whiteColor(75), 6));
   if (is_over_sl) {
     p.setBrush(ochreColor(128));
@@ -497,7 +497,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   } else {
     p.setFont(InterFont(180, QFont::DemiBold));
-    uiText(p, rect().left()+45, height()-45, speedStr, 255, true);
+    uiText(p, rect().left()+45, height()-35, speedStr, 255, true);
   }
   if (!s->scene.low_ui_profile) {
     if (s->scene.brakeLights) {
@@ -1059,7 +1059,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int diameter2 = 170;
     int diameter3 = 202;
     int s_center_x = UI_BORDER_SIZE + 305;
-    int s_center_y = s->scene.low_ui_profile?(height()-202-15-150+100):(UI_BORDER_SIZE + 100);
+    int s_center_y = s->scene.low_ui_profile?(height()-202-30-150+100):(UI_BORDER_SIZE + 100);
     
     int d_center_x = s_center_x;
     int d_center_y = s->scene.low_ui_profile?(s_center_y - 155):(s_center_y + 155);

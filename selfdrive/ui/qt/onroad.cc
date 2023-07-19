@@ -945,7 +945,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int m_btn_center_y = s->scene.low_ui_profile?(height()-UI_BORDER_SIZE-m_btn_size/2-m_btn_offset):(UI_BORDER_SIZE + m_btn_size / 2 - m_btn_offset);
     int m_x = m_btn_center_x - m_btn_size/2;
     int m_y = m_btn_center_y - m_btn_size/2;
-    s->scene.low_ui_profile?(UI_BORDER_SIZE+10):895
     QRect lanebtn_draw(m_x, m_y, m_btn_size, m_btn_size);
     p.setBrush(Qt::NoBrush);
     if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(150));

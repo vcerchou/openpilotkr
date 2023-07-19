@@ -609,16 +609,17 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   if (s->scene.comma_stock_ui != 1) {
     int j_num = 100;
-    // opkr debug info(left panel)
+    // debug info(left panel)
     int width_l = 180;
     int sp_xl = rect().left() + UI_BORDER_SIZE + width_l / 2 - 10;
     int sp_yl = UI_BORDER_SIZE + 275;
     int num_l = 0;
 
-    p.setPen(whiteColor(200));
     //p.setRenderHint(QPainter::TextAntialiasing);
     // lead drel
     num_l = num_l + 1;
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xl, sp_yl, QString("REL DIST"), 150, 27);
     if (lead_stat) {
       if (dist_rel < 5) {
         p.setPen(redColor(200));
@@ -626,39 +627,41 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(orangeColor(200));
       }
       if (dist_rel < 10) {
-        debugText(p, sp_xl, sp_yl, QString::number(dist_rel, 'f', 1), 150, 57);
+        debugText(p, sp_xl, sp_yl+35, QString::number(dist_rel, 'f', 1), 150, 57);
       } else {
-        debugText(p, sp_xl, sp_yl, QString::number(dist_rel, 'f', 0), 150, 57);
+        debugText(p, sp_xl, sp_yl+35, QString::number(dist_rel, 'f', 0), 150, 57);
       }
     }
-    p.setPen(whiteColor(200));
-    debugText(p, sp_xl, sp_yl + 35, QString("REL DIST"), 150, 27);
     p.translate(sp_xl + 90, sp_yl + 20);
     p.rotate(-90);
     p.drawText(0, 0, "m");
     p.resetMatrix();
+
     // lead spd
     num_l = num_l + 1;
     sp_yl = sp_yl + j_num;
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xl, sp_yl, QString("REL SPED"), 150, 27);
     if (int(vel_rel) < -5) {
       p.setPen(redColor(200));
     } else if (int(vel_rel) < 0) {
       p.setPen(orangeColor(200));
     }
     if (lead_stat) {
-      debugText(p, sp_xl, sp_yl, QString::number(vel_rel * (s->scene.is_metric ? 3.6 : 2.2369363), 'f', 0), 150, 57);
+      debugText(p, sp_xl, sp_yl+35, QString::number(vel_rel * (s->scene.is_metric ? 3.6 : 2.2369363), 'f', 0), 150, 57);
     } else {
-      debugText(p, sp_xl, sp_yl, "-", 150, 57);
+      debugText(p, sp_xl, sp_yl+35, "-", 150, 57);
     }
-    p.setPen(whiteColor(200));
-    debugText(p, sp_xl, sp_yl + 35, QString("REL SPED"), 150, 27);
     p.translate(sp_xl + 90, sp_yl + 20);
     p.rotate(-90);
     if (s->scene.is_metric) {p.drawText(0, 0, "km/h");} else {p.drawText(0, 0, "mi/h");}
     p.resetMatrix();
+
     // steer angle
     num_l = num_l + 1;
     sp_yl = sp_yl + j_num;
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xl, sp_yl, QString("STER ANG"), 150, 27);
     p.setPen(greenColor(200));
     if ((int(s->scene.angleSteers) < -50) || (int(s->scene.angleSteers) > 50)) {
       p.setPen(redColor(200));
@@ -666,22 +669,20 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setPen(orangeColor(200));
     }
     if (s->scene.angleSteers > -10 && s->scene.angleSteers < 10) {
-      debugText(p, sp_xl, sp_yl, QString::number(s->scene.angleSteers, 'f', 1), 150, 57);
+      debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.angleSteers, 'f', 1), 150, 57);
     } else {
-      debugText(p, sp_xl, sp_yl, QString::number(s->scene.angleSteers, 'f', 0), 150, 57);
+      debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.angleSteers, 'f', 0), 150, 57);
     }
-    p.setPen(whiteColor(200));
-    debugText(p, sp_xl, sp_yl + 35, QString("STER ANG"), 150, 27);
     p.translate(sp_xl + 90, sp_yl + 20);
     p.rotate(-90);
-    p.drawText(0, 0, "       °");
+    p.drawText(30, 0, "°");
     p.resetMatrix();
     // steer ratio
     if (!s->scene.low_ui_profile) {
       num_l = num_l + 1;
       sp_yl = sp_yl + j_num;
-      debugText(p, sp_xl, sp_yl, QString::number(s->scene.steerRatio, 'f', 2), 150, 57);
-      debugText(p, sp_xl, sp_yl + 35, QString("SteerRatio"), 150, 27);
+      debugText(p, sp_xl, sp_yl, QString("SteerRatio"), 150, 27);
+      debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.steerRatio, 'f', 2), 150, 57);
     }
 
     // gear step and cruise gap
@@ -689,15 +690,15 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       num_l = num_l + 1;
       sp_yl = sp_yl + j_num;
       if (s->scene.charge_meter > 0) {
-        p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
         p.setPen(whiteColor(200));
-        debugText(p, sp_xl, sp_yl + 35, QString("MAIN BAT"), 150, 27);
+        debugText(p, sp_xl, sp_yl, QString("MAIN BAT"), 150, 27);
+        p.setPen(yellowColor(230));
+        debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
       } else {
-        p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl, "S " + QString::number(s->scene.gear_step, 'f', 0), 150, 57);
         p.setPen(whiteColor(200));
-        debugText(p, sp_xl, sp_yl + 35, QString("GEAR"), 150, 27);
+        debugText(p, sp_xl, sp_yl, QString("GEAR"), 150, 27);
+        p.setPen(yellowColor(230));
+        debugText(p, sp_xl, sp_yl+35, "S " + QString::number(s->scene.gear_step, 'f', 0), 150, 57);
       }
       p.translate(sp_xl + 90, sp_yl + 20);
       p.rotate(-90);
@@ -743,61 +744,62 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.drawRoundedRect(left_panel, 20, 20);
     // left panel end
 
-    // opkr debug info(right panel)
+    // debug info(right panel)
     int width_r = 180;
     int sp_xr = rect().right() - UI_BORDER_SIZE - width_r / 2 - 10;
     int sp_yr = UI_BORDER_SIZE + 255;
     int num_r = 0;
 
-    p.setPen(whiteColor(200));
     //p.setRenderHint(QPainter::TextAntialiasing);
     // cpu temp
     num_r = num_r + 1;
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xr, sp_yr, QString("CPU TEMP"), 150, 27);
     if (s->scene.cpuTemp > 85) {
       p.setPen(redColor(200));
     } else if (s->scene.cpuTemp > 75) {
       p.setPen(orangeColor(200));
     }
-    debugText(p, sp_xr, sp_yr, QString::number(s->scene.cpuTemp, 'f', 0) + "°C", 150, 57);
-    p.setPen(whiteColor(200));
-    debugText(p, sp_xr, sp_yr + 35, QString("CPU TEMP"), 150, 27);
+    debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.cpuTemp, 'f', 0) + "°C", 150, 57);
     p.translate(sp_xr + 90, sp_yr + 20);
     p.rotate(-90);
     p.drawText(0, 0, QString::number(s->scene.cpuPerc, 'f', 0) + "%");
     p.resetMatrix();
+
     // sys temp
     num_r = num_r + 1;
     sp_yr = sp_yr + j_num;
+    p.setPen(whiteColor(200));
+    debugText(p, sp_xr, sp_yr, QString("AMB TEMP"), 150, 27);
     if (s->scene.ambientTemp > 70) {
       p.setPen(redColor(200));
     } else if (s->scene.ambientTemp > 60) {
       p.setPen(orangeColor(200));
     } 
-    debugText(p, sp_xr, sp_yr, QString::number(s->scene.ambientTemp, 'f', 0) + "°C", 150, 57);
-    p.setPen(whiteColor(200));
-    debugText(p, sp_xr, sp_yr + 35, QString("AMB TEMP"), 150, 27);
+    debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.ambientTemp, 'f', 0) + "°C", 150, 57);
     p.translate(sp_xr + 90, sp_yr + 20);
     p.rotate(-90);
     p.drawText(0, 0, QString::number(s->scene.fanSpeedRpm, 'f', 0));
     p.resetMatrix();
+
     // Ublox GPS accuracy
     if (s->scene.gpsAccuracyUblox != 0.00) {
       num_r = num_r + 1;
       sp_yr = sp_yr + j_num;
+      p.setPen(whiteColor(200));
+      debugText(p, sp_xr, sp_yr, QString("GPS PREC"), 150, 27);
       if (s->scene.gpsAccuracyUblox > 1.3) {
         p.setPen(redColor(200));
       } else if (s->scene.gpsAccuracyUblox > 0.85) {
         p.setPen(orangeColor(200));
       }
       if (s->scene.gpsAccuracyUblox > 99 || s->scene.gpsAccuracyUblox == 0) {
-        debugText(p, sp_xr, sp_yr, "None", 150, 57);
+        debugText(p, sp_xr, sp_yr+35, "None", 150, 57);
       } else if (s->scene.gpsAccuracyUblox > 9.99) {
-        debugText(p, sp_xr, sp_yr, QString::number(s->scene.gpsAccuracyUblox, 'f', 1), 150, 57);
+        debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.gpsAccuracyUblox, 'f', 1), 150, 57);
       } else {
-        debugText(p, sp_xr, sp_yr, QString::number(s->scene.gpsAccuracyUblox, 'f', 2), 150, 57);
+        debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.gpsAccuracyUblox, 'f', 2), 150, 57);
       }
-      p.setPen(whiteColor(200));
-      debugText(p, sp_xr, sp_yr + 35, QString("GPS PREC"), 150, 27);
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);
       p.drawText(0, 0, QString::number(s->scene.satelliteCount, 'f', 0));
@@ -805,29 +807,25 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       // altitude
       num_r = num_r + 1;
       sp_yr = sp_yr + j_num;
-      debugText(p, sp_xr, sp_yr, QString::number(s->scene.altitudeUblox, 'f', 0), 150, 57);
-      debugText(p, sp_xr, sp_yr + 35, QString("ALTITUDE"), 150, 27);
+      p.setPen(whiteColor(200));
+      debugText(p, sp_xr, sp_yr, QString("ALTITUDE"), 150, 27);
+      debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.altitudeUblox, 'f', 0), 150, 57);
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);
       p.drawText(0, 0, "m");
       p.resetMatrix();
     }
 
-    QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 195, width_r, 104*num_r);  
-    p.setOpacity(1.0);
-    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
-    p.drawRoundedRect(right_panel, 20, 20);
-    // right panel end
-
     // opkr tpms
+    num_r = num_r + 1;
     int tpms_width = 180;
     int tpms_sp_xr = rect().right() - UI_BORDER_SIZE - tpms_width / 2;
-    int tpms_sp_yr = sp_yr + j_num - 5;
-    QRect tpms_panel(rect().right() - UI_BORDER_SIZE - tpms_width, tpms_sp_yr - 25, tpms_width, 135);  
-    p.setOpacity(1.0);
-    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
-    p.drawRoundedRect(tpms_panel, 20, 20);
-    p.setPen(QColor(255, 255, 255, 200));
+    int tpms_sp_yr = sp_yr + j_num - 25;
+    // QRect tpms_panel(rect().right() - UI_BORDER_SIZE - tpms_width, tpms_sp_yr - 25, tpms_width, 135);  
+    // p.setOpacity(1.0);
+    // p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    // p.drawRoundedRect(tpms_panel, 20, 20);
+    p.setPen(whiteColor(200));
     //p.setRenderHint(QPainter::TextAntialiasing);
     float maxv = 0;
     float minv = 300;
@@ -904,23 +902,30 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setPen(greenColor(200));
       debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
+
+    QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 195, width_r, 104*num_r+15);  
+    p.setOpacity(1.0);
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    p.drawRoundedRect(right_panel, 20, 20);
+    // right panel end
+
   }
 
 
   if (s->scene.comma_stock_ui != 1) {
     // opkr rec
-    QRect recbtn_draw(rect().right() - UI_BORDER_SIZE - 140 - 20, 905, 140, 140);
-    p.setBrush(Qt::NoBrush);
-    if (s->scene.rec_stat) p.setBrush(redColor(150));
-    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
-    p.drawEllipse(recbtn_draw);
-    p.setPen(whiteColor(200));
-    p.setFont(InterFont(41, QFont::DemiBold));
+    // QRect recbtn_draw(rect().right() - UI_BORDER_SIZE - 140 - 20, 905, 140, 140);
+    // p.setBrush(Qt::NoBrush);
+    // if (s->scene.rec_stat) p.setBrush(redColor(150));
+    // p.setPen(QPen(QColor(255, 255, 255, 80), 6));
+    // p.drawEllipse(recbtn_draw);
+    // p.setPen(whiteColor(200));
+    // p.setFont(InterFont(41, QFont::DemiBold));
     
-    p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
+    // p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
 
     // opkr lane selector
-    QRect lanebtn_draw(rect().right() - UI_BORDER_SIZE - 140 - 20 - 160, 905, 140, 140);
+    QRect lanebtn_draw(rect().right() - UI_BORDER_SIZE - 140 - 20, 905, 140, 140);
     p.setBrush(Qt::NoBrush);
     if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(150));
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
@@ -928,12 +933,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(whiteColor(200));
     if (s->scene.laneless_mode == 0) {
       p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20 - 160, 885, 140, 140), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20 - 160, 925, 140, 140), Qt::AlignCenter, QString("LINE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20, 885, 140, 140), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20, 925, 140, 140), Qt::AlignCenter, QString("LINE"));
     } else if (s->scene.laneless_mode == 1) {
       p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20 - 160, 885, 140, 140), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20 - 160, 925, 140, 140), Qt::AlignCenter, QString("LESS"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20, 885, 140, 140), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 140 - 20, 925, 140, 140), Qt::AlignCenter, QString("LESS"));
     } else if (s->scene.laneless_mode == 2) {
       p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
     }

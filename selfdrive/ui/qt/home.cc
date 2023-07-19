@@ -318,8 +318,8 @@ void HomeWindow::mousePressMULTI(QMouseEvent* e, int nDir) {
 
 void HomeWindow::mousePressEvent(QMouseEvent* e) 
 {
-  QRect rec_btn = QRect(1985, 905, 140, 140);
-  QRect laneless_btn = QRect(1825, 905, 140, 140);
+  QRect rec_btn = QRect(1825, 905, 140, 140);
+  QRect laneless_btn = QRect(1985, 905, 140, 140); 
   QRect monitoring_btn = QRect(50, 770, 140, 150);
   QRect stockui_btn = QRect(15, 15, 184, 202);
   QRect tuneui_btn = QRect(1960, 15, 184, 202);

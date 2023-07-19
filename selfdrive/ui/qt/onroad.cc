@@ -1332,37 +1332,30 @@ void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &t
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
 
-void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity) {
-  p.setOpacity(1.0);  // bg dictates opacity of ellipse
-  p.setPen(Qt::NoPen);
-  p.setBrush(bg);
-  p.drawEllipse(x - btn_size / 2, y - btn_size / 2, btn_size, btn_size);
-  p.setOpacity(opacity);
-  p.drawPixmap(x - img.size().width() / 2, y - img.size().height() / 2, img);
-  p.setOpacity(1.0);
-}
-
-void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation, float angle) {
+void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity, bool rotation, float angle) {
   // opkr
   if (rotation) {
     p.setOpacity(opacity);
     p.setPen(Qt::NoPen);
-    p.setBrush(QColor(0, 0, 0, 166));
-    p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
+    p.setBrush(bg);
+    p.drawEllipse(x - btn_size / 2, y - btn_size / 2, btn_size, btn_size);
     p.setOpacity(opacity);
     p.save();
     p.translate(x, y);
     p.rotate(-angle);
-    img.scaled(105,105);
+    //img.scaled(105,105);
     QRect r = img.rect();
     r.moveCenter(QPoint(0,0));
     p.drawPixmap(r, img);
     p.restore();
   } else {
-    p.setOpacity(opacity);
+    p.setOpacity(1.0);  // bg dictates opacity of ellipse
     p.setPen(Qt::NoPen);
-    p.drawEllipse(x - radius / 2, y - radius / 2, radius, radius);
-    p.drawPixmap(x - img_size / 2, y - img_size / 2, img);
+    p.setBrush(bg);
+    p.drawEllipse(x - btn_size / 2, y - btn_size / 2, btn_size, btn_size);
+    p.setOpacity(opacity);
+    p.drawPixmap(x - img.size().width() / 2, y - img.size().height() / 2, img);
+    p.setOpacity(1.0);
   }
 }
 
@@ -1501,7 +1494,8 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
   painter.save();
 
   if (scene.enabled) {
-    drawIcon(painter, rect().right() - radius / 2 - 15, scene.low_ui_profile?(height() - radius/2 - 10):(radius/2 + 10), scene.experimental_mode?experimental_img:engage_img, 1.0, true, scene.angleSteers);
+    drawIcon(painter, rect().right() - radius / 2 - 15, scene.low_ui_profile?(height() - radius/2 - 10):(radius/2 + 10),
+     scene.experimental_mode?experimental_img:engage_img, QColor(23, 134, 68, 150), 1.0, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";
     switch(int(scene.getGearShifter)) {
@@ -1513,9 +1507,9 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
       case 7 : gear_text = "B"; painter.setPen(whiteColor(255)); break;
       default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); painter.setPen(whiteColor(255)); break;
     }
-    debugText(painter, rect().right() - radius / 2 - 15, radius / 2 + 70 + 10, gear_text, 255, 190, true);
+    debugText(painter, rect().right() - radius / 2 - 15, scene.low_ui_profile?(height() - radius/2 - 10 - 70):(radius / 2 + 70 + 10), gear_text, 255, 190, true);
   } else {
-    drawIcon(painter, rect().right() - radius / 2 - 15, radius / 2 + 10, engage_img, greyColor(100), 0.7);
+    drawIcon(painter, rect().right() - radius / 2 - 15, scene.low_ui_profile?(height() - radius / 2 - 10):(radius / 2 + 10), engage_img, blackColor(100), 0.8);
   }
 
   painter.restore();

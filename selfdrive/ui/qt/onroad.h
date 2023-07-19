@@ -10,7 +10,7 @@
 
 
 const int btn_size = 192;
-const int img_size = (btn_size / 4) * 3;
+const int img_size = (btn_size / 4) * 3; // 144
 
 
 // ***** onroad widgets *****
@@ -85,8 +85,7 @@ public:
   void updateState(const UIState &s);
 
 private:
-  void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity);
-  void drawIcon(QPainter &p, int x, int y, QPixmap &img, float opacity, bool rotation = false, float angle = 0);
+  void drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg = QColor(0,0,0,0), float opacity = 1.0, bool rotation = false, float angle = 0);
   void drawText(QPainter &p, int x, int y, const QString &text, int alpha = 255);
   void uiText(QPainter &p, int x, int y, const QString &text, int alpha = 255, bool custom_color = false);
   void debugText(QPainter &p, int x, int y, const QString &text, int alpha = 255, int fontsize = 30, bool bold = false);
@@ -118,9 +117,6 @@ private:
   bool lead_stat = false;
   float dist_rel = 0;
   float vel_rel = 0;
-
-  const int radius = 180;
-  const int img_size = (radius / 2) * 1.5;
 
 protected:
   void paintGL() override;

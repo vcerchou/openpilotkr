@@ -948,7 +948,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     if (s->scene.laneless_mode == 0) {
       p.setFont(InterFont(39, QFont::DemiBold));
       p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_proflie?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LINE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LINE"));
     } else if (s->scene.laneless_mode == 1) {
       p.setFont(InterFont(39, QFont::DemiBold));
       p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));

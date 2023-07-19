@@ -939,7 +939,14 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
 
     // opkr multi menu
-    QRect lanebtn_draw(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+10):895, 150, 150);
+    int m_btn_size = 150;
+    int m_btn_offset = 10;
+    int m_btn_center_x = rect().right() - UI_BORDER_SIZE - m_btn_size / 2 - m_btn_offset;
+    int m_btn_center_y = s->scene.low_ui_profile?(height()-UI_BORDER_SIZE-m_btn_size/2-m_btn_offset):(UI_BORDER_SIZE + m_btn_size / 2 - m_btn_offset);
+    int m_x = m_btn_center_x - m_btn_size/2;
+    int m_y = m_btn_center_y - m_btn_size/2;
+    s->scene.low_ui_profile?(UI_BORDER_SIZE+10):895
+    QRect lanebtn_draw(m_x, m_y, m_btn_size, m_btn_size);
     p.setBrush(Qt::NoBrush);
     if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(150));
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
@@ -947,12 +954,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(whiteColor(200));
     if (s->scene.laneless_mode == 0) {
       p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LINE"));
+      p.drawText(QRect(m_x, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(m_x, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LINE"));
     } else if (s->scene.laneless_mode == 1) {
       p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LESS"));
+      p.drawText(QRect(m_x, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(m_x, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LESS"));
     } else if (s->scene.laneless_mode == 2) {
       p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
     }
@@ -1527,7 +1534,7 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
       case 7 : gear_text = "B"; painter.setPen(whiteColor(255)); break;
       default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); painter.setPen(whiteColor(255)); break;
     }
-    debugText(painter, rect().right() - btn_size / 2 - 5, scene.low_ui_profile?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true);
+    debugText(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true);
   } else {
     drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), engage_img, blackColor(100), 0.8);
   }

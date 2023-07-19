@@ -943,6 +943,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
     }
   }
+
   // opkr standstill
   if (s->scene.standStill && s->scene.comma_stock_ui != 1) {
     int minute = 0;

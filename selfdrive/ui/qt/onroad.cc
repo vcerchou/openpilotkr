@@ -939,7 +939,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     // p.drawText(recbtn_draw, Qt::AlignCenter, QString("REC"));
 
     // opkr multi menu
-    QRect lanebtn_draw(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profle?(UI_BORDER_SIZE+10):895, 150, 150);
+    QRect lanebtn_draw(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+10):895, 150, 150);
     p.setBrush(Qt::NoBrush);
     if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(150));
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
@@ -947,12 +947,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(whiteColor(200));
     if (s->scene.laneless_mode == 0) {
       p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profle?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profle?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LINE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_proflie?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LINE"));
     } else if (s->scene.laneless_mode == 1) {
       p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profle?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profle?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LESS"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+20):885, 150, 150), Qt::AlignCenter, QString("LANE"));
+      p.drawText(QRect(rect().right() - UI_BORDER_SIZE - 150 - 10, s->scene.low_ui_profile?(UI_BORDER_SIZE+60):925, 150, 150), Qt::AlignCenter, QString("LESS"));
     } else if (s->scene.laneless_mode == 2) {
       p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
     }

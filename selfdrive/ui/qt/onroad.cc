@@ -627,9 +627,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(orangeColor(200));
       }
       if (dist_rel < 10) {
-        debugText(p, sp_xl, sp_yl+35, QString::number(dist_rel, 'f', 1), 150, 57);
+        debugText(p, sp_xl, sp_yl+55, QString::number(dist_rel, 'f', 1), 150, 57);
       } else {
-        debugText(p, sp_xl, sp_yl+35, QString::number(dist_rel, 'f', 0), 150, 57);
+        debugText(p, sp_xl, sp_yl+55, QString::number(dist_rel, 'f', 0), 150, 57);
       }
     }
     p.translate(sp_xl + 90, sp_yl + 20);
@@ -650,9 +650,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setPen(orangeColor(200));
     }
     if (lead_stat) {
-      debugText(p, sp_xl, sp_yl+35, QString::number(vel_rel * (s->scene.is_metric ? 3.6 : 2.2369363), 'f', 0), 150, 57);
+      debugText(p, sp_xl, sp_yl+55, QString::number(vel_rel * (s->scene.is_metric ? 3.6 : 2.2369363), 'f', 0), 150, 57);
     } else {
-      debugText(p, sp_xl, sp_yl+35, "-", 150, 57);
+      debugText(p, sp_xl, sp_yl+55, "-", 150, 57);
     }
     p.translate(sp_xl + 90, sp_yl + 20);
     p.rotate(-90);
@@ -673,9 +673,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.setPen(orangeColor(200));
     }
     if (s->scene.angleSteers > -10 && s->scene.angleSteers < 10) {
-      debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.angleSteers, 'f', 1), 150, 57);
+      debugText(p, sp_xl, sp_yl+55, QString::number(s->scene.angleSteers, 'f', 1), 150, 57);
     } else {
-      debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.angleSteers, 'f', 0), 150, 57);
+      debugText(p, sp_xl, sp_yl+55, QString::number(s->scene.angleSteers, 'f', 0), 150, 57);
     }
     p.translate(sp_xl + 90, sp_yl + 20);
     p.rotate(-90);
@@ -688,7 +688,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       num_l = num_l + 1;
       sp_yl = sp_yl + j_num;
       debugText(p, sp_xl, sp_yl, QString("SteerRatio"), 150, 27);
-      debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.steerRatio, 'f', 2), 150, 57);
+      debugText(p, sp_xl, sp_yl+55, QString::number(s->scene.steerRatio, 'f', 2), 150, 57);
     }
 
     // gear step and cruise gap
@@ -699,12 +699,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(whiteColor(200));
         debugText(p, sp_xl, sp_yl, QString("MAIN BAT"), 150, 27);
         p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl+35, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
+        debugText(p, sp_xl, sp_yl+55, QString::number(s->scene.charge_meter, 'f', 0) + "%", 150, 57);
       } else {
         p.setPen(whiteColor(200));
         debugText(p, sp_xl, sp_yl, QString("GEAR"), 150, 27);
         p.setPen(yellowColor(230));
-        debugText(p, sp_xl, sp_yl+35, "S " + QString::number(s->scene.gear_step, 'f', 0), 150, 57);
+        debugText(p, sp_xl, sp_yl+55, "S " + QString::number(s->scene.gear_step, 'f', 0), 150, 57);
       }
       p.translate(sp_xl + 90, sp_yl + 20);
       p.rotate(-90);
@@ -767,7 +767,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     } else if (s->scene.cpuTemp > 75) {
       p.setPen(orangeColor(200));
     }
-    debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.cpuTemp, 'f', 0) + "°C", 150, 57);
+    debugText(p, sp_xr, sp_yr+55, QString::number(s->scene.cpuTemp, 'f', 0) + "°C", 150, 57);
     p.translate(sp_xr + 90, sp_yr + 20);
     p.rotate(-90);
     p.setFont(InterFont(27, QFont::DemiBold));
@@ -785,7 +785,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     } else if (s->scene.ambientTemp > 60) {
       p.setPen(orangeColor(200));
     } 
-    debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.ambientTemp, 'f', 0) + "°C", 150, 57);
+    debugText(p, sp_xr, sp_yr+55, QString::number(s->scene.ambientTemp, 'f', 0) + "°C", 150, 57);
     p.translate(sp_xr + 90, sp_yr + 20);
     p.rotate(-90);
     p.setFont(InterFont(27, QFont::DemiBold));
@@ -805,11 +805,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         p.setPen(orangeColor(200));
       }
       if (s->scene.gpsAccuracyUblox > 99 || s->scene.gpsAccuracyUblox == 0) {
-        debugText(p, sp_xr, sp_yr+35, "None", 150, 57);
+        debugText(p, sp_xr, sp_yr+55, "None", 150, 57);
       } else if (s->scene.gpsAccuracyUblox > 9.99) {
-        debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.gpsAccuracyUblox, 'f', 1), 150, 57);
+        debugText(p, sp_xr, sp_yr+55, QString::number(s->scene.gpsAccuracyUblox, 'f', 1), 150, 57);
       } else {
-        debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.gpsAccuracyUblox, 'f', 2), 150, 57);
+        debugText(p, sp_xr, sp_yr+55, QString::number(s->scene.gpsAccuracyUblox, 'f', 2), 150, 57);
       }
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);
@@ -822,7 +822,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       sp_yr = sp_yr + j_num;
       p.setPen(whiteColor(200));
       debugText(p, sp_xr, sp_yr, QString("ALTITUDE"), 150, 27);
-      debugText(p, sp_xr, sp_yr+35, QString::number(s->scene.altitudeUblox, 'f', 0), 150, 57);
+      debugText(p, sp_xr, sp_yr+55, QString::number(s->scene.altitudeUblox, 'f', 0), 150, 57);
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);
       p.setFont(InterFont(27, QFont::DemiBold));
@@ -917,7 +917,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       debugText(p, tpms_sp_xr+(s->scene.tpmsUnit != 0?46:50), tpms_sp_yr+100, QString::number(s->scene.tpmsPressureRr, 'f', (s->scene.tpmsUnit != 0?1:0)), 200, font_size);
     }
 
-    QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 195, width_r, 104*num_r+15);  
+    QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 195, width_r, 104*num_r+20);  
     p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(right_panel, 20, 20);

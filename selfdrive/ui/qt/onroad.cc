@@ -1359,41 +1359,38 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // date + time + road_name
-  if (s->scene.top_text_view > 0 && s->scene.comma_stock_ui != 1) {
+  if (s->scene.bottom_text_view > 0 && s->scene.comma_stock_ui != 1) {
     int rect_w = 600;
     int rect_x = s->fb_w/2 - rect_w/2;
     const int rect_h = 60;
     const int rect_y = !s->scene.animated_rpm?0:(s->fb_h-rect_h);
 
+    QString road_name = "";
+    QString oref = "";
     if (s->scene.navi_select == 1 && s->scene.liveMapData.ocurrentRoadName == "") {
-      road_name = s->scene.liveENaviData.eopkrroadname;
-      oref = "";
+      road_name = QString::fromStdString(s->scene.liveENaviData.eopkrroadname);
     } else if (s->scene.navi_select == 2) {
-      road_name = s->scene.liveENaviData.ewazeroadname;
-      oref = "";
+      road_name = QString::fromStdString(s->scene.liveENaviData.ewazeroadname);
     } else if (s->scene.osm_enabled) {
-      road_name = s->scene.liveMapData.ocurrentRoadName;
-      oref = s->scene.liveMapData.oref;
-    } else {
-      road_name = "";
-      oref = "";
+      road_name = QString::fromStdString(s->scene.liveMapData.ocurrentRoadName);
+      oref = QString::fromStdString(s->scene.liveMapData.oref);
     }
     QDateTime now = QDateTime::currentDateTime();
     QString tvalue = "";
-    if (s->scene.top_text_view == 1) {
+    if (s->scene.bottom_text_view == 1) {
       tvalue = now.toString('MM-dd ddd hh:mm:ss');
-    } else if (s->scene.top_text_view == 2) {
+    } else if (s->scene.bottom_text_view == 2) {
       tvalue = now.toString('MM-dd ddd');
-    } else if (s->scene.top_text_view == 3) {
+    } else if (s->scene.bottom_text_view == 3) {
       tvalue = now.toString('hh:mm:ss');
-    } else if (s->scene.top_text_view == 4) {
-      tvalue = now.toString('MM-dd ddd hh:mm:ss ') + QString::fromStdString(road_name) + QString::fromStdString(oref);
-    } else if (s->scene.top_text_view == 5) {
-      tvalue = now.toString('MM-dd ddd ') + QString::fromStdString(road_name) + QString::fromStdString(oref);
-    } else if (s->scene.top_text_view == 6) {
-      tvalue = now.toString('hh:mm:ss ') + QString::fromStdString(road_name) + QString::fromStdString(oref);
-    } else if (s->scene.top_text_view == 7) {
-      tvalue = QString::fromStdString(road_name) + QString::fromStdString(oref);
+    } else if (s->scene.bottom_text_view == 4) {
+      tvalue = now.toString('MM-dd ddd hh:mm:ss ') + road_name + oref;
+    } else if (s->scene.bottom_text_view == 5) {
+      tvalue = now.toString('MM-dd ddd ') + road_name + oref;
+    } else if (s->scene.bottom_text_view == 6) {
+      tvalue = now.toString('hh:mm:ss ') + road_name + oref;
+    } else if (s->scene.bottom_text_view == 7) {
+      tvalue = road_name + oref;
     }
     int tw = tvalue.length();
     rect_w = tw*2;

@@ -1394,7 +1394,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       tvalue = road_name + oref;
     }
     int tw = tvalue.length();
-    rect_w = tw*20;
+    rect_w = tw*30;
     rect_x = s->fb_w/2 - rect_w/2;
 
     QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);
@@ -1402,7 +1402,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setFont(InterFont(s->scene.mapbox_running?33:57, QFont::Bold));
     p.drawText(datetime_panel, Qt::AlignCenter, tvalue);
     p.setBrush(blackColor(60));
-    p.setPen(QPen(whiteColor(200), 0));
+    p.setPen(QPen(whiteColor(0), 0));
     p.drawRoundedRect(datetime_panel, 15, 15);
   }
 

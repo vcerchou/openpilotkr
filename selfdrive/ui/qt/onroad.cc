@@ -1377,18 +1377,20 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     QDateTime now = QDateTime::currentDateTime();
     QString tvalue = "";
+
+    
     if (s->scene.bottom_text_view == 1) {
-      tvalue = now.toString('MM-dd ddd hh:mm:ss');
+      tvalue = now.toString('MM-dd ddd HH:mm:ss');
     } else if (s->scene.bottom_text_view == 2) {
       tvalue = now.toString('MM-dd ddd');
     } else if (s->scene.bottom_text_view == 3) {
       tvalue = now.toString('hh:mm:ss');
     } else if (s->scene.bottom_text_view == 4) {
-      tvalue = now.toString('MM-dd ddd hh:mm:ss ') + road_name + oref;
+      tvalue = now.toString('MM-dd ddd HH:mm:ss ') + road_name + oref;
     } else if (s->scene.bottom_text_view == 5) {
       tvalue = now.toString('MM-dd ddd ') + road_name + oref;
     } else if (s->scene.bottom_text_view == 6) {
-      tvalue = now.toString('hh:mm:ss ') + road_name + oref;
+      tvalue = now.toString('HH:mm:ss ') + road_name + oref;
     } else if (s->scene.bottom_text_view == 7) {
       tvalue = road_name + oref;
     }

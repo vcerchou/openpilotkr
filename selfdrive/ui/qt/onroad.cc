@@ -1399,10 +1399,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
     QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);
     p.setPen(whiteColor(200));
-    p.setFont(InterFont(s->scene.mapbox_running?33:57, QFont::Bold));
+    p.setFont(InterFont(s->scene.mapbox_running?33:57, QFont::DemiBold));
     p.drawText(datetime_panel, Qt::AlignCenter, tvalue);
     p.setBrush(blackColor(60));
-    p.setPen(QPen(whiteColor(0), 0));
+    p.setPen(QPen(blackColor(0), 0));
     p.drawRoundedRect(datetime_panel, 15, 15);
   }
 

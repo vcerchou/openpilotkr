@@ -438,12 +438,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.setFont(InterFont(60, QFont::Bold));
   //p.setPen(max_color);
   p.setPen(whiteColor(200));
-  p.drawText(set_speed_rect.adjusted(0, 17, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.ctrl_speed > 1?QString::number(s->scene.ctrl_speed, 'f', 0):setSpeedStr);
-  p.setPen(QPen(Qt::white, 3));
-  p.drawLine(set_speed_rect.left()+30, set_speed_rect.y()+set_speed_size.height()/2, set_speed_rect.right()-30, set_speed_rect.y()+set_speed_size.height()/2);
+  p.drawText(set_speed_rect.adjusted(0, 15, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.ctrl_speed > 1?QString::number(s->scene.ctrl_speed, 'f', 0):setSpeedStr);
+  p.setPen(QPen(Qt::white, 6));
+  p.drawLine(set_speed_rect.left()+30, set_speed_rect.y()+set_speed_size.height()/2-10, set_speed_rect.right()-30, set_speed_rect.y()+set_speed_size.height()/2-10);
   p.setFont(InterFont(90, QFont::Bold));
   p.setPen(set_speed_color);
-  p.drawText(set_speed_rect.adjusted(0, 87, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.cruiseAccStatus?QString::number(s->scene.vSetDis, 'f', 0):"-");
+  p.drawText(set_speed_rect.adjusted(0, 90, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.cruiseAccStatus?QString::number(s->scene.vSetDis, 'f', 0):"-");
 
   const QRect sign_rect = set_speed_rect.adjusted(sign_margin, default_size.height(), -sign_margin, -sign_margin);
   // US/Canada (MUTCD style) sign`
@@ -518,7 +518,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   //p.setRenderHint(QPainter::TextAntialiasing);
   p.setOpacity(0.7);
   int ui_viz_rx = UI_BORDER_SIZE + 190;
-  int ui_viz_ry = s->scene.low_ui_profile?UI_BORDER_SIZE - 140:UI_BORDER_SIZE + 100;
+  int ui_viz_ry = s->scene.low_ui_profile?UI_BORDER_SIZE - 200:UI_BORDER_SIZE + 100;
   int ui_viz_rx_center = s->fb_w/2;
 
   // debug
@@ -527,11 +527,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   int debug_y3 = 970-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
   if (s->scene.nDebugUi1 && s->scene.comma_stock_ui != 1) {
     p.setFont(InterFont(s->scene.mapbox_running?25:30, QFont::DemiBold));
-    uiText(p, s->scene.low_ui_profile?340:205, debug_y1, s->scene.alertTextMsg1.c_str());
-    uiText(p, s->scene.low_ui_profile?340:205, debug_y2, s->scene.alertTextMsg2.c_str());
+    uiText(p, s->scene.low_ui_profile?370:205, debug_y1, s->scene.alertTextMsg1.c_str());
+    uiText(p, s->scene.low_ui_profile?370:205, debug_y2, s->scene.alertTextMsg2.c_str());
   }
   if (s->scene.nDebugUi3 && s->scene.comma_stock_ui != 1) {
-    uiText(p, s->scene.low_ui_profile?340:205, debug_y3, s->scene.alertTextMsg3.c_str());
+    uiText(p, s->scene.low_ui_profile?370:205, debug_y3, s->scene.alertTextMsg3.c_str());
   }
   if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && s->scene.comma_stock_ui != 1) {
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0: " + QString::fromStdString(s->scene.liveENaviData.eopkr0));

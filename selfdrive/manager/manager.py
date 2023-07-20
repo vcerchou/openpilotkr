@@ -217,7 +217,6 @@ def manager_init() -> None:
     ("StoppingDist", "38"),
     ("StopAtStopSign", "0"),
     ("VarCruiseSpeedFactor", "10"),
-    ("LanguageSetting", "main_en"),
     ("OPKRSpeedBump", "0"),
     ("OPKREarlyStop", "1"),
     ("DoNotDisturbMode", "0"),

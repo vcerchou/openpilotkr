@@ -558,6 +558,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     uiText(p, ui_viz_rx, ui_viz_ry+360, "AD:" + QString::number(s->scene.steer_actuator_delay, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+400, "OS:" + QString::number(s->scene.output_scale, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.lProb, 'f', 2) + "|" + QString::number(s->scene.lateralPlan.rProb, 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+480, QString::number(s->scene.lateralPlan.dProb, 'f', 1) + "/" + QString::number(s->scene.lateralPlan.laneWidth, 'f', 1) + "m");
+    uiText(p, ui_viz_rx, ui_viz_ry+520, QString::number(std::clamp<float>(1.0 - s->scene.road_edge_stds[0], 0.0, 1.0), 'f', 1)
+                                + "/" + QString::number(s->scene.lane_line_probs[0], 'f', 1)
+                                + "/" + QString::number(s->scene.lane_line_probs[1], 'f', 1)
+                                + "/" + QString::number(s->scene.lane_line_probs[2], 'f', 1)
+                                + "/" + QString::number(s->scene.lane_line_probs[3], 'f', 1)
+                                + "/" + QString::number(std::clamp<float>(1.0 - s->scene.road_edge_stds[1], 0.0, 1.0), 'f', 1));
 
     if (!s->scene.low_ui_profile) {
       QString szLaCMethod = "";
@@ -1349,6 +1356,55 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     for (int i = 0; i <= 15; i++) {
       p.drawLine((i*142), 0, (i*142), s->fb_h);
     }
+  }
+
+  // date + time + road_name
+  if (s->scene.top_text_view > 0 && s->scene.comma_stock_ui != 1) {
+    int rect_w = 600;
+    int rect_x = s->fb_w/2 - rect_w/2;
+    const int rect_h = 60;
+    const int rect_y = !s->scene.animated_rpm?0:(s->fb_h-rect_h);
+
+    if (s->scene.navi_select == 1 && s->scene.liveMapData.ocurrentRoadName == "") {
+      road_name = s->scene.liveENaviData.eopkrroadname;
+      oref = "";
+    } else if (s->scene.navi_select == 2) {
+      road_name = s->scene.liveENaviData.ewazeroadname;
+      oref = "";
+    } else if (s->scene.osm_enabled) {
+      road_name = s->scene.liveMapData.ocurrentRoadName;
+      oref = s->scene.liveMapData.oref;
+    } else {
+      road_name = "";
+      oref = "";
+    }
+    QDateTime now = QDateTime::currentDateTime();
+    QString tvalue = "";
+    if (s->scene.top_text_view == 1) {
+      tvalue = now.toString('MM-dd ddd hh:mm:ss');
+    } else if (s->scene.top_text_view == 2) {
+      tvalue = now.toString('MM-dd ddd');
+    } else if (s->scene.top_text_view == 3) {
+      tvalue = now.toString('hh:mm:ss');
+    } else if (s->scene.top_text_view == 4) {
+      tvalue = now.toString('MM-dd ddd hh:mm:ss ') + QString::fromStdString(road_name) + QString::fromStdString(oref);
+    } else if (s->scene.top_text_view == 5) {
+      tvalue = now.toString('MM-dd ddd ') + QString::fromStdString(road_name) + QString::fromStdString(oref);
+    } else if (s->scene.top_text_view == 6) {
+      tvalue = now.toString('hh:mm:ss ') + QString::fromStdString(road_name) + QString::fromStdString(oref);
+    } else if (s->scene.top_text_view == 7) {
+      tvalue = QString::fromStdString(road_name) + QString::fromStdString(oref);
+    }
+    int tw = tvalue.length();
+    rect_w = tw*2;
+    rect_x = s->fb_w/2 - rect_w/2;
+
+    p.setBrush(blackColor(60));
+    QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);
+    p.drawRoundedRect(datetime_panel, 15, 15);
+    p.setPen(whiteColor(200));
+    p.setFont(InterFont(s->scene.mapbox_running?33:57, QFont::Bold));
+    p.drawText(datetime_panel, Qt::AlignCenter, tvalue);
   }
 
   p.restore();

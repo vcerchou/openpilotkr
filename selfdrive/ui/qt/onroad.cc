@@ -321,8 +321,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   if (sm["carState"].getCarState().getVEgoCluster() == 0.0 && !v_ego_cluster_seen) {
     v_ego = sm["carState"].getCarState().getVEgo();
   } else {
-    v_ego = sm["carState"].getCarState().getVEgoCluster();
-    v_ego_cluster_seen = true;
+    //v_ego = sm["carState"].getCarState().getVEgoCluster();
+    //v_ego_cluster_seen = true;
+    v_ego = sm["carState"].getCarState().getVEgo();
   }
   float cur_speed = cs_alive ? std::max<float>(0.0, v_ego) : 0.0;
   cur_speed *= s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH;

@@ -1378,7 +1378,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     QDateTime now = QDateTime::currentDateTime();
     QString tvalue = "";
 
-
     if (s->scene.bottom_text_view == 1) {
       tvalue = now.toString("MM-dd ddd HH:mm:ss");
     } else if (s->scene.bottom_text_view == 2) {
@@ -1395,15 +1394,16 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       tvalue = road_name + oref;
     }
     int tw = tvalue.length();
-    rect_w = tw*2;
+    rect_w = tw*20;
     rect_x = s->fb_w/2 - rect_w/2;
 
-    p.setBrush(blackColor(60));
     QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);
-    p.drawRoundedRect(datetime_panel, 15, 15);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(s->scene.mapbox_running?33:57, QFont::Bold));
     p.drawText(datetime_panel, Qt::AlignCenter, tvalue);
+    p.setBrush(blackColor(60));
+    p.setPen(QPen(whiteColor(200), 0));
+    p.drawRoundedRect(datetime_panel, 15, 15);
   }
 
   p.restore();

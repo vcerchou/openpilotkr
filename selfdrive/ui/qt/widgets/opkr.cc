@@ -7349,8 +7349,8 @@ RPMAnimatedMaxValue::RPMAnimatedMaxValue() : AbstractControl(tr("AnimatedRPM Max
     auto str = QString::fromStdString(params.get("AnimatedRPMMax"));
     int value = str.toInt();
     value = value + 100;
-    if (value >= 6500) {
-      value = 6500;
+    if (value >= 8000) {
+      value = 8000;
     }
     QString values = QString::number(value);
     params.put("AnimatedRPMMax", values.toStdString());

@@ -226,8 +226,8 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
     p.drawText(r, Qt::AlignCenter, alert.text1);
   } else if (alert.size == cereal::ControlsState::AlertSize::MID) {
     if (alert.text2 == "") {
-      p.setFont(InterFont(88, QFont::Bold));
-      p.drawText(QRect(0, c.y(), width(), 150), Qt::AlignCenter, alert.text1);
+      p.setFont(InterFont(80, QFont::Bold));
+      p.drawText(r, Qt::AlignCenter, alert.text1);
     } else {
       p.setFont(InterFont(88, QFont::Bold));
       p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, alert.text1);

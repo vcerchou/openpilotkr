@@ -191,14 +191,14 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
   int h = alert_heights[alert.size];
 
   int margin = 40;
-  int margin_w = 150;
+  int margin_w = UI_BORDER_SIZE + 180;
   int radius = 30;
   if (alert.size == cereal::ControlsState::AlertSize::FULL) {
     margin = 0;
     margin_w = 0;
     radius = 0;
   }
-  QRect r = QRect(0 + (uiState()->scene.low_ui_profile?margin_w:margin), height() - h + margin, width() - (uiState()->scene.low_ui_profile?margin_w:margin)*2, h - margin*2);
+  QRect r = QRect(0 + margin_w, height() - h + margin, width() - margin_w*2, h - margin*2);
 
   QPainter p(this);
 
@@ -225,10 +225,15 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
     p.setFont(InterFont(74, QFont::DemiBold));
     p.drawText(r, Qt::AlignCenter, alert.text1);
   } else if (alert.size == cereal::ControlsState::AlertSize::MID) {
-    p.setFont(InterFont(88, QFont::Bold));
-    p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, alert.text1);
-    p.setFont(InterFont(66));
-    p.drawText(QRect(0, c.y() + 21, width(), 90), Qt::AlignHCenter, alert.text2);
+    if (alert.text2 == "") {
+      p.setFont(InterFont(88, QFont::Bold));
+      p.drawText(QRect(0, c.y(), width(), 150), Qt::AlignCenter, alert.text1);
+    } else {
+      p.setFont(InterFont(88, QFont::Bold));
+      p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, alert.text1);
+      p.setFont(InterFont(66));
+      p.drawText(QRect(0, c.y() + 21, width(), 90), Qt::AlignHCenter, alert.text2);
+    }
   } else if (alert.size == cereal::ControlsState::AlertSize::FULL) {
     bool l = alert.text1.length() > 15;
     p.setFont(InterFont(l ? 132 : 177, QFont::Bold));

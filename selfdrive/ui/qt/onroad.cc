@@ -955,7 +955,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
     // opkr multi menu
     int m_btn_size = 160;
-    int m_btn_offset = 15;
+    int m_btn_offset = 10;
     int m_btn_center_x = rect().right() - UI_BORDER_SIZE - m_btn_size / 2 - m_btn_offset;
     int m_btn_center_y = s->scene.low_ui_profile?(UI_BORDER_SIZE + m_btn_size / 2 + m_btn_offset):(height()-UI_BORDER_SIZE-m_btn_size/2-m_btn_offset);
     int m_x = m_btn_center_x - m_btn_size/2;

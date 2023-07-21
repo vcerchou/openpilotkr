@@ -618,6 +618,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
   }
 
+  p.setOpacity(1.0);
   if (s->scene.comma_stock_ui != 1) {
     int j_num = 100;
     // debug info(left panel)
@@ -757,7 +758,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
 
     QRect left_panel(rect().left() + UI_BORDER_SIZE, UI_BORDER_SIZE + 215, width_l, 104*num_l);
-    p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(left_panel, 20, 20);
     // left panel end
@@ -929,7 +929,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
 
     QRect right_panel(rect().right() - UI_BORDER_SIZE - width_r, UI_BORDER_SIZE + 195, width_r, 104*num_r+25);  
-    p.setOpacity(1.0);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawRoundedRect(right_panel, 20, 20);
     // right panel end

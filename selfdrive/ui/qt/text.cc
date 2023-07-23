@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
   QPushButton *btn2 = new QPushButton();
   QPushButton *btn3 = new QPushButton();
   QPushButton *btn4 = new QPushButton();
+  QPushButton *btn5 = new QPushButton();
   QLabel *label2 = new QLabel();
   QString device_ip = "---";
   const QHostAddress &localhost = QHostAddress(QHostAddress::LocalHost);
@@ -56,6 +57,7 @@ int main(int argc, char *argv[]) {
   btn2->setText(QObject::tr("Update"));
   btn3->setText(QObject::tr("Restore"));
   btn4->setText(QObject::tr("Reset"));
+  btn5->setText(QObject::tr("InitParam"));
   QObject::connect(btn, &QPushButton::clicked, [=]() {
     Hardware::reboot();
   });
@@ -77,18 +79,26 @@ int main(int argc, char *argv[]) {
     QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
     Hardware::reboot();
   });
-  btn2->setFixedSize(400, 150);
-  btn3->setFixedSize(400, 150);
-  btn4->setFixedSize(400, 150);
+  QObject::connect(btn5, &QPushButton::clicked, [=]() {
+    btn5->setEnabled(false);
+    QProcess::execute("touch /data/opkr_compiling");
+    QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/init_param.sh");
+    Hardware::reboot();
+  });
+  btn2->setFixedSize(350, 150);
+  btn3->setFixedSize(350, 150);
+  btn4->setFixedSize(350, 150);
+  btn5->setFixedSize(350, 150);
   main_layout->addWidget(btn2, 1, 0, 1, 1, Qt::AlignCenter | Qt::AlignBottom);
   main_layout->addWidget(btn3, 1, 1, 1, 1, Qt::AlignCenter | Qt::AlignBottom);
   main_layout->addWidget(btn4, 1, 2, 1, 1, Qt::AlignCenter | Qt::AlignBottom);
+  main_layout->addWidget(btn5, 1, 3, 1, 1, Qt::AlignCenter | Qt::AlignBottom);
 #else
   btn->setText(QObject::tr("Exit"));
   QObject::connect(btn, &QPushButton::clicked, &a, &QApplication::quit);
 #endif
-  btn->setFixedSize(400, 150);
-  main_layout->addWidget(btn, 1, 3, 1, 1, Qt::AlignCenter | Qt::AlignBottom);
+  btn->setFixedSize(350, 150);
+  main_layout->addWidget(btn, 1, 4, 1, 1, Qt::AlignCenter | Qt::AlignBottom);
 
   window.setStyleSheet(R"(
     * {
@@ -98,9 +108,9 @@ int main(int argc, char *argv[]) {
       font-size: 50px;
     }
     QPushButton {
-      padding: 40px;
-      padding-right: 40px;
-      padding-left: 40px;
+      padding: 30px;
+      padding-right: 30px;
+      padding-left: 30px;
       border: 2px solid white;
       border-radius: 20px;
       margin-right: 30px;

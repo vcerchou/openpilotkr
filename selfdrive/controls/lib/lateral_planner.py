@@ -18,9 +18,9 @@ LaneChangeState = log.LateralPlan.LaneChangeState
 
 TRAJECTORY_SIZE = 33
 
-CAMERA_OFFSET = -(float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
+CAMERA_OFFSET = (float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
 CAMERA_OFFSET_A = CAMERA_OFFSET + 0.15
-PATH_OFFSET = -(float(Decimal(Params().get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # default 0.0
+PATH_OFFSET = (float(Decimal(Params().get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # default 0.0
 
 PATH_COST = 1.0
 LATERAL_MOTION_COST = 0.11

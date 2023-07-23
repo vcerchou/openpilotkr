@@ -411,7 +411,12 @@ class LongitudinalMpc:
       self.source = SOURCES[np.argmin(x_obstacles[0])]
 
       # These are not used in ACC mode
-      x[:], v[:], a[:], j[:] = 0.0, 0.0, 0.0, 0.0
+      xforward = ((v[1:] + v[:-1]) / 2) * (T_IDXS[1:] - T_IDXS[:-1])
+      x = np.cumsum(np.insert(xforward, 0, x[0]))
+      x = (x[N] + 5.0) * np.ones(N+1)
+
+      #x[:], v[:], a[:], j[:] = 0.0, 0.0, 0.0, 0.0
+      v[:], a[:], j[:] = 0.0, 0.0, 0.0
 
     elif self.mode == 'blended':
       self.params[:,5] = 1.0

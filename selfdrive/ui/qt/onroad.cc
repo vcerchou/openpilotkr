@@ -191,7 +191,7 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
   int h = alert_heights[alert.size];
 
   int margin = 40;
-  int margin_w = UI_BORDER_SIZE + 180;
+  int margin_w = UI_BORDER_SIZE + 190;
   int radius = 30;
   if (alert.size == cereal::ControlsState::AlertSize::FULL) {
     margin = 0;
@@ -225,7 +225,7 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
     p.setFont(InterFont(74, QFont::DemiBold));
     p.drawText(r, Qt::AlignCenter, alert.text1);
   } else if (alert.size == cereal::ControlsState::AlertSize::MID) {
-    if (alert.text2 == "") {
+    if (alert.text2.length() < 2) {
       p.setFont(InterFont(80, QFont::Bold));
       p.drawText(r, Qt::AlignCenter, alert.text1);
     } else {
@@ -446,7 +446,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   p.setPen(whiteColor(200));
   p.drawText(set_speed_rect.adjusted(0, 15, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.ctrl_speed > 1?QString::number(s->scene.ctrl_speed, 'f', 0):setSpeedStr);
   p.setPen(QPen(Qt::white, 6));
-  p.drawLine(set_speed_rect.left()+30, set_speed_rect.y()+set_speed_size.height()/2-10, set_speed_rect.right()-30, set_speed_rect.y()+set_speed_size.height()/2-10);
+  p.drawLine(set_speed_rect.left()+35, set_speed_rect.y()+set_speed_size.height()/2-10, set_speed_rect.right()-35, set_speed_rect.y()+set_speed_size.height()/2-10);
   p.setFont(InterFont(90, QFont::Bold));
   p.setPen(set_speed_color);
   p.drawText(set_speed_rect.adjusted(0, 90, 0, 0), Qt::AlignTop | Qt::AlignHCenter, s->scene.cruiseAccStatus?QString::number(s->scene.vSetDis, 'f', 0):"-");
@@ -506,7 +506,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   } else {
     p.setFont(InterFont(180, QFont::Bold));
-    uiText(p, rect().left()+45, height()-25, speedStr, 255, true);
+    uiText(p, rect().left()+30, height()-25, speedStr, 255, true);
   }
   if (!s->scene.low_ui_profile) {
     if (s->scene.brakeLights) {
@@ -563,7 +563,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     uiText(p, ui_viz_rx, ui_viz_ry+360, "AD:" + QString::number(s->scene.steer_actuator_delay, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+400, "OS:" + QString::number(s->scene.output_scale, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+440, QString::number(s->scene.lateralPlan.lProb, 'f', 2) + "|" + QString::number(s->scene.lateralPlan.rProb, 'f', 2));
-    uiText(p, ui_viz_rx, ui_viz_ry+480, QString::number(s->scene.lateralPlan.dProb, 'f', 1) + "/" + QString::number(s->scene.lateralPlan.laneWidth, 'f', 1) + "m");
+    uiText(p, ui_viz_rx, ui_viz_ry+480, QString::number(s->scene.lateralPlan.dProb, 'f', 1) + "/" + QString::number(s->scene.lateralPlan.laneWidth, 'f', 1) + "m"
+                                + "/" + QString::number(s->scene.lateralPlan.totalCameraOffset, 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+520, QString::number(std::clamp<float>(1.0 - s->scene.road_edge_stds[0], 0.0, 1.0), 'f', 1)
                                 + "/" + QString::number(s->scene.lane_line_probs[0], 'f', 1)
                                 + "/" + QString::number(s->scene.lane_line_probs[1], 'f', 1)
@@ -1398,7 +1399,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       tvalue = road_name + oref;
     }
     int tw = tvalue.length();
-    rect_w = tw*30;
+    rect_w = (road_name.length() > 1)?tw*35:tw*30;
     rect_x = s->fb_w/2 - rect_w/2;
 
     QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);

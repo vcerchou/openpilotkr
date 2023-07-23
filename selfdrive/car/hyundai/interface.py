@@ -2,6 +2,7 @@
 from cereal import car
 from panda import Panda
 from common.conversions import Conversions as CV
+from selfdrive.car.hyundai.tunes import LatTunes, LongTunes, set_long_tune, set_lat_tune
 from selfdrive.car.hyundai.hyundaicanfd import CanBus
 from selfdrive.car.hyundai.values import HyundaiFlags, CAR, DBC, CANFD_CAR, CAMERA_SCC_CAR, CANFD_RADAR_SCC_CAR, EV_CAR, HYBRID_CAR, LEGACY_SAFETY_MODE_CAR, Buttons
 from selfdrive.car.hyundai.radar_interface import RADAR_START_ADDR
@@ -80,6 +81,7 @@ class CarInterface(CarInterfaceBase):
     
     tire_stiffness_factor = 1.
 
+    set_long_tune(ret.longitudinalTuning, LongTunes.OPKR)
     lat_control_method = int(params.get("LateralControlMethod", encoding="utf8"))
     if lat_control_method == 0:
       set_lat_tune(ret.lateralTuning, LatTunes.PID)
@@ -328,8 +330,8 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kiV = [0.0]
       ret.experimentalLongitudinalAvailable = candidate in (HYBRID_CAR | EV_CAR) and candidate not in CANFD_RADAR_SCC_CAR
     else:
-      ret.longitudinalTuning.kpV = [0.5]
-      ret.longitudinalTuning.kiV = [0.0]
+      #ret.longitudinalTuning.kpV = [0.5]
+      #ret.longitudinalTuning.kiV = [0.0]
       ret.experimentalLongitudinalAvailable = True #candidate not in (LEGACY_SAFETY_MODE_CAR | CAMERA_SCC_CAR)
 
 

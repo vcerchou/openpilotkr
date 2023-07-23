@@ -223,11 +223,11 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
   p.setRenderHint(QPainter::TextAntialiasing);
   if (alert.size == cereal::ControlsState::AlertSize::SMALL) {
     p.setFont(InterFont(74, QFont::DemiBold));
-    p.drawText(r, Qt::AlignCenter, alert.text1);
+    p.drawText(QRect(0, c.y()-45, width(), 90), Qt::AlignCenter, alert.text1);
   } else if (alert.size == cereal::ControlsState::AlertSize::MID) {
     if (alert.text2.length() < 2) {
       p.setFont(InterFont(80, QFont::Bold));
-      p.drawText(r, Qt::AlignCenter, alert.text1);
+      p.drawText(QRect(0, c.y()-60, width(), 120), Qt::AlignCenter, alert.text1);
     } else {
       p.setFont(InterFont(88, QFont::Bold));
       p.drawText(QRect(0, c.y() - 125, width(), 150), Qt::AlignHCenter | Qt::AlignTop, alert.text1);

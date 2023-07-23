@@ -106,7 +106,28 @@ function launch {
 
   # start manager
   cd selfdrive/manager
-  ./build.py && ./manager.py
+  if [ -f "/data/params/d/OSMEnable" ]; then
+    OSM_ENABLE=$(cat /data/params/d/OSMEnable)
+  fi
+  if [ -f "/data/params/d/OSMSpeedLimitEnable" ]; then
+    OSM_SL_ENABLE=$(cat /data/params/d/OSMSpeedLimitEnable)
+  fi
+  if [ -f "/data/params/d/CurvDecelOption" ]; then
+    OSM_CURV_ENABLE=$(cat /data/params/d/CurvDecelOption)
+  fi
+  if [ -f "/data/params/d/OSMOfflineUse" ]; then
+    OSM_OFFLINE_ENABLE=$(cat /data/params/d/OSMOfflineUse)
+  fi
+
+  if [ "$OSM_ENABLE" == "1" ] || [ "$OSM_SL_ENABLE" == "1" ] || [ "$OSM_CURV_ENABLE" == "1" ] || [ "$OSM_CURV_ENABLE" == "3" ]; then
+    if [ "$OSM_OFFLINE_ENABLE" == "1" ]; then
+      ./custom_dep.py && ./build.py && ./local_osm_install.py && ./manager.py
+    else
+      ./custom_dep.py && ./build.py && ./manager.py
+    fi
+  else
+    ./build.py && ./manager.py
+  fi
 
   # if broken, keep on screen error
   while true; do sleep 1; done

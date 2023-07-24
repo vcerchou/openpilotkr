@@ -26,10 +26,10 @@ PidKp:25
 PidKi:4
 PidKd:150
 PidKf:7
-TorqueKp:2
+TorqueKp:3
 TorqueKf:5
-TorqueKi:1
-TorqueFriction:55
+TorqueKi:2
+TorqueFriction:50
 TorqueUseAngle:1
 TorqueMaxLatAccel:10
 TorqueAngDeadZone:10
@@ -101,7 +101,7 @@ AutoEnableSpeed:9
 SafetyCamDecelDistGain:0
 OpkrLiveTunePanelEnable:0
 RadarLongHelper:2
-LiveSteerRatioPercent:0
+LiveSteerRatioPercent:-5
 StoppingDistAdj:0
 ShowError:1
 AutoResLimitTime:10

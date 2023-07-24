@@ -43,6 +43,8 @@ class LatControlTorque(LatControl):
     self.lt_timer = 0
     self.live_torque_params = self.params.get_bool("OpkrLiveTorque")
 
+    self.max_lat_accel = float(Decimal(self.params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
+
   def live_tune(self):
     self.mpc_frame += 1
     if self.mpc_frame % 300 == 0:

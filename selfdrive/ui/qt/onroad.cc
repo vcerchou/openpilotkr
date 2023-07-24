@@ -1399,7 +1399,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       tvalue = road_name + oref;
     }
     int tw = tvalue.length();
-    rect_w = (road_name.length() > 1)?tw*35:tw*30;
+    rect_w = (road_name.length() > 1)?tw*40:tw*33;
     rect_x = s->fb_w/2 - rect_w/2;
 
     QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);

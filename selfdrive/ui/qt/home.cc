@@ -318,26 +318,45 @@ void HomeWindow::mousePressMULTI(QMouseEvent* e, int nDir) {
 
 void HomeWindow::mousePressEvent(QMouseEvent* e) 
 {
-  QRect rec_btn = QRect(1825, 905, 140, 140);
-  QRect laneless_btn = QRect(1985, 905, 140, 140); 
-  QRect monitoring_btn = QRect(50, 770, 140, 150);
-  QRect stockui_btn = QRect(15, 15, 184, 202);
-  QRect tuneui_btn = QRect(1960, 15, 184, 202);
-  QRect speedlimit_btn = QRect(220, 15, 190, 190);
   QRect livetunepanel_left_above_btn = QRect(590, 570, 210, 170);
   QRect livetunepanel_right_above_btn = QRect(1360, 570, 210, 170);
   QRect livetunepanel_left_btn = QRect(590, 745, 210, 170);
   QRect livetunepanel_right_btn = QRect(1360, 745, 210, 170);
 
+  if (uiState()->scene.low_ui_profile) {
+    QRect stockui_btn = QRect(15, 693, 184, 202);
+    QRect tuneui_btn = QRect(1960, 895, 170, 170);
+    QRect speedlimit_btn = QRect(220, 700, 190, 190);
+    QRect monitoring_btn = QRect(20, 20, 190, 190);
+    QRect multi_btn = QRect(1960, 15, 160, 160);
+    QRect rec_btn = QRect(1780, 15, 160, 160);
+    QRect laneless_btn = QRect(1600, 15, 160, 160);
+  } else {
+    QRect stockui_btn = QRect(15, 15, 184, 202);
+    QRect tuneui_btn = QRect(1960, 15, 170, 170);
+    QRect speedlimit_btn = QRect(220, 15, 190, 190);
+    QRect monitoring_btn = QRect(20, 860, 190, 190);
+    QRect multi_btn = QRect(1960, 895, 160, 160);
+    QRect rec_btn = QRect(1780, 895, 160, 160);
+    QRect laneless_btn = QRect(1600, 895, 160, 160);
+  }
+
   printf( "mousePressEvent = (%d,%d)\n", e->x(), e->y() );
 
+  // OPKR Multi Button
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && multi_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
+    uiState()->scene.multi_btn_touched = !uiState()->scene.multi_btn_touched;
+    return;
+  }
   // OPKR REC
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && !uiState()->scene.mapbox_running &&
+      uiState()->scene.multi_btn_touched) {
     uiState()->scene.touched = true;
     return;
   }
   // Laneless mode
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->pos()) && !uiState()->scene.mapbox_running &&
+      uiState()->scene.multi_btn_touched) {
     uiState()->scene.laneless_mode = uiState()->scene.laneless_mode + 1;
     if (uiState()->scene.laneless_mode > 2) {
       uiState()->scene.laneless_mode = 0;

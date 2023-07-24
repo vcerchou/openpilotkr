@@ -226,6 +226,8 @@ typedef struct UIScene {
   bool rec_stat = false;
   bool experimental_mode = false;
   bool low_ui_profile;
+  bool multi_btn_touched = false;
+  float multi_btn_slide_timer = 0;
   // gps
   int satelliteCount;
   float gpsAccuracy;

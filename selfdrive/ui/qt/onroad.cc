@@ -104,15 +104,28 @@ void OnroadWindow::updateState(const UIState &s) {
 
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
-  QRect rec_btn = QRect(1985, 905, 140, 140);
-  QRect laneless_btn = QRect(1825, 905, 140, 140);
-  QRect monitoring_btn = QRect(50, 770, 140, 150);
-  QRect stockui_btn = QRect(15, 15, 184, 202);
-  QRect tuneui_btn = QRect(1960, 15, 184, 202);
-  QRect speedlimit_btn = QRect(220, 15, 190, 190);
+  if (uiState()->scene.low_ui_profile) {
+    QRect stockui_btn = QRect(15, 693, 184, 202);
+    QRect tuneui_btn = QRect(1960, 895, 170, 170);
+    QRect speedlimit_btn = QRect(220, 700, 190, 190);
+    QRect monitoring_btn = QRect(20, 20, 190, 190);
+    QRect multi_btn = QRect(1960, 15, 160, 160);
+    QRect rec_btn = QRect(1780, 15, 160, 160);
+    QRect laneless_btn = QRect(1600, 15, 160, 160);
+  } else {
+    QRect stockui_btn = QRect(15, 15, 184, 202);
+    QRect tuneui_btn = QRect(1960, 15, 170, 170);
+    QRect speedlimit_btn = QRect(220, 15, 190, 190);
+    QRect monitoring_btn = QRect(20, 860, 190, 190);
+    QRect monitoring_btn = QRect(20, 860, 190, 190);
+    QRect multi_btn = QRect(1960, 895, 160, 160);
+    QRect rec_btn = QRect(1780, 895, 160, 160);
+    QRect laneless_btn = QRect(1600, 895, 160, 160);
+  }
 
-  if (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) ||
-    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable) {
+  if (multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
+    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable ||
+    (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos())))) {
     QWidget::mousePressEvent(e);
     return;
   }
@@ -961,22 +974,42 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int m_btn_center_y = s->scene.low_ui_profile?(UI_BORDER_SIZE + m_btn_size / 2 + m_btn_offset):(height()-UI_BORDER_SIZE-m_btn_size/2-m_btn_offset);
     int m_x = m_btn_center_x - m_btn_size/2;
     int m_y = m_btn_center_y - m_btn_size/2;
-    QRect lanebtn_draw(m_x, m_y, m_btn_size, m_btn_size);
+    QRect multi_btn_draw(m_x, m_y, m_btn_size, m_btn_size);
+
     p.setBrush(Qt::NoBrush);
-    if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(150));
+    if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(100));
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
-    p.drawEllipse(lanebtn_draw);
+    p.drawEllipse(multi_btn_draw);
     p.setPen(whiteColor(200));
-    if (s->scene.laneless_mode == 0) {
-      p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(m_x, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(m_x, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LINE"));
-    } else if (s->scene.laneless_mode == 1) {
-      p.setFont(InterFont(39, QFont::DemiBold));
-      p.drawText(QRect(m_x, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
-      p.drawText(QRect(m_x, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LESS"));
-    } else if (s->scene.laneless_mode == 2) {
-      p.drawText(lanebtn_draw, Qt::AlignCenter, QString("AUTO"));
+    p.setFont(InterFont(39, QFont::DemiBold));
+    p.drawText(multi_btn_draw, Qt::AlignCenter, QString("PUSH"));
+    p.setBrush(Qt::NoBrush);
+    if (s->scene.multi_btn_touched) {
+      s->scene.multi_btn_slide_timer += 10;
+      s->scene.multi_btn_slide_timer = fmin(s->scene.multi_btn_slide_timer, 180);
+      QRect multi_btn_draw1(m_x-(int)s->scene.multi_btn_slide_timer, m_y, m_btn_size, m_btn_size);
+      QRect multi_btn_draw2(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y, m_btn_size, m_btn_size);
+      p.drawEllipse(multi_btn_draw1);
+      p.drawEllipse(multi_btn_draw2);
+      p.drawText(multi_btn_draw1, Qt::AlignCenter, QString("REC"));
+      if (s->scene.laneless_mode == 0) {
+        p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
+        p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LINE"));
+      } else if (s->scene.laneless_mode == 1) {
+        p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
+        p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LESS"));
+      } else if (s->scene.laneless_mode == 2) {
+        p.drawText(multi_btn_draw2, Qt::AlignCenter, QString("AUTO"));
+      }
+    } else {
+      s->scene.multi_btn_slide_timer -= 10;
+      s->scene.multi_btn_slide_timer = fmax(s->scene.multi_btn_slide_timer, 0);
+      QRect multi_btn_draw1(m_x-(int)s->scene.multi_btn_slide_timer, m_y, m_btn_size, m_btn_size);
+      QRect multi_btn_draw2(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y, m_btn_size, m_btn_size);
+      if (s->scene.multi_btn_slide_timer != 0) {
+        p.drawEllipse(multi_btn_draw1);
+        p.drawEllipse(multi_btn_draw2);
+      }
     }
   }
 

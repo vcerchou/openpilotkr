@@ -105,7 +105,7 @@ void OnroadWindow::updateState(const UIState &s) {
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   QRect stockui_btn = QRect(15, uiState()->scene.low_ui_profile?693:15, 184, 202);
-  QRect tuneui_btn = QRect(1960, uiState()->scene.low_ui_profile?:895:15, 170, 170);
+  QRect tuneui_btn = QRect(1960, uiState()->scene.low_ui_profile?895:15, 170, 170);
   QRect speedlimit_btn = QRect(220, uiState()->scene.low_ui_profile?700:15, 190, 190);
   QRect monitoring_btn = QRect(20, uiState()->scene.low_ui_profile?20:860, 190, 190);
   QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile?15:895, 160, 160);

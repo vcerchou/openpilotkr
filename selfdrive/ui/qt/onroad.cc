@@ -104,24 +104,13 @@ void OnroadWindow::updateState(const UIState &s) {
 
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
-  if (uiState()->scene.low_ui_profile) {
-    QRect stockui_btn = QRect(15, 693, 184, 202);
-    QRect tuneui_btn = QRect(1960, 895, 170, 170);
-    QRect speedlimit_btn = QRect(220, 700, 190, 190);
-    QRect monitoring_btn = QRect(20, 20, 190, 190);
-    QRect multi_btn = QRect(1960, 15, 160, 160);
-    QRect rec_btn = QRect(1780, 15, 160, 160);
-    QRect laneless_btn = QRect(1600, 15, 160, 160);
-  } else {
-    QRect stockui_btn = QRect(15, 15, 184, 202);
-    QRect tuneui_btn = QRect(1960, 15, 170, 170);
-    QRect speedlimit_btn = QRect(220, 15, 190, 190);
-    QRect monitoring_btn = QRect(20, 860, 190, 190);
-    QRect monitoring_btn = QRect(20, 860, 190, 190);
-    QRect multi_btn = QRect(1960, 895, 160, 160);
-    QRect rec_btn = QRect(1780, 895, 160, 160);
-    QRect laneless_btn = QRect(1600, 895, 160, 160);
-  }
+  QRect stockui_btn = QRect(15, uiState()->scene.low_ui_profile?693:15, 184, 202);
+  QRect tuneui_btn = QRect(1960, uiState()->scene.low_ui_profile?:895:15, 170, 170);
+  QRect speedlimit_btn = QRect(220, uiState()->scene.low_ui_profile?700:15, 190, 190);
+  QRect monitoring_btn = QRect(20, uiState()->scene.low_ui_profile?20:860, 190, 190);
+  QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile?15:895, 160, 160);
+  QRect rec_btn = QRect(1780, uiState()->scene.low_ui_profile?15:895, 160, 160);
+  QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
 
   if (multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
     stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable ||

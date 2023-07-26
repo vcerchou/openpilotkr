@@ -332,7 +332,7 @@ void DevicePanel::onroadRefresh() {
       // Check engaged again in case it changed while the dialog was open
       if (!uiState()->engaged()) {
         params.putBool("OnRoadRefresh", true);
-        QTimer::singleShot(3000, []() {
+        QTimer::singleShot(3000, [this]() {
           params.putBool("OnRoadRefresh", false);
         });
       }
@@ -405,7 +405,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
       } else {
         QString cmd1 = "wget https://raw.githubusercontent.com/openpilotkr/openpilot/"+QString::fromStdString(params.get("GitBranch"))+"/OPKR_Updates.txt -O /data/OPKR_Updates.txt";
         QProcess::execute(cmd1);
-        QTimer::singleShot(2000, []() {});
+        QTimer::singleShot(2000, [this]() {});
         if (QFileInfo::exists("/data/OPKR_Updates.txt")) {
           QFileInfo fileInfo;
           fileInfo.setFile("/data/OPKR_Updates.txt");

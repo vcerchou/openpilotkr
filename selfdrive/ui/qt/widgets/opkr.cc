@@ -389,7 +389,9 @@ void SwitchOpenpilot::printMsg() {
 
 void SwitchOpenpilot::executeProgram(const QString &tcmd) {
   QString program = QString(tcmd);
-  textMsgProcess->start(program);
+  QStringList arguments;
+  arguments << "";
+  textMsgProcess->start(program, arguments);
   textMsgProcess->waitForStarted();
 }
 
@@ -714,7 +716,9 @@ void BranchSelectCombo::printMsg1() {
 
 void BranchSelectCombo::executeProgram1(const QString &tcmd1) {
   QString program1 = QString(tcmd1);
-  textMsgProcess1->start(program1);
+  QStringList arguments;
+  arguments << "";
+  textMsgProcess1->start(program1, arguments);
   textMsgProcess1->waitForStarted();
 }
 

@@ -20,6 +20,7 @@ if [ "$?" == "0" ]; then
 
   if [ "$HASH" != "$REMOTE_HASH" ]; then
     touch /data/opkr_compiling
+    rm -f /data/openpilot/selfdrive/ui/translations/*.ts
     sleep 1
 
     sudo reboot

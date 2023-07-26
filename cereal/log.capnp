@@ -919,6 +919,7 @@ struct ModelDataV2 {
   temporalPose @21 :Pose;
 
   navEnabled @22 :Bool;
+  locationMonoTime @24 :UInt64;
 
 
   struct LeadDataV2 {

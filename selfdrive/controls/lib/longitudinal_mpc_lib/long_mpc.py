@@ -7,7 +7,7 @@ from common.numpy_fast import clip, interp
 from system.swaglog import cloudlog
 # WARNING: imports outside of constants will not trigger a rebuild
 from selfdrive.modeld.constants import index_function
-from selfdrive.controls.lib.radar_helpers import _LEAD_ACCEL_TAU
+from selfdrive.controls.radard import _LEAD_ACCEL_TAU
 from common.conversions import Conversions as CV
 
 if __name__ == '__main__':  # generating code
@@ -406,7 +406,7 @@ class LongitudinalMpc:
       v_cruise_clipped = np.clip(v_cruise * np.ones(N+1),
                                  v_lower,
                                  v_upper)
-      cruise_obstacle = np.cumsum(T_DIFFS * v_cruise_clipped) + get_safe_obstacle_distance(v_cruise_clipped, get_T_FOLLOW(personality) if not self.custom_tr_enabled else t_follow)
+      cruise_obstacle = np.cumsum(T_DIFFS * v_cruise_clipped) + get_safe_obstacle_distance(v_cruise_clipped, t_follow if not self.custom_tr_enabled else self.t_follow)
       x_obstacles = np.column_stack([lead_0_obstacle, lead_1_obstacle, cruise_obstacle])
       self.source = SOURCES[np.argmin(x_obstacles[0])]
 
@@ -445,7 +445,7 @@ class LongitudinalMpc:
 
     self.params[:,2] = np.min(x_obstacles, axis=1)
     self.params[:,3] = np.copy(self.prev_a)
-    self.params[:,4] = t_follow
+    self.params[:,4] = t_follow if not self.custom_tr_enabled else self.t_follow
 
 
     self.e2e_x = x[:]

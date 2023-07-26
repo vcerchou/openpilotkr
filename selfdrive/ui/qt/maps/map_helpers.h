@@ -10,16 +10,7 @@
 #include "common/transformations/orientation.hpp"
 #include "cereal/messaging/messaging.h"
 
-#include "common/params.h"
-
-
-QString MAPBOX_TOKEN = "";
-if (QString::fromStdString(Params().get("MapboxToken")).isEmpty()) {
-  MAPBOX_TOKEN = util::getenv("MAPBOX_TOKEN").c_str();
-} else {
-  MAPBOX_TOKEN = QString::fromStdString(Params().get("MapboxToken"));
-}	
-
+const QString MAPBOX_TOKEN = util::getenv("MAPBOX_TOKEN").c_str();
 const QString MAPS_HOST = util::getenv("MAPS_HOST", MAPBOX_TOKEN.isEmpty() ? "https://maps.comma.ai" : "https://api.mapbox.com").c_str();
 const QString MAPS_CACHE_PATH = "/data/mbgl-cache-navd.db";
 

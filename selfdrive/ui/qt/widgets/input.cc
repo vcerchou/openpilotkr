@@ -468,11 +468,11 @@ GitPullCancel::GitPullCancel(const QString &confirm_text, const QString &cancel_
         QStringList hash = str.split(",");
         if (ConfirmationDialog::confirm2(tr("This will run below command: git reset --hard ") + hash[0], this)) {
           QString cmd0 = "git reset --hard " + hash[0];
-          system("rm -f /data/openpilot/prebuilt");
-          system("touch /data/opkr_compiling");
-          system("git clean -d -f -f");
-          system(cmd0.c_str());
-          system("sudo reboot");
+          std::system("rm -f /data/openpilot/prebuilt");
+          std::system("touch /data/opkr_compiling");
+          std::system("git clean -d -f -f");
+          std::system(cmd0.toUtf8().constData());
+          std::system("sudo reboot");
         }
       } else {
         ConfirmationDialog::alert(tr("No selection."), this);

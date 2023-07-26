@@ -270,7 +270,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presetone_layout->addWidget(presetoneload_btn);
   QObject::connect(presetoneload_btn, &QPushButton::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Do you want to load Preset1?"), this)) {
-      QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/load_preset1.sh");
+      std::system("/data/openpilot/selfdrive/assets/addon/script/load_preset1.sh");
     }
   });
 
@@ -279,7 +279,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presetone_layout->addWidget(presetonesave_btn);
   QObject::connect(presetonesave_btn, &QPushButton::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Do you want to save Preset1?"), this)) {
-      QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/save_preset1.sh");
+      std::system("/data/openpilot/selfdrive/assets/addon/script/save_preset1.sh");
     }
   });
 
@@ -292,7 +292,7 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presettwo_layout->addWidget(presettwoload_btn);
   QObject::connect(presettwoload_btn, &QPushButton::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Do you want to load Preset2?"), this)) {
-      QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/load_preset2.sh");
+      std::system("/data/openpilot/selfdrive/assets/addon/script/load_preset2.sh");
     }
   });
 
@@ -301,14 +301,14 @@ CPresetWidget::CPresetWidget() : CGroupWidget( tr("Parameter Preset") )
   presettwo_layout->addWidget(presettwosave_btn);
   QObject::connect(presettwosave_btn, &QPushButton::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Do you want to save Preset2?"), this)) {
-      QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/save_preset2.sh");
+      std::system("/data/openpilot/selfdrive/assets/addon/script/save_preset2.sh");
     }
   });
 
   auto paraminit_btn = new ButtonControl(tr("Parameters Init"), tr("RUN"));
   QObject::connect(paraminit_btn, &ButtonControl::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Initialize parameters. Changes in the Device menu are changed to the initial set value. Do you want to proceed?"), this)){
-      QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/init_param.sh");
+      std::system("/data/openpilot/selfdrive/assets/addon/script/init_param.sh");
     }
   });
 
@@ -353,10 +353,10 @@ SwitchOpenpilot::SwitchOpenpilot() : ButtonControl(tr("Change Repo/Branch"), "",
               QString cmd1 = "mv /data/openpilot /data/openpilot_" + as;
               QString tcmd = "git clone --progress -b " + githubbranch + " --single-branch https://github.com/" + githubid + "/" + githubrepo + ".git /data/openpilot";
               QString cmd3 = "rm -f /data/openpilot_" + as + "/prebuilt";
-			  QString cmd4 = "touch /data/opkr_compiling";
-              QProcess::execute(cmd1);
-              QProcess::execute(cmd3);
-			  QProcess::execute(cmd4);
+			        QString cmd4 = "touch /data/opkr_compiling";
+              std::system(cmd1.toUtf8().constData());
+              std::system(cmd3.toUtf8().constData());
+			        std::system(cmd4.toUtf8().constData());
               textMsgProcess = new QProcess(this);
               outbox = new QMessageBox(this);
               outbox->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
@@ -395,11 +395,11 @@ void SwitchOpenpilot::executeProgram(const QString &tcmd) {
 
 void SwitchOpenpilot::processFinished(int exitCode, QProcess::ExitStatus exitStatus) {
   if(exitStatus == QProcess::NormalExit) {
-    QProcess::execute("chmod -R g-rwx /data/openpilot");
-    QProcess::execute("chmod -R o-rwx /data/openpilot");
-    QProcess::execute("chmod 755 /data/openpilot");
-    QProcess::execute("chmod 755 /data/openpilot/cereal");
-    QProcess::execute("sudo reboot");
+    std::system("chmod -R g-rwx /data/openpilot");
+    std::system("chmod -R o-rwx /data/openpilot");
+    std::system("chmod 755 /data/openpilot");
+    std::system("chmod 755 /data/openpilot/cereal");
+    std::system("sudo reboot");
   }
 }
 
@@ -533,7 +533,7 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
       uiState()->scene.cal_view = false;
-      QProcess::execute("sudo pkill -f selfdrive.boardd.pandad");
+      std::system("sudo pkill -f selfdrive.boardd.pandad");
     }
     refresh();
   });
@@ -545,7 +545,7 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
       uiState()->scene.cal_view = true;
-      QProcess::execute("sudo pkill -f selfdrive.boardd.pandad");
+      std::system("sudo pkill -f selfdrive.boardd.pandad");
     }
     refresh();
   });
@@ -677,9 +677,9 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
         if (ConfirmationDialog::confirm2(tr("Now will checkout the branch") +", <" + selection + ">. " + tr("The device will be rebooted if completed."), this)) {
           QString cmd1 = "git -C /data/openpilot remote set-branches --add origin " + selection;
           QString tcmd1 = "git -C /data/openpilot fetch --progress origin";
-          QProcess::execute("git -C /data/openpilot clean -d -f -f");
-          QProcess::execute(cmd1);
-          QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
+          std::system("git -C /data/openpilot clean -d -f -f");
+          std::system(cmd1.toUtf8().constData());
+          std::system("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
           textMsgProcess1 = new QProcess(this);
           outbox1 = new QMessageBox(this);
           outbox1->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
@@ -722,16 +722,16 @@ void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exit
   QString cmd2 = "git -C /data/openpilot checkout --track origin/" + selection;
   QString cmd3 = "git -C /data/openpilot checkout " + selection;
   if(exitStatus == QProcess::NormalExit) {
-    QProcess::execute(cmd2);
-    QProcess::execute(cmd3);
+    std::system(cmd2.toUtf8().constData());
+    std::system(cmd3.toUtf8().constData());
     std::system("touch /data/compiling");
     std::system("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
   }
 }
 
 void BranchSelectCombo::refresh() {
-  QProcess::execute("git -C /data/openpilot remote prune origin");
-  QProcess::execute("git -C /data/openpilot fetch origin");
+  std::system("git -C /data/openpilot remote prune origin");
+  std::system("git -C /data/openpilot fetch origin");
   std::system("git -C /data/openpilot ls-remote --refs | grep refs/heads | awk -F '/' '{print $3}' > /data/branches");
   QFile branchlistfile("/data/branches");
   if (branchlistfile.open(QIODevice::ReadOnly)) {
@@ -6040,20 +6040,20 @@ OPKRServerAPI::OPKRServerAPI() : AbstractControl(tr("User's API"), tr("Set Your 
         if (ConfirmationDialog::confirm2(cmd0, this)) {
           params.put("OPKRServerAPI", users_api_host.toStdString());
           params.put("OPKRServer", "2");
-          QProcess::execute("rm -f /data/params/d/DongleId");
-          QProcess::execute("rm -f /data/params/d/IMEI");
-          QProcess::execute("rm -f /data/params/d/HardwareSerial");
-          QProcess::execute("sudo reboot");
+          std::system("rm -f /data/params/d/DongleId");
+          std::system("rm -f /data/params/d/IMEI");
+          std::system("rm -f /data/params/d/HardwareSerial");
+          std::system("sudo reboot");
         }
       }
     } else if (btn.text() == tr("UNSET")) {
       if (ConfirmationDialog::confirm2(tr("Do you want to unset? the API server gets back to OPKR server and Device will be rebooted now."), this)) {
         params.remove("OPKRServerAPI");
         params.put("OPKRServer", "0");
-        QProcess::execute("rm -f /data/params/d/DongleId");
-        QProcess::execute("rm -f /data/params/d/IMEI");
-        QProcess::execute("rm -f /data/params/d/HardwareSerial");
-        QProcess::execute("sudo reboot");
+        std::system("rm -f /data/params/d/DongleId");
+        std::system("rm -f /data/params/d/IMEI");
+        std::system("rm -f /data/params/d/HardwareSerial");
+        std::system("sudo reboot");
       }
     }
   });

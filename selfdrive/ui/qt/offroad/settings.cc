@@ -405,7 +405,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
       } else {
         QString cmd1 = "wget https://raw.githubusercontent.com/openpilotkr/openpilot/"+QString::fromStdString(params.get("GitBranch"))+"/OPKR_Updates.txt -O /data/OPKR_Updates.txt";
         QProcess::execute(cmd1);
-        QTimer::singleShot(2000, [this]() {});
+        QTimer::singleShot(2000, []() {});
         if (QFileInfo::exists("/data/OPKR_Updates.txt")) {
           QFileInfo fileInfo;
           fileInfo.setFile("/data/OPKR_Updates.txt");

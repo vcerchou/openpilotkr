@@ -132,19 +132,26 @@ void TogglesPanel::showEvent(QShowEvent *event) {
 }
 
 void TogglesPanel::updateToggles() {
-  auto e2e_toggle = toggles["ExperimentalMode"];
+  auto experimental_mode_toggle = toggles["ExperimentalMode"];
   auto op_long_toggle = toggles["ExperimentalLongitudinalEnabled"];
   const QString e2e_description = QString("%1<br>"
                                           "<h4>%2</h4><br>"
                                           "%3<br>"
                                           "<h4>%4</h4><br>"
-                                          "%5")
+                                          "%5<br>"
+                                          "<h4>%6</h4><br>"
+                                          "%7")
                                   .arg(tr("openpilot defaults to driving in <b>chill mode</b>. Experimental mode enables <b>alpha-level features</b> that aren't ready for chill mode. Experimental features are listed below:"))
-                                  .arg(tr("🌮 End-to-End Longitudinal Control 🌮"))
+                                  .arg(tr("End-to-End Longitudinal Control" ))
                                   .arg(tr("Let the driving model control the gas and brakes. openpilot will drive as it thinks a human would, including stopping for red lights and stop signs. "
                                        "Since the driving model decides the speed to drive, the set speed will only act as an upper bound. This is an alpha quality feature; mistakes should be expected."))
+                                  .arg(tr("Navigate on openpilot"))
+                                  .arg(tr("When navigation has a destination, openpilot will input the map information into the model. This provides useful context for the model and allows openpilot to keep left or right appropriately at forks/exits. "
+                                          "Lane change behavior is unchanged and still activated by the driver. This is an alpha quality feature; mistakes should be expected, particularly around exits/forks."
+					  "These mistakes can include unintended laneline crossings, late exit taking, driving towards dividing barriers in the gore areas, etc."))
                                   .arg(tr("New Driving Visualization"))
-                                  .arg(tr("The driving visualization will transition to the road-facing wide-angle camera at low speeds to better show some turns. The Experimental mode logo will also be shown in the top right corner."));
+                                  .arg(tr("The driving visualization will transition to the road-facing wide-angle camera at low speeds to better show some turns. The Experimental mode logo will also be shown in the top right corner."
+				          "When a navigation destination is set and the driving model is using it as input, the driving path on the map will turn green."));
 
   const bool is_release = params.getBool("IsReleaseBranch");
   auto cp_bytes = params.get("CarParamsPersistent");
@@ -159,12 +166,12 @@ void TogglesPanel::updateToggles() {
     op_long_toggle->setVisible(CP.getExperimentalLongitudinalAvailable() && !is_release);
     if (hasLongitudinalControl(CP)) {
       // normal description and toggle
-      e2e_toggle->setEnabled(true);
-      e2e_toggle->setDescription(e2e_description);
+      experimental_mode_toggle->setEnabled(true);
+      experimental_mode_toggle->setDescription(e2e_description);
       long_personality_setting->setEnabled(true);
     } else {
       // no long for now
-      e2e_toggle->setEnabled(false);
+      experimental_mode_toggle->setEnabled(false);
       long_personality_setting->setEnabled(false);
       params.remove("ExperimentalMode");
 
@@ -176,15 +183,15 @@ void TogglesPanel::updateToggles() {
         if (is_release) {
           long_desc = unavailable + " " + tr("An alpha version of openpilot longitudinal control can be tested, along with Experimental mode, on non-release branches.");
         } else {
-          long_desc = tr("Enable experimental longitudinal control to allow Experimental mode.");
+          long_desc = tr("Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.");
         }
       }
-      e2e_toggle->setDescription("<b>" + long_desc + "</b><br><br>" + e2e_description);
+      experimental_mode_toggle->setDescription("<b>" + long_desc + "</b><br><br>" + e2e_description);
     }
 
-    e2e_toggle->refresh();
+    experimental_mode_toggle->refresh();
   } else {
-    e2e_toggle->setDescription(e2e_description);
+    experimental_mode_toggle->setDescription(e2e_description);
     op_long_toggle->setVisible(false);
   }
 }
@@ -242,7 +249,7 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
     QString selection = MultiOptionDialog::getSelection(tr("Select a language"), langs.keys(), langs.key(uiState()->language), this);
     if (!selection.isEmpty()) {
       // put language setting, exit Qt UI, and trigger fast restart
-      Params().put("LanguageSetting", langs[selection].toStdString());
+      params.put("LanguageSetting", langs[selection].toStdString());
       qApp->exit(18);
       watchdog_kick(0);
     }
@@ -264,7 +271,7 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   QPushButton *refresh_btn = new QPushButton(tr("Refresh"));
   refresh_btn->setObjectName("refresh_btn");
   power_layout->addWidget(refresh_btn);
-  QObject::connect(refresh_btn, &QPushButton::clicked, this, &DevicePanel::refresh);
+  QObject::connect(refresh_btn, &QPushButton::clicked, this, &DevicePanel::onroadRefresh);
 
   QPushButton *reboot_btn = new QPushButton(tr("Reboot"));
   reboot_btn->setObjectName("reboot_btn");
@@ -279,6 +286,7 @@ DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {
   if (!Hardware::PC()) {
     connect(uiState(), &UIState::offroadTransition, poweroff_btn, &QPushButton::setVisible);
   }
+
   setStyleSheet(R"(
     QPushButton {
       height: 120px;
@@ -298,7 +306,7 @@ void DevicePanel::updateCalibDescription() {
   QString desc =
       tr("openpilot requires the device to be mounted within 4° left or right and "
          "within 5° up or 8° down. openpilot is continuously calibrating, resetting is rarely required.");
-  std::string calib_bytes = Params().get("CalibrationParams");
+  std::string calib_bytes = params.get("CalibrationParams");
   if (!calib_bytes.empty()) {
     try {
       AlignedBuffer aligned_buf;
@@ -318,14 +326,14 @@ void DevicePanel::updateCalibDescription() {
   qobject_cast<ButtonControl *>(sender())->setDescription(desc);
 }
 
-void DevicePanel::refresh() {
+void DevicePanel::onroadRefresh() {
   if (!uiState()->engaged()) {
     if (ConfirmationDialog::confirm(tr("Are you sure you want to refresh?"), tr("Refresh"), this)) {
       // Check engaged again in case it changed while the dialog was open
       if (!uiState()->engaged()) {
-        Params().putBool("OnRoadRefresh", true);
+        params.putBool("OnRoadRefresh", true);
         QTimer::singleShot(3000, []() {
-          Params().putBool("OnRoadRefresh", false);
+          params.putBool("OnRoadRefresh", false);
         });
       }
     }
@@ -339,7 +347,7 @@ void DevicePanel::reboot() {
     if (ConfirmationDialog::confirm(tr("Are you sure you want to reboot?"), tr("Reboot"), this)) {
       // Check engaged again in case it changed while the dialog was open
       if (!uiState()->engaged()) {
-        Params().putBool("DoReboot", true);
+        params.putBool("DoReboot", true);
       }
     }
   } else {
@@ -352,7 +360,7 @@ void DevicePanel::poweroff() {
     if (ConfirmationDialog::confirm(tr("Are you sure you want to power off?"), tr("Power Off"), this)) {
       // Check engaged again in case it changed while the dialog was open
       if (!uiState()->engaged()) {
-        Params().putBool("DoShutdown", true);
+        params.putBool("DoShutdown", true);
       }
     }
   } else {
@@ -369,11 +377,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   lastUpdateLbl = new LabelControl(tr("Last Update Check"), "", "");
   updateBtn = new ButtonControl(tr("Check for Updates"), "");
   connect(updateBtn, &ButtonControl::clicked, [=]() {
-    if (params.getBool("IsOffroad")) {
-      fs_watch->addPath(QString::fromStdString(params.getParamPath("LastUpdateTime")));
-      fs_watch->addPath(QString::fromStdString(params.getParamPath("UpdateFailedCount")));
-    }
-    std::system("/data/openpilot/selfdrive/assets/addon/script/gitcommit.sh");
+    std::system("/data/openpilot/selfdrive/assets/addon/script/gitcommit.sh &");
     std::system("date '+%F %T' > /data/params/d/LastUpdateTime");
     QString last_ping = QString::fromStdString(params.get("LastAthenaPingTime"));
     QString desc = "";
@@ -395,7 +399,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
         if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
           if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {
             std::system("touch /data/opkr_compiling");
-            std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
+            std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh &");
           }
         }
       } else {
@@ -409,7 +413,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
           if (UpdateInfoDialog::confirm(desc + "\n" + QString::fromStdString(txt), this)) {
             if (ConfirmationDialog::confirm2(tr("Device will be updated and rebooted. Do you want to proceed?"), this)) {
               std::system("touch /data/opkr_compiling");
-              std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh");
+              std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh &");
             }
           }
         }
@@ -437,16 +441,6 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   addItem(new CUtilWidget(this));
 
   addItem(uninstallBtn);
-  fs_watch = new QFileSystemWatcher(this);
-  QObject::connect(fs_watch, &QFileSystemWatcher::fileChanged, [=](const QString path) {
-    if (path.contains("UpdateFailedCount") && std::atoi(params.get("UpdateFailedCount").c_str()) > 0) {
-      lastUpdateLbl->setText(tr("failed to fetch update"));
-      updateBtn->setText(tr("CHECK"));
-      updateBtn->setEnabled(true);
-    } else if (path.contains("LastUpdateTime")) {
-      updateLabels();
-    }
-  });
 }
 
 void SoftwarePanel::showEvent(QShowEvent *event) {

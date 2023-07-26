@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QButtonGroup>
-#include <QFileSystemWatcher>
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
@@ -9,6 +8,7 @@
 #include <QWidget>
 
 
+#include "selfdrive/ui/qt/util.h"
 #include "selfdrive/ui/qt/widgets/controls.h"
 
 // ********** settings window + top-level panels **********
@@ -48,7 +48,7 @@ private slots:
   void poweroff();
   void reboot();
   void updateCalibDescription();
-  void refresh();
+  void onroadRefresh();
 
 private:
   Params params;
@@ -96,7 +96,7 @@ private:
   ButtonControl *updateBtn;
 
   Params params;
-  QFileSystemWatcher *fs_watch;
+  ParamWatcher *fs_watch;
 };
 
 class UIPanel : public QFrame {

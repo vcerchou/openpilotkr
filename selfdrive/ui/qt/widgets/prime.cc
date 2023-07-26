@@ -26,16 +26,17 @@ PairingQRWidget::PairingQRWidget(QWidget* parent) : QWidget(parent) {
 void PairingQRWidget::showEvent(QShowEvent *event) {
   refresh();
   timer->start(5 * 60 * 1000);
+  device()->setOffroadBrightness(100);
 }
 
 void PairingQRWidget::hideEvent(QHideEvent *event) {
   timer->stop();
+  device()->setOffroadBrightness(BACKLIGHT_OFFROAD);
 }
 
 void PairingQRWidget::refresh() {
   QString pairToken = CommaApi::create_jwt({{"pair", true}});
-  //QString qrString = "https://connect.comma.ai/?pair=" + pairToken;
-  QString qrString = "http://opkr.o-r.kr:3000/?pair=" + pairToken;
+  QString qrString = "https://connect.comma.ai/?pair=" + pairToken;
   this->updateQrCode(qrString);
   update();
 }

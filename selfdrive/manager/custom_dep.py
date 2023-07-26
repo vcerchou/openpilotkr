@@ -39,7 +39,7 @@ def wait_for_internet_connection(return_on_failure=False):
 def install_dep(spinner):
   wait_for_internet_connection()
 
-  TOTAL_PIP_STEPS = 2986
+  TOTAL_PIP_STEPS = 21
 
   try:
     os.makedirs(TMP_DIR)

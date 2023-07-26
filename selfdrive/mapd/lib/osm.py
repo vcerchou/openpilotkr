@@ -1,4 +1,4 @@
-from third_party.overpy import overpy
+import overpy
 import subprocess
 import numpy as np
 from selfdrive.mapd.lib.geo import R

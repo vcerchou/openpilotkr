@@ -1,5 +1,5 @@
 import os
-from third_party.overpy import overpy
+import overpy
 import subprocess
 import requests
 import email.utils as eut

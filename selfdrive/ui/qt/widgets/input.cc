@@ -2,7 +2,6 @@
 
 #include <QPushButton>
 #include <QButtonGroup>
-#include <QProcess>
 
 #include "system/hardware/hw.h"
 #include "selfdrive/ui/qt/util.h"
@@ -469,11 +468,11 @@ GitPullCancel::GitPullCancel(const QString &confirm_text, const QString &cancel_
         QStringList hash = str.split(",");
         if (ConfirmationDialog::confirm2(tr("This will run below command: git reset --hard ") + hash[0], this)) {
           QString cmd0 = "git reset --hard " + hash[0];
-          QProcess::execute("rm -f /data/openpilot/prebuilt");
-          QProcess::execute("touch /data/opkr_compiling");
-          QProcess::execute("git clean -d -f -f");
-          QProcess::execute(cmd0);
-          QProcess::execute("sudo reboot");
+          std::system("rm -f /data/openpilot/prebuilt");
+          std::system("touch /data/opkr_compiling");
+          std::system("git clean -d -f -f");
+          std::system(cmd0);
+          std::system("sudo reboot");
         }
       } else {
         ConfirmationDialog::alert(tr("No selection."), this);

@@ -3,6 +3,7 @@ import os
 import sys
 import errno
 import shutil
+import time
 from glob import glob
 import subprocess
 import importlib.util
@@ -10,26 +11,29 @@ from urllib.request import urlopen
 
 
 # NOTE: Do NOT import anything here that needs be built (e.g. params)
-from common.basedir import BASEDIR
 from common.spinner import Spinner
+from common.basedir import BASEDIR
 
-
-OPSPLINE_SPEC = importlib.util.find_spec('opspline') or importlib.util.find_spec('scipy')
+sys.path.append(os.path.join(BASEDIR, "third_party"))
+OPSPLINE_SPEC = importlib.util.find_spec('scipy')
 OVERPY_SPEC = importlib.util.find_spec('overpy')
 MAX_BUILD_PROGRESS = 100
 TMP_DIR = '/data/tmp'
-PYEXTRA_DIR = '/data/openpilot/pyextra'
+THIRD_PARTY_DIR = '/data/openpilot/third_party'
 
 
 def wait_for_internet_connection(return_on_failure=False):
+  retries = 0
   while True:
     try:
       _ = urlopen('https://www.google.com/', timeout=10)
       return True
     except Exception as e:
       print(f'Wait for internet failed: {e}')
-      if return_on_failure:
+      if return_on_failure and retries == 15:
         return False
+      retries += 1
+      time.sleep(2)  # Wait for 2 seconds before retrying
 
 
 def install_dep(spinner):
@@ -45,7 +49,7 @@ def install_dep(spinner):
   my_env = os.environ.copy()
   my_env['TMPDIR'] = TMP_DIR
 
-  pip_target = [f'--target={PYEXTRA_DIR}']
+  pip_target = [f'--target={THIRD_PARTY_DIR}']
   packages = []
   if OPSPLINE_SPEC is None:
     packages.append('scipy==1.7.1')
@@ -65,14 +69,15 @@ def install_dep(spinner):
       steps += 1
       spinner.update_progress(MAX_BUILD_PROGRESS * min(1., steps / TOTAL_PIP_STEPS), 100.)
       print(output.decode('utf8', 'replace'))
+
   shutil.rmtree(TMP_DIR)
   os.unsetenv('TMPDIR')
 
-  # remove numpy installed to PYEXTRA_DIR since numpy is already present in the AGNOS image
+  # remove numpy installed to THIRD_PARTY_DIR since numpy is already present in the AGNOS image
   if OPSPLINE_SPEC is None:
-    for directory in glob(f'{PYEXTRA_DIR}/numpy*'):
+    for directory in glob(f'{THIRD_PARTY_DIR}/numpy*'):
       shutil.rmtree(directory)
-    shutil.rmtree(f'{PYEXTRA_DIR}/bin')
+    shutil.rmtree(f'{THIRD_PARTY_DIR}/bin')
 
 
 if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):

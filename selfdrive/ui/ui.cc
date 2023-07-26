@@ -393,7 +393,7 @@ static void update_state(UIState *s) {
     scene.liveMapData.oref = lmap_data.getRef();
   }
 
-  if (s->sm->frame % (5*UI_FREQ) == 0) {
+  if (s->sm->frame % (10*UI_FREQ) == 0) {
   	s->is_OpenpilotViewEnabled = Params().getBool("IsOpenpilotViewEnabled");
   }
 

@@ -2247,6 +2247,7 @@ struct MapRenderState {
 
 struct NavModelData {
   frameId @0 :UInt32;
+  locationMonoTime @6 :UInt64;
   modelExecutionTime @1 :Float32;
   dspExecutionTime @2 :Float32;
   features @3 :List(Float32);

@@ -77,7 +77,7 @@ def install_dep(spinner):
   if OPSPLINE_SPEC is None:
     for directory in glob(f'{THIRD_PARTY_DIR}/numpy*'):
       shutil.rmtree(directory)
-    shutil.rmtree(f'{THIRD_PARTY_DIR}/bin')
+    #shutil.rmtree(f'{THIRD_PARTY_DIR}/bin')
 
 
 if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):

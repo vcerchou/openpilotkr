@@ -471,7 +471,7 @@ GitPullCancel::GitPullCancel(const QString &confirm_text, const QString &cancel_
           std::system("rm -f /data/openpilot/prebuilt");
           std::system("touch /data/opkr_compiling");
           std::system("git clean -d -f -f");
-          std::system(cmd0);
+          std::system(cmd0.toStdString());
           std::system("sudo reboot");
         }
       } else {

@@ -52,7 +52,7 @@ def install_dep(spinner):
   pip_target = [f'--target={THIRD_PARTY_DIR}']
   packages = []
   if OPSPLINE_SPEC is None:
-    packages.append('scipy==1.7.1')
+    packages.append('scipy==1.11.1')
   if OVERPY_SPEC is None:
     packages.append('overpy==0.6')
 
@@ -77,7 +77,7 @@ def install_dep(spinner):
   if OPSPLINE_SPEC is None:
     for directory in glob(f'{THIRD_PARTY_DIR}/numpy*'):
       shutil.rmtree(directory)
-    #shutil.rmtree(f'{THIRD_PARTY_DIR}/bin')
+    shutil.rmtree(f'{THIRD_PARTY_DIR}/bin')
 
 
 if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):

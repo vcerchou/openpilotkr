@@ -437,7 +437,7 @@ void UIState::updateStatus() {
 
   // this is useful to save compiling time before depart when you use remote ignition
   if (!scene.auto_gitpull && (sm->frame - scene.started_frame > 15*UI_FREQ)) {
-    if (params.getBool("GitPullOnBoot")) {
+    if (Params().getBool("GitPullOnBoot")) {
       scene.auto_gitpull = true;
       std::system("/data/openpilot/selfdrive/assets/addon/script/gitpull.sh &");
     } else if (sm->frame - scene.started_frame > 20*UI_FREQ) {

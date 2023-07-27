@@ -551,12 +551,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
 
   // debug
   int debug_y1 = 1015-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
-  int debug_y2 = 1050-UI_BORDER_SIZE+(s->scene.mapbox_running ? 3:0)-(s->scene.animated_rpm?60:0);
+  int debug_y2 = 1050-UI_BORDER_SIZE+(s->scene.mapbox_running ? 8:0)-(s->scene.animated_rpm?60:0);
   int debug_y3 = 970-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
   if (s->scene.nDebugUi1 && s->scene.comma_stock_ui != 1) {
     p.setFont(InterFont(s->scene.mapbox_running?25:30, QFont::DemiBold));
-    uiText(p, s->scene.low_ui_profile?370:205, debug_y1, s->scene.alertTextMsg1.c_str());
-    uiText(p, s->scene.low_ui_profile?370:205, debug_y2, s->scene.alertTextMsg2.c_str());
+    uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?290:360):205, debug_y1, s->scene.alertTextMsg1.c_str());
+    uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?290:360):205, debug_y2, s->scene.alertTextMsg2.c_str());
   }
   if (s->scene.nDebugUi3 && s->scene.comma_stock_ui != 1) {
     uiText(p, s->scene.low_ui_profile?370:205, debug_y3, s->scene.alertTextMsg3.c_str());
@@ -990,7 +990,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(multi_btn_draw);
     p.setPen(whiteColor(200));
-    p.setFont(InterFont(39, QFont::DemiBold));
+    p.setFont(InterFont(43, QFont::DemiBold));
     p.drawText(multi_btn_draw, Qt::AlignCenter, QString("OPKR"));
     p.setBrush(Qt::NoBrush);
     if (s->scene.multi_btn_touched) {
@@ -1034,9 +1034,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     minute = int(s->scene.lateralPlan.standstillElapsedTime / 60);
     second = int(s->scene.lateralPlan.standstillElapsedTime) - (minute * 60);
     p.setPen(ochreColor(220));
-    debugText(p, s->scene.mapbox_running?(rect().right()-UI_BORDER_SIZE-295):(rect().right()-UI_BORDER_SIZE-545), UI_BORDER_SIZE+420, "STOP", 220, s->scene.mapbox_running?90:135);
+    debugText(p, s->scene.mapbox_running?(rect().right()-UI_BORDER_SIZE-305):(rect().right()-UI_BORDER_SIZE-545), UI_BORDER_SIZE+420, "STOP", 220, s->scene.mapbox_running?90:135);
     p.setPen(whiteColor(220));
-    debugText(p, s->scene.mapbox_running?(rect().right()-UI_BORDER_SIZE-295):(rect().right()-UI_BORDER_SIZE-545), s->scene.mapbox_running?UI_BORDER_SIZE+500:UI_BORDER_SIZE+550, QString::number(minute).rightJustified(2,'0') + ":" + QString::number(second).rightJustified(2,'0'), 220, s->scene.mapbox_running?95:140);
+    debugText(p, s->scene.mapbox_running?(rect().right()-UI_BORDER_SIZE-305):(rect().right()-UI_BORDER_SIZE-545), s->scene.mapbox_running?UI_BORDER_SIZE+500:UI_BORDER_SIZE+550, QString::number(minute).rightJustified(2,'0') + ":" + QString::number(second).rightJustified(2,'0'), 220, s->scene.mapbox_running?95:140);
   }
 
   // opkr autohold
@@ -1065,7 +1065,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     float bh = 0;
     if (s->scene.leftBlinker) {
       bw = 250;
-      bx = s->fb_w/2 - bw/2 - 65;
+      bx = s->scene.mapbox_running?(s->fb_w/2 - 30):(s->fb_w/2 - bw/2 - 65);
       bh = s->scene.low_ui_profile?height()/2:200;
       QPointF leftbsign1[] = {{bx, bh-100}, {bx-bw/4, bh-100}, {bx-bw/2, bh}, {bx-bw/4, bh+100}, {bx, bh+100}, {bx-bw/4, bh}};
       bx -= 125;
@@ -1088,7 +1088,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     if (s->scene.rightBlinker) {
       bw = 250;
-      bx = s->fb_w/2 - bw/2 + bw + 65;
+      bx = s->scene.mapbox_running?(s->fb_w/2 + 30):(s->fb_w/2 - bw/2 + bw + 65);
       bh = s->scene.low_ui_profile?height()/2:200;
       QPointF rightbsign1[] = {{bx, bh-100}, {bx+bw/4, bh-100}, {bx+bw/2, bh}, {bx+bw/4, bh+100}, {bx, bh+100}, {bx+bw/4, bh}};
       bx += 125;
@@ -1446,7 +1446,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       tvalue = road_name + oref;
     }
     int tw = tvalue.length();
-    rect_w = (road_name.length() > 1)?tw*40:tw*33;
+    if (s->scene.mapbox_running) {
+      rect_w = (road_name.length() > 1)?tw*30:tw*23;
+    } else {
+      rect_w = (road_name.length() > 1)?tw*40:tw*33;
+    }
     rect_x = s->fb_w/2 - rect_w/2;
 
     QRect datetime_panel = QRect(rect_x, rect_y, rect_w, rect_h);

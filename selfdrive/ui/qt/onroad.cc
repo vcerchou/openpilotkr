@@ -94,7 +94,7 @@ void OnroadWindow::updateState(const UIState &s) {
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   QRect stockui_btn = QRect(15, uiState()->scene.low_ui_profile?693:15, 184, 202);
-  QRect tuneui_btn = QRect(1960, uiState()->scene.low_ui_profile?895:15, 170, 170);
+  QRect tuneui_btn = QRect(uiState()->scene.mapbox_enabled?1600:1960, uiState()->scene.low_ui_profile?895:15, 170, 170);
   QRect speedlimit_btn = QRect(220, uiState()->scene.low_ui_profile?700:15, 190, 190);
   QRect monitoring_btn = QRect(20, uiState()->scene.low_ui_profile?20:860, 190, 190);
   QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile?15:895, 160, 160);
@@ -102,7 +102,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
   QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
 
   if (multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
-    stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable ||
+    stockui_btn.contains(e->pos()) || (tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_enabled) || uiState()->scene.live_tune_panel_enable ||
     (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()))) && !uiState()->scene.mapbox_running) {
     QWidget::mousePressEvent(e);
     return;
@@ -131,6 +131,7 @@ void OnroadWindow::offroadTransition(bool offroad) {
     if (map == nullptr && (!MAPBOX_TOKEN.isEmpty())) {
       auto m = new MapPanel(get_mapbox_settings());
       map = m;
+      uiState()->scene.mapbox_enabled = true;
 
       QObject::connect(m, &MapPanel::mapPanelRequested, this, &OnroadWindow::mapPanelRequested);
       QObject::connect(nvg->map_settings_btn, &MapSettingsButton::clicked, m, &MapPanel::toggleMapSettings);
@@ -141,6 +142,8 @@ void OnroadWindow::offroadTransition(bool offroad) {
 
       // hidden by default, made visible when navRoute is published
       m->setVisible(false);
+    } else {
+      uiState()->scene.mapbox_enabled = false;
     }
   }
 #endif
@@ -994,8 +997,10 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       s->scene.multi_btn_slide_timer = fmin(s->scene.multi_btn_slide_timer, 180);
       QRect multi_btn_draw1(m_x-(int)s->scene.multi_btn_slide_timer, m_y, m_btn_size, m_btn_size);
       QRect multi_btn_draw2(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y, m_btn_size, m_btn_size);
+      QRect multi_btn_draw3(m_x-(int)s->scene.multi_btn_slide_timer*3, m_y, m_btn_size, m_btn_size);
       p.drawEllipse(multi_btn_draw1);
       p.drawEllipse(multi_btn_draw2);
+      if (s->scene.mapbox_enabled) p.drawEllipse(multi_btn_draw3);
       p.drawText(multi_btn_draw1, Qt::AlignCenter, QString("REC"));
       if (s->scene.laneless_mode == 0) {
         p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
@@ -1006,14 +1011,17 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       } else if (s->scene.laneless_mode == 2) {
         p.drawText(multi_btn_draw2, Qt::AlignCenter, QString("AUTO"));
       }
+      if (s->scene.mapbox_enabled) p.drawText(multi_btn_draw3, Qt::AlignCenter, QString("TUNE"));
     } else {
       s->scene.multi_btn_slide_timer -= 20;
       s->scene.multi_btn_slide_timer = fmax(s->scene.multi_btn_slide_timer, 0);
       QRect multi_btn_draw1(m_x-(int)s->scene.multi_btn_slide_timer, m_y, m_btn_size, m_btn_size);
       QRect multi_btn_draw2(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y, m_btn_size, m_btn_size);
+      QRect multi_btn_draw3(m_x-(int)s->scene.multi_btn_slide_timer*3, m_y, m_btn_size, m_btn_size);
       if (s->scene.multi_btn_slide_timer != 0) {
         p.drawEllipse(multi_btn_draw1);
         p.drawEllipse(multi_btn_draw2);
+        if (s->scene.mapbox_enabled) p.drawEllipse(multi_btn_draw3);
       }
     }
   }
@@ -1810,7 +1818,9 @@ void AnnotatedCameraWidget::paintGL() {
     drawDriverState(painter, s);
   }
 
-  drawWheelState(painter, s);
+  if (!s->scene.mapbox_enabled) {
+    drawWheelState(painter, s);
+  }
 
   drawHud(painter);
 

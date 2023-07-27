@@ -399,7 +399,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
+  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running && (uiState()->scene.multi_btn_touched && uiState()->scene.mapbox_enabled)) {
     uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
     if (uiState()->scene.opkr_livetune_ui) {
       Params().putBool("OpkrLiveTunePanelEnable", true);
@@ -411,7 +411,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // SpeedLimit Decel on/off Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && speedlimit_btn.contains(e->pos())) {
+  if (uiState()->scene.started && !sidebar->isVisible() && speedlimit_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.sl_decel_off = !uiState()->scene.sl_decel_off;
     if (uiState()->scene.sl_decel_off) {
       Params().putBool("SpeedLimitDecelOff", true);

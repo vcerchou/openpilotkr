@@ -2294,8 +2294,8 @@ This may take up to a minute.</source>
         <translation>카메라 오프셋</translation>
     </message>
     <message>
-        <source>Sets the CameraOffset value. (+value:Move Left, -value:Move Right)</source>
-        <translation>CameraOffset 값을 설정합니다. (+값:왼쪽으로 이동, -값:오른쪽으로 이동)</translation>
+        <source>Sets the CameraOffset value. (low value: Car to Move Left, high value: Car to Move Right)</source>
+        <translation>CameraOffset 값을 설정합니다. (낮은 값: 차를 왼쪽으로 이동, 높은 값: 차를 오른쪽으로 이동)</translation>
     </message>
 </context>
 <context>
@@ -2305,8 +2305,8 @@ This may take up to a minute.</source>
         <translation>Path 오프셋</translation>
     </message>
     <message>
-        <source>Sets the PathOffset value. (+value:Move left, -value:Move right)</source>
-        <translation>PathOffset 값을 설정합니다. (+값:왼쪽으로 이동, -value:오른쪽으로 이동)</translation>
+        <source>Sets the PathOffset value. (low value: Car to Move Left, high value: Car to Move Right)</source>
+        <translation>PathOffset 값을 설정합니다. (낮은 값: 차를 왼쪽으로 이동, 높은 값: 차를 오른쪽으로 이동)</translation>
     </message>
 </context>
 <context>
@@ -3150,8 +3150,8 @@ This may take up to a minute.</source>
 <context>
     <name>OPKREdgeOffset</name>
     <message>
-        <source>+ value to move car to left, - value to move car to right on each lane.</source>
-        <translation>+값은차를 왼쪽으로 이동, -값은 오른쪽으로 이동.</translation>
+        <source>low value to move car to left, high value to move car to right on each lane.</source>
+        <translation>낮은 값은 차를 왼쪽으로 이동시키며, 높은 값은 차를 오른쪽으로 이동시킵니다.</translation>
     </message>
     <message>
         <source>LeftEdge: </source>

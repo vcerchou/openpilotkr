@@ -2814,7 +2814,7 @@ void MaxRateDown::refresh() {
 }
 
 //튜닝
-CameraOffset::CameraOffset() : AbstractControl(tr("CameraOffset"), tr("Sets the CameraOffset value. (+value:Move Left, -value:Move Right)"), "../assets/offroad/icon_shell.png") {
+CameraOffset::CameraOffset() : AbstractControl(tr("CameraOffset"), tr("Sets the CameraOffset value. (low value: Car to Move Left, high value: Car to Move Right)"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -2877,7 +2877,7 @@ void CameraOffset::refresh() {
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
-PathOffset::PathOffset() : AbstractControl(tr("PathOffset"), tr("Sets the PathOffset value. (+value:Move left, -value:Move right)"), "../assets/offroad/icon_shell.png") {
+PathOffset::PathOffset() : AbstractControl(tr("PathOffset"), tr("Sets the PathOffset value. (low value: Car to Move Left, high value: Car to Move Right)"), "../assets/offroad/icon_shell.png") {
 
   label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
   label.setStyleSheet("color: #e0e879");
@@ -6983,7 +6983,7 @@ void OPKRBottomTextView::refresh() {
   }
 }
 
-OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("+ value to move car to left, - value to move car to right on each lane."), "") {
+OPKREdgeOffset::OPKREdgeOffset() : AbstractControl("", tr("low value to move car to left, high value to move car to right on each lane."), "") {
 
   labell1.setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
   labell1.setText(tr("LeftEdge: "));

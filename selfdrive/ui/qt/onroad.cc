@@ -304,8 +304,8 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->setMargin(UI_BORDER_SIZE);
   main_layout->setSpacing(0);
 
-  experimental_btn = new ExperimentalButton(this);
-  main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
+  // experimental_btn = new ExperimentalButton(this);
+  // main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
 
   map_settings_btn = new MapSettingsButton(this);
   main_layout->addWidget(map_settings_btn, 0, Qt::AlignBottom | Qt::AlignRight);
@@ -524,7 +524,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     debugText(p, rect().center().x(), s->scene.animated_rpm?255:210, speedStr, 255, 180, true);
   } else {
     p.setFont(InterFont(180, QFont::Bold));
-    uiText(p, rect().left()+30, height()-25, speedStr, 255, true);
+    uiText(p, rect().left()+20, height()-25, speedStr, 255, true);
   }
   if (!s->scene.low_ui_profile) {
     if (s->scene.brakeLights) {
@@ -756,26 +756,26 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       } else if (s->scene.cruise_gap == 2) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-20, 0, "■■");
+          p.drawText(-30, 0, "■■");
         } else {
           p.setPen(redColor(200));
-          p.drawText(-20, 0, "■■");
+          p.drawText(-30, 0, "■■");
         }
       } else if (s->scene.cruise_gap == 3) {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-20, 0, "■■■");
+          p.drawText(-40, 0, "■■■");
         } else {
           p.setPen(greenColor(200));
-          p.drawText(-20, 0, "■■■");
+          p.drawText(-40, 0, "■■■");
         }
       } else {
         if (s->scene.gap_by_speed_on) {
           p.setPen(QColor(0, 180, 255, 220));
-          p.drawText(-20, 0, "■■■■");
+          p.drawText(-50, 0, "■■■■");
         } else {
           p.setPen(whiteColor(200));
-          p.drawText(-20, 0, "■■■■");
+          p.drawText(-50, 0, "■■■■");
         }
       }
       p.resetMatrix();

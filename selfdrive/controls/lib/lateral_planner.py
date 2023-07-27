@@ -18,7 +18,7 @@ LaneChangeState = log.LateralPlan.LaneChangeState
 
 TRAJECTORY_SIZE = 33
 
-CAMERA_OFFSET = (float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # m from center car to camera
+CAMERA_OFFSET = (float(Decimal(Params().get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
 CAMERA_OFFSET_A = CAMERA_OFFSET + 0.15
 PATH_OFFSET = (float(Decimal(Params().get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))  # default 0.0
 
@@ -84,8 +84,8 @@ class LateralPlanner:
     self.spd_lane_width_spd = list(map(float, self.params.get("SpdLaneWidthSpd", encoding="utf8").split(',')))
     self.spd_lane_width_set = list(map(float, self.params.get("SpdLaneWidthSet", encoding="utf8").split(',')))
     self.lll_prob = self.rll_prob = self.d_prob = self.lll_std = self.rll_std = 0.
-    self.camera_offset = -CAMERA_OFFSET
-    self.path_offset = -PATH_OFFSET
+    self.camera_offset = CAMERA_OFFSET
+    self.path_offset = PATH_OFFSET
     self.left_curv_offset = int(self.params.get("LeftCurvOffsetAdj", encoding="utf8"))
     self.right_curv_offset = int(self.params.get("RightCurvOffsetAdj", encoding="utf8"))
     self.drive_routine_on_co = self.params.get_bool("RoutineDriveOn")
@@ -112,36 +112,36 @@ class LateralPlanner:
     mode_select = sm['carState'].cruiseState.modeSel
     if self.drive_routine_on_co:
       self.sm.update(0)
-      current_road_offset = -self.sm['liveMapData'].roadCameraOffset
+      current_road_offset = self.sm['liveMapData'].roadCameraOffset
     else:
       current_road_offset = 0.0
 
     Curv = round(curvature, 4)
     # right lane is minus
-    lane_differ = round(abs(self.lll_y[0] + self.rll_y[0]), 2)
+    lane_differ = round(self.lll_y[0] + self.rll_y[0], 2)
     lean_offset = 0
     if int(mode_select) == 4:
       lean_offset = 0.15
     else:
       lean_offset = 0
 
-    if (self.left_curv_offset != 0 or self.right_curv_offset != 0) and v_ego > 8:
-      if curvature > 0.0008 and self.left_curv_offset < 0 and lane_differ >= 0: # left curve
+    if (self.left_curv_offset != 0 or self.right_curv_offset != 0) and v_ego > 8 and int(mode_select) != 4:
+      if curvature > 0.0008 and self.left_curv_offset < 0 and lane_differ <= 0: # left curve, if car is more close to left line
         if lane_differ > 0.6:
           lane_differ = 0.6          
-        lean_offset = +round(abs(self.left_curv_offset) * lane_differ * 0.05, 3) # move to left
-      elif curvature > 0.0008 and self.left_curv_offset > 0 and lane_differ <= 0:
+        lean_offset = -round(abs(self.left_curv_offset) * abs(lane_differ * 0.05), 3) # move to left
+      elif curvature > 0.0008 and self.left_curv_offset > 0 and lane_differ >= 0: # left curve, if car is more close to right line
         if lane_differ > 0.6:
           lane_differ = 0.6
-        lean_offset = -round(abs(self.left_curv_offset) * lane_differ * 0.05, 3) # move to right
-      elif curvature < -0.0008 and self.right_curv_offset < 0 and lane_differ >= 0: # right curve
+        lean_offset = +round(abs(self.left_curv_offset) * abs(lane_differ * 0.05), 3) # move to right
+      elif curvature < -0.0008 and self.right_curv_offset < 0 and lane_differ <= 0: # right curve, if car is more close to left line
         if lane_differ > 0.6:
           lane_differ = 0.6    
-        lean_offset = +round(abs(self.right_curv_offset) * lane_differ * 0.05, 3) # move to left
-      elif curvature < -0.0008 and self.right_curv_offset > 0 and lane_differ <= 0:
+        lean_offset = -round(abs(self.right_curv_offset) * abs(lane_differ * 0.05), 3) # move to left
+      elif curvature < -0.0008 and self.right_curv_offset > 0 and lane_differ >= 0: # right curve, if car is more close to right line
         if lane_differ > 0.6:
           lane_differ = 0.6    
-        lean_offset = -round(abs(self.right_curv_offset) * lane_differ * 0.05, 3) # move to right
+        lean_offset = +round(abs(self.right_curv_offset) * abs(lane_differ * 0.05), 3) # move to right
       else:
         lean_offset = 0
 
@@ -150,7 +150,7 @@ class LateralPlanner:
       self.timer = 0.0
       self.speed_offset = self.params.get_bool("SpeedCameraOffset")
       if self.params.get_bool("OpkrLiveTunePanelEnable"):
-        self.camera_offset = -(float(Decimal(self.params.get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
+        self.camera_offset = (float(Decimal(self.params.get("CameraOffsetAdj", encoding="utf8")) * Decimal('0.001')))
 
     if self.drive_close_to_edge: # opkr
       left_edge_prob = np.clip(1.0 - md.roadEdgeStds[0], 0.0, 1.0)
@@ -166,9 +166,9 @@ class LateralPlanner:
         if right_nearside_prob < 0.1 and left_nearside_prob < 0.1:
           self.road_edge_offset = 0.0
         elif right_edge_prob > 0.35 and right_nearside_prob < 0.2 and right_close_prob > 0.5 and left_nearside_prob >= right_nearside_prob:
-          self.road_edge_offset = -self.right_edge_offset
+          self.road_edge_offset = self.right_edge_offset
         elif left_edge_prob > 0.35 and left_nearside_prob < 0.2 and left_close_prob > 0.5 and right_nearside_prob >= left_nearside_prob:
-          self.road_edge_offset = -self.left_edge_offset
+          self.road_edge_offset = self.left_edge_offset
         else:
           self.road_edge_offset = 0.0
     else:
@@ -177,6 +177,10 @@ class LateralPlanner:
       speed_offset = -interp(v_ego, [0, 11.1, 16.6, 22.2, 31], [0.10, 0.05, 0.02, 0.01, 0.0])
     else:
       speed_offset = 0.0
+
+    # logic is opposite compared to before
+    # for self.total_camera_offset, low value to move for car left side, high value to move for car right side.
+    # little confused to make sure. let me know if this is incorrect.
     self.total_camera_offset = self.camera_offset + lean_offset + current_road_offset + self.road_edge_offset + speed_offset
 
     lane_lines = md.laneLines
@@ -201,7 +205,7 @@ class LateralPlanner:
     if self.timer2 > 1.0:
       self.timer2 = 0.0
       if self.params.get_bool("OpkrLiveTunePanelEnable"):
-        self.path_offset = -(float(Decimal(self.params.get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))
+        self.path_offset = (float(Decimal(self.params.get("PathOffsetAdj", encoding="utf8")) * Decimal('0.001')))
     # Reduce reliance on lanelines that are too far apart or
     # will be in a few seconds
     path_xyz[:, 1] += self.path_offset

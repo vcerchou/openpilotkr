@@ -8,7 +8,7 @@ fi
 
 cat /data/openpilot/selfdrive/assets/addon/script/param_init_value | while read line
 do
-ParamName=$(echo $line | applets/awk -F ':' '{print $1}')
+ParamName=$(echo $line | awk -F ':' '{print $1}')
 ParamValue=$(cat /data/params/d/${ParamName})
 echo "$ParamName:$ParamValue" >> /data/preset2
 done

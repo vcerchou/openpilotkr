@@ -4077,7 +4077,7 @@ This may take up to a minute.</source>
     </message>
     <message>
         <source>Low UI Profile to get UI more visible at bottom side.</source>
-        <translation>UI 일부 정보를 하단으로 이동하여 시야에 잘 보이도록 합니다. 속도계나 설정속도가 룸미러에 가려지는 경우 유용할 수 있습니다.</translation>
+        <translation>일부 UI 정보를 하단으로 이동하여 시야에 잘 보이도록 합니다. 속도계나 설정속도가 룸미러에 가려지는 경우 유용할 수 있습니다.</translation>
     </message>
 </context>
 </TS>

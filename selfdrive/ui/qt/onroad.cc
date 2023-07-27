@@ -979,7 +979,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int m_btn_size = 160;
     int m_btn_offset = 10;
     int m_btn_center_x = rect().right() - UI_BORDER_SIZE - m_btn_size / 2 - m_btn_offset;
-    int m_btn_center_y = s->scene.low_ui_profile?(UI_BORDER_SIZE + m_btn_size / 2 + m_btn_offset):(height()-UI_BORDER_SIZE-m_btn_size/2-m_btn_offset);
+    int m_btn_center_y = (s->scene.low_ui_profile || s->scene.mapbox_enabled)?(UI_BORDER_SIZE + m_btn_size / 2 + m_btn_offset):(height()-UI_BORDER_SIZE-m_btn_size/2-m_btn_offset);
     int m_x = m_btn_center_x - m_btn_size/2;
     int m_y = m_btn_center_y - m_btn_size/2;
     QRect multi_btn_draw(m_x, m_y, m_btn_size, m_btn_size);

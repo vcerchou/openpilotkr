@@ -97,7 +97,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
   QRect tuneui_btn = QRect(uiState()->scene.mapbox_enabled?1420:1960, uiState()->scene.low_ui_profile&&!uiState()->scene.mapbox_enabled?895:15, 170, 170);
   QRect speedlimit_btn = QRect(220, uiState()->scene.low_ui_profile?700:15, 190, 190);
   QRect monitoring_btn = QRect(20, uiState()->scene.low_ui_profile?20:860, 190, 190);
-  QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile?15:895, 160, 160);
+  QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
   QRect rec_btn = QRect(1780, uiState()->scene.low_ui_profile?15:895, 160, 160);
   QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
 

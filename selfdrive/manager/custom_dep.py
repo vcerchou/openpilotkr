@@ -50,7 +50,7 @@ def install_dep(spinner):
   pip_target = [f'--target={PYEXTRA_DIR}']
   packages = []
   if OPSPLINE_SPEC is None:
-    packages.append('scipy==1.9.1')
+    packages.append('scipy==1.11.1')
   if OVERPY_SPEC is None:
     packages.append('overpy==0.6')
 

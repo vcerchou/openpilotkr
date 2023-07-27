@@ -17,5 +17,5 @@ fi
 export STAGING_ROOT="/data/safe_staging"
 
 if [ -f "/data/params/d/MapboxToken" ]; then
-  export MapboxToken=$(cat /data/params/d/MapboxToken)
+  export MAPBOX_TOKEN=$(cat /data/params/d/MapboxToken)
 fi

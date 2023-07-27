@@ -15,12 +15,17 @@ if [ "$?" == "0" ]; then
   BRANCH=$(git rev-parse --abbrev-ref HEAD)
   HASH=$(git rev-parse HEAD)
   git fetch
+
   REMOTE_HASH=$(git rev-parse --verify origin/$BRANCH)
-  git pull origin $BRANCH
 
   if [ "$HASH" != "$REMOTE_HASH" ]; then
+    IS_LANGFILE_CHANGED=$(git diff @{upstream} | grep .ts)
+    if [ "$IS_LANGFILE_CHANGED" != "" ]; then
+      rm -f /data/openpilot/selfdrive/ui/translations/*.ts
+      rm -f /data/openpilot/selfdrive/ui/translations/*.qm    
+    fi
+    git pull origin $BRANCH
     touch /data/opkr_compiling
-    rm -f /data/openpilot/selfdrive/ui/translations/*.ts
     sleep 1
 
     sudo reboot

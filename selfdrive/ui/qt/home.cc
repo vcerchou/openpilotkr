@@ -399,7 +399,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running && (uiState()->scene.multi_btn_touched && uiState()->scene.mapbox_enabled)) {
+  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running || (uiState()->scene.multi_btn_touched && uiState()->scene.mapbox_enabled)) {
     uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
     if (uiState()->scene.opkr_livetune_ui) {
       Params().putBool("OpkrLiveTunePanelEnable", true);

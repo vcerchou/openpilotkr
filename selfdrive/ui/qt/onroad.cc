@@ -103,7 +103,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   if (multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
     stockui_btn.contains(e->pos()) || tuneui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable ||
-    (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos())))) {
+    (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()))) && !uiState()->scene.mapbox_running) {
     QWidget::mousePressEvent(e);
     return;
   }
@@ -1635,9 +1635,9 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
       case 7 : gear_text = "B"; painter.setPen(whiteColor(255)); break;
       default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); painter.setPen(whiteColor(255)); break;
     }
-    debugText(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true);
+    debugText(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true);
   } else {
-    drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), engage_img, blackColor(100), 0.8);
+    drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), engage_img, blackColor(100), 0.8);
   }
 
   painter.restore();

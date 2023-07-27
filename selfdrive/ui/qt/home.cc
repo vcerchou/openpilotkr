@@ -375,7 +375,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // Stock UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && stockui_btn.contains(e->pos())) {
+  if (uiState()->scene.started && !sidebar->isVisible() && stockui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.comma_stock_ui = uiState()->scene.comma_stock_ui + 1;
     if (uiState()->scene.do_not_disturb_mode > 0) {
       if (uiState()->scene.comma_stock_ui > 2) {

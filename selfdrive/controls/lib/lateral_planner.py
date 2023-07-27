@@ -165,9 +165,9 @@ class LateralPlanner:
         self.timer3 = 0.0
         if right_nearside_prob < 0.1 and left_nearside_prob < 0.1:
           self.road_edge_offset = 0.0
-        elif right_edge_prob > 0.35 and right_nearside_prob < 0.2 and right_close_prob > 0.5 and left_nearside_prob >= right_nearside_prob:
+        elif right_edge_prob > 0.3 and right_nearside_prob < 0.2 and right_close_prob > 0.5 and left_nearside_prob >= right_nearside_prob:
           self.road_edge_offset = self.right_edge_offset
-        elif left_edge_prob > 0.35 and left_nearside_prob < 0.2 and left_close_prob > 0.5 and right_nearside_prob >= left_nearside_prob:
+        elif left_edge_prob > 0.3 and left_nearside_prob < 0.2 and left_close_prob > 0.5 and right_nearside_prob >= left_nearside_prob:
           self.road_edge_offset = self.left_edge_offset
         else:
           self.road_edge_offset = 0.0

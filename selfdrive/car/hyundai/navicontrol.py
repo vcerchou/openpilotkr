@@ -337,6 +337,7 @@ class NaviControl():
 
   def auto_speed_control(self, CS, navi_speed):
 
+    self.sm.update(0)
     modelSpeed = self.sm['lateralPlan'].modelSpeed
     min_control_speed = 20 if CS.is_set_speed_in_mph else 30
     var_speed = navi_speed
@@ -379,8 +380,9 @@ class NaviControl():
         var_speed = min(navi_speed, 30 if CS.is_set_speed_in_mph else 50)
       elif (self.lead_0.status or self.lead_1.status) and CS.CP.vFuture >= (min_control_speed-(4 if CS.is_set_speed_in_mph else 7)):
         self.faststart = False
-        dRel = int(self.lead_0.dRel)
-        vRel = int(self.lead_0.vRel * (CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH))
+        dRel = CS.lead_distance if 0 < CS.lead_distance < 149 and not self.cut_in_run_timer else int(self.lead_0.dRel)
+        vRel = CS.lead_objspd * (CV.KPH_TO_MPH if CS.is_set_speed_in_mph else 1) if 0 < CS.lead_distance < 149 and \
+         not self.cut_in_run_timer else int(self.lead_0.vRel * (CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH))
         if self.cut_in_run_timer > 0:
           self.cut_in_run_timer -= 1
         elif self.cut_in:

@@ -248,6 +248,8 @@ class CarController:
     self.long_alt = self.c_params.get_bool("OPKRLongAlt")
     self.live_torque_params = self.c_params.get_bool("OpkrLiveTorque")
 
+    self.btnsignal = 0
+
     self.str_log2 = 'MultiLateral'
     if CP.lateralTuning.which() == 'pid':
       self.str_log2 = 'T={:0.2f}/{:0.3f}/{:0.5f}/{:0.2f}'.format(CP.lateralTuning.pid.kpV[1], CP.lateralTuning.pid.kiV[1], CP.lateralTuning.pid.kf, CP.lateralTuning.pid.kd)
@@ -594,12 +596,13 @@ class CarController:
         self.last_lead_distance = 0
         self.standstill_res_button = False
       elif self.opkr_variablecruise and CS.acc_active:
+        btn_signal = self.NC.update(CS)
+        self.btnsignal = btn_signal
         self.on_speed_control = self.NC.onSpeedControl
         self.on_speed_bump_control = self.NC.onSpeedBumpControl
         self.curv_speed_control = self.NC.curvSpeedControl
         self.cut_in_control = self.NC.cutInControl
         self.driver_scc_set_control = self.NC.driverSccSetControl
-        btn_signal = self.NC.update(CS)
         if self.opkr_cruisegap_auto_adj and not self.gap_by_spd_on:
           # gap restore
           if self.switch_timer > 0:
@@ -635,9 +638,15 @@ class CarController:
                   self.resume_cnt = 0
                   self.switch_timer = randint(30, 36)
             elif btn_signal != None:
-              can_sends.append(hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)) if not self.longcontrol \
-              else can_sends.append(hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus))
-              self.resume_cnt += 1
+              if self.switch_timer > 0:
+                self.switch_timer -= 1
+              else:
+                can_sends.append(hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)) if not self.longcontrol \
+                else can_sends.append(hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus))
+                self.resume_cnt += 1
+                if self.resume_cnt >= randint(6, 8):
+                  self.resume_cnt = 0
+                  self.switch_timer = randint(30, 36)
             elif 0 < CS.lead_distance <= 149 and not self.cruise_gap_set_init and self.try_early_stop and self.try_early_stop_retrieve and \
             CS.cruiseGapSet != self.try_early_stop_org_gap and \
             (CS.clu_Vanz <= 20 or (CS.lead_objspd >= 0 and self.sm['longitudinalPlan'].e2eX[12] > 50 and CS.clu_Vanz > 20)):
@@ -725,10 +734,15 @@ class CarController:
             elif btn_signal != None:
               if self.switch_timer2 > 0 and self.try_early_stop_retrieve:
                 self.switch_timer2 -= 1
+              elif self.switch_timer > 0:
+                self.switch_timer -= 1
               else:
                 can_sends.append(hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)) if not self.longcontrol \
                 else can_sends.append(hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus))
-              self.resume_cnt += 1
+                self.resume_cnt += 1
+                if self.resume_cnt >= randint(6, 8):
+                  self.resume_cnt = 0
+                  self.switch_timer = randint(30, 36)
               self.gap_by_spd_gap1 = False
               self.gap_by_spd_gap2 = False
               self.gap_by_spd_gap3 = False
@@ -1157,11 +1171,11 @@ class CarController:
       str_log1 = 'MD={}  BS={:1.0f}/{:1.0f}  CV={:03.0f}/{:0.4f}  TQ={:03.0f}/{:03.0f}  VF={:03.0f}  ST={:03.0f}/{:01.0f}/{:01.0f}'.format(
         CS.out.cruiseState.modeSel, self.CP.mdpsBus, self.CP.sccBus, self.model_speed, abs(self.sm['controlsState'].curvature), abs(new_steer), abs(CS.out.steeringTorque), self.vFuture, self.params.STEER_MAX, self.params.STEER_DELTA_UP, self.params.STEER_DELTA_DOWN)
       if CS.out.cruiseState.accActive:
-        str_log2 = 'AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  TS={:03.0f}  SS/VS={:03.0f}/{:03.0f}  RD/LD={:04.1f}/{:03.1f}  CG={:1.0f}'.format(
-        self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, self.NC.ctrl_speed , set_speed_in_units, round(CS.VSetDis), CS.lead_distance, self.last_lead_distance, CS.cruiseGapSet)
+        str_log2 = 'AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  TS={:03.0f}  SS/VS={:03.0f}/{:03.0f}  RD/ED/C/T={:04.1f}/{:04.1f}/{}/{}  CG={:1.0f}  BT={:1.0f}'.format(
+        self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, self.NC.ctrl_speed , set_speed_in_units, round(CS.VSetDis), CS.lead_distance, self.dRel, int(self.NC.cut_in), self.NC.cut_in_run_timer, CS.cruiseGapSet, self.btnsignal)
       else:
         str_log2 = 'MDPS={}  LKAS={}  LEAD={}  AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  CG={:1.0f}'.format(
-        CS.out.steerFaultTemporary, CS.lkas_button_on, 0 < CS.lead_distance < 149, self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, CS.cruiseGapSet)
+        not CS.out.steerFaultTemporary, CS.lkas_button_on, 0 < CS.lead_distance < 149, self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, CS.cruiseGapSet)
       trace1.printf2( '{}'.format( str_log2 ) )
 
       # str_log3 = 'V/D/R/A/M/G={:.1f}/{:.1f}/{:.1f}/{:.2f}/{:.1f}/{:1.0f}'.format(CS.clu_Vanz, CS.lead_distance, CS.lead_objspd, CS.scc12["aReqValue"], self.stoppingdist, CS.cruiseGapSet)

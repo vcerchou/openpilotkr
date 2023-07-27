@@ -260,7 +260,6 @@ class Controls:
     self.osm_waze_spdlimit_offset_option = int(self.params.get("OpkrSpeedLimitOffsetOption", encoding="utf8"))
     self.osm_speedlimit_enabled = self.params.get_bool("OSMSpeedLimitEnable")
     self.osm_waze_speedlimit = 255
-    self.pause_spdlimit = False
     self.osm_waze_off_spdlimit_init = False
     self.v_cruise_kph_set_timer = 0
     self.safety_speed = 0
@@ -279,8 +278,6 @@ class Controls:
     self.osm_waze_custom_spdlimit_c = list(map(int, self.params.get("OSMCustomSpeedLimitC", encoding="utf8").split(',')))
     self.osm_waze_custom_spdlimit_t = list(map(int, self.params.get("OSMCustomSpeedLimitT", encoding="utf8").split(',')))
 
-    self.pause_spdlimit_push = False
-    self.pause_spdlimit_push_cnt = 0
 
   def auto_enable(self, CS):
     if self.state != State.enabled:
@@ -978,7 +975,7 @@ class Controls:
     controlsState.alertTextMsg1 = self.log_alertTextMsg1
     controlsState.alertTextMsg2 = self.log_alertTextMsg2
     controlsState.alertTextMsg3 = self.log_alertTextMsg3
-    controlsState.pauseSpdLimit = self.pause_spdlimit
+    controlsState.pauseSpdLimit = self.v_cruise_helper.pause_spdlimit
     if self.osm_speedlimit_enabled or self.navi_selection == 2:
       if self.navi_selection == 2:
         controlsState.limitSpeedCamera = int(round(self.sm['liveENaviData'].wazeRoadSpeedLimit))

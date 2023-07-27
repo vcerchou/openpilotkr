@@ -19,9 +19,8 @@ if [ "$?" == "0" ]; then
   REMOTE_HASH=$(git rev-parse --verify origin/$BRANCH)
 
   if [ "$HASH" != "$REMOTE_HASH" ]; then
-    IS_LANGFILE_CHANGED=$(git diff @{upstream} | grep .ts)
+    IS_LANGFILE_CHANGED=$(git diff @{upstream} | grep translations)
     if [ "$IS_LANGFILE_CHANGED" != "" ]; then
-      rm -f /data/openpilot/selfdrive/ui/translations/*.ts
       rm -f /data/openpilot/selfdrive/ui/translations/*.qm    
     fi
     git pull origin $BRANCH

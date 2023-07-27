@@ -960,7 +960,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
 
-  if (s->scene.comma_stock_ui != 1) {
+  if (s->scene.comma_stock_ui != 1 && !s->scene.mapbox_running) {
     // opkr rec
     // QRect recbtn_draw(rect().right() - UI_BORDER_SIZE - 140 - 20, 905, 140, 140);
     // p.setBrush(Qt::NoBrush);
@@ -987,7 +987,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.drawEllipse(multi_btn_draw);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(39, QFont::DemiBold));
-    p.drawText(multi_btn_draw, Qt::AlignCenter, QString("PUSH"));
+    p.drawText(multi_btn_draw, Qt::AlignCenter, QString("OPKR"));
     p.setBrush(Qt::NoBrush);
     if (s->scene.multi_btn_touched) {
       s->scene.multi_btn_slide_timer += 20;
@@ -1622,7 +1622,7 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
   painter.save();
 
   if (scene.enabled) {
-    drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile?(height() - btn_size/2 - 10):(btn_size/2 + 10),
+    drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size/2 - 10):(btn_size/2 + 10),
      scene.experimental_mode?experimental_img:engage_img, QColor(23, 134, 68, 150), 1.0, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";

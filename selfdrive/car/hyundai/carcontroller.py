@@ -1172,7 +1172,7 @@ class CarController:
         CS.out.cruiseState.modeSel, self.CP.mdpsBus, self.CP.sccBus, self.model_speed, abs(self.sm['controlsState'].curvature), abs(new_steer), abs(CS.out.steeringTorque), self.vFuture, self.params.STEER_MAX, self.params.STEER_DELTA_UP, self.params.STEER_DELTA_DOWN)
       if CS.out.cruiseState.accActive:
         str_log2 = 'AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  TS={:03.0f}  SS/VS={:03.0f}/{:03.0f}  RD/ED/C/T={:04.1f}/{:04.1f}/{}/{}  CG={:1.0f}  BT={:1.0f}'.format(
-        self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, self.NC.ctrl_speed , set_speed_in_units, round(CS.VSetDis), CS.lead_distance, self.dRel, int(self.NC.cut_in), self.NC.cut_in_run_timer, CS.cruiseGapSet, self.btnsignal)
+        self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, self.NC.ctrl_speed , set_speed_in_units, round(CS.VSetDis), CS.lead_distance, self.dRel, int(self.NC.cut_in), self.NC.cut_in_run_timer, CS.cruiseGapSet, self.btnsignal if self.btnsignal is not None else 0)
       else:
         str_log2 = 'MDPS={}  LKAS={}  LEAD={}  AQ={:+04.2f}  VF={:03.0f}/{:03.0f}  CG={:1.0f}'.format(
         not CS.out.steerFaultTemporary, CS.lkas_button_on, 0 < CS.lead_distance < 149, self.aq_value if self.longcontrol else CS.scc12["aReqValue"], self.vFuture, self.vFutureA, CS.cruiseGapSet)

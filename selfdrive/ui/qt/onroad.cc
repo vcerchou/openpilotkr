@@ -991,7 +991,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setBrush(Qt::NoBrush);
     if (s->scene.multi_btn_touched) {
       s->scene.multi_btn_slide_timer += 10;
-      s->scene.multi_btn_slide_timer = fmin(s->scene.multi_btn_slide_timer, 180);
+      s->scene.multi_btn_slide_timer = fmin(s->scene.multi_btn_slide_timer, 120);
       QRect multi_btn_draw1(m_x-(int)s->scene.multi_btn_slide_timer, m_y, m_btn_size, m_btn_size);
       QRect multi_btn_draw2(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y, m_btn_size, m_btn_size);
       p.drawEllipse(multi_btn_draw1);

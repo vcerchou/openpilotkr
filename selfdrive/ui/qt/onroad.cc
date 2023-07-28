@@ -383,7 +383,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
 
   if (s.scene.live_tune_panel_enable) {
     map_settings_btn->setEnabled(false);
-  } else {
+  } else if (s.scene.mapbox_enabled) {
     map_settings_btn->setEnabled(true);
   }
 

@@ -1,10 +1,10 @@
+import os
+import sys
 import subprocess
 import numpy as np
 from selfdrive.mapd.lib.geo import R
 from selfdrive.mapd.lib.helpers import is_local_osm_installed
 
-import os
-import sys
 from common.basedir import BASEDIR
 sys.path.append(os.path.join(BASEDIR, "pyextra"))
 

@@ -46,7 +46,6 @@ class OSM():
       else:
         print("Query OSM from remote Server")
         ways = self.api.query(q).ways
-        print(ways)
     except Exception as e:
       print(f'Exception while querying OSM:\n{e}')
       ways = []

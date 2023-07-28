@@ -136,11 +136,7 @@ void OnroadWindow::offroadTransition(bool offroad) {
 
       QObject::connect(m, &MapPanel::mapPanelRequested, this, &OnroadWindow::mapPanelRequested);
       QObject::connect(nvg->map_settings_btn, &MapSettingsButton::clicked, m, &MapPanel::toggleMapSettings);
-      if (uiState()->scene.live_tune_panel_enable) {
-        nvg->map_settings_btn->setEnabled(false);
-      } else {
-        nvg->map_settings_btn->setEnabled(true);
-      }
+      nvg->map_settings_btn->setEnabled(true);
 
       m->setFixedWidth(topWidget(this)->width() / 2 - UI_BORDER_SIZE);
       split->insertWidget(0, m);
@@ -383,6 +379,12 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   if (map_settings_btn->isEnabled()) {
     map_settings_btn->setVisible(!hideBottomIcons);
     main_layout->setAlignment(map_settings_btn, (rightHandDM ? Qt::AlignLeft : Qt::AlignRight) | Qt::AlignBottom);
+  }
+
+  if (s.scene.live_tune_panel_enable) {
+    map_settings_btn->setEnabled(false)
+  } else {
+    map_settings_btn->setEnabled(true)
   }
 
   // opkr

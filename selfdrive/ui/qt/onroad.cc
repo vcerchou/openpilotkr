@@ -136,7 +136,11 @@ void OnroadWindow::offroadTransition(bool offroad) {
 
       QObject::connect(m, &MapPanel::mapPanelRequested, this, &OnroadWindow::mapPanelRequested);
       QObject::connect(nvg->map_settings_btn, &MapSettingsButton::clicked, m, &MapPanel::toggleMapSettings);
-      nvg->map_settings_btn->setEnabled(true);
+      if (uiState()->scene.live_tune_panel_enable) {
+        nvg->map_settings_btn->setEnabled(false);
+      } else {
+        nvg->map_settings_btn->setEnabled(true);
+      }
 
       m->setFixedWidth(topWidget(this)->width() / 2 - UI_BORDER_SIZE);
       split->insertWidget(0, m);

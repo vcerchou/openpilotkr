@@ -111,6 +111,11 @@ private:
   QPixmap dm_img;
   QPixmap engage_img;
   QPixmap experimental_img;
+  QPixmap gear_img_p;
+  QPixmap gear_img_r;
+  QPixmap gear_img_n;
+  QPixmap gear_img_d;
+
   float speed;
   QString speedUnit;
   float setSpeed;

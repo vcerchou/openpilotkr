@@ -1,10 +1,10 @@
 import os
+import sys
 import subprocess
 import requests
 import email.utils as eut
 import time
 
-import sys
 from common.basedir import BASEDIR
 sys.path.append(os.path.join(BASEDIR, "pyextra"))
 

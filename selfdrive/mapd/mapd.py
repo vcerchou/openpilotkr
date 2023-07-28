@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-import os
-import sys
-from common.basedir import BASEDIR
 import threading
 from traceback import print_exception
 import numpy as np
@@ -13,8 +10,6 @@ from selfdrive.mapd.lib.geo import distance_to_points
 from selfdrive.mapd.lib.WayCollection import WayCollection
 from selfdrive.mapd.config import QUERY_RADIUS, MIN_DISTANCE_FOR_NEW_QUERY, FULL_STOP_MAX_SPEED, LOOK_AHEAD_HORIZON_TIME
 from common.params import Params
-
-sys.path.append(os.path.join(BASEDIR, "pyextra"))
 
 _DEBUG = False
 

@@ -1,9 +1,14 @@
 import os
-import overpy
 import subprocess
 import requests
 import email.utils as eut
 import time
+
+import sys
+from common.basedir import BASEDIR
+sys.path.append(os.path.join(BASEDIR, "pyextra"))
+
+import overpy
 
 
 S3_LOCAL_OSM_URL = "https://opkr.o-r.kr/osm/db/kor/db.tar.gz"

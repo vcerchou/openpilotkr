@@ -382,9 +382,9 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   }
 
   if (s.scene.live_tune_panel_enable) {
-    map_settings_btn->setEnabled(false)
+    map_settings_btn->setEnabled(false);
   } else {
-    map_settings_btn->setEnabled(true)
+    map_settings_btn->setEnabled(true);
   }
 
   // opkr

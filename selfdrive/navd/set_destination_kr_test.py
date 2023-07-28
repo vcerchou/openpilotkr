@@ -19,13 +19,13 @@ if __name__ == "__main__":
   else:
     print("OPKR Route test")
     dest = {
-      "latitude": 37.533180,
-      "longitude": 126.669497,
+      "latitude": 37.533157,
+      "longitude": 126.669500,
     }
     params.put("NavDestination", json.dumps(dest))
 
     waypoints = [
-      (126.669497, 37.533180),
+      (126.669500, 37.533157),
     ]
     params.put("NavDestinationWaypoints", json.dumps(waypoints))
 

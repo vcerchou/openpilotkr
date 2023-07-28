@@ -1655,16 +1655,16 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";
     switch(int(scene.getGearShifter)) {
-      case 1 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_p, 1.0); break;
-      case 2 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_d, 1.0); break;
-      case 3 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_n, 1.0); break;
-      case 4 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_r, 1.0); break;
+      case 1 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_p); break;
+      case 2 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_d); break;
+      case 3 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_n); break;
+      case 4 : drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), gear_img_r); break;
       case 5 : gear_text = "M"; painter.setPen(greenColor(255)); debugText(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true); break;
       case 7 : gear_text = "B"; painter.setPen(whiteColor(255)); debugText(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true); break;
       default: gear_text = QString::number(int(scene.getGearShifter), 'f', 0); painter.setPen(whiteColor(255)); debugText(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size/2 + 70):(btn_size / 2 + 70 + 10), gear_text, 255, 190, true); break;
     }
   } else {
-    drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), engage_img, blackColor(100), 0.8);
+    drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size / 2 - 10):(btn_size / 2 + 10), engage_img, blackColor(100), 0.9);
   }
 
   painter.restore();

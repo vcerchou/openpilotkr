@@ -985,14 +985,18 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     int m_y = m_btn_center_y - m_btn_size/2;
     QRect multi_btn_draw(m_x, m_y, m_btn_size, m_btn_size);
 
+    p.setBrush(blackColor(70));
+    p.setPen(Qt::NoPen);
+    p.drawEllipse(m_x-5, m_y-5, m_btn_size+10, m_btn_size+10);
+    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.setBrush(Qt::NoBrush);
     if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(100));
-    p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(multi_btn_draw);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(43, QFont::DemiBold));
     p.drawText(multi_btn_draw, Qt::AlignCenter, QString("OPKR"));
     p.setBrush(Qt::NoBrush);
+
     if (s->scene.multi_btn_touched) {
       s->scene.multi_btn_slide_timer += 20;
       s->scene.multi_btn_slide_timer = fmin(s->scene.multi_btn_slide_timer, 180);
@@ -1476,7 +1480,7 @@ void AnnotatedCameraWidget::drawText(QPainter &p, int x, int y, const QString &t
 void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QBrush bg, float opacity, bool rotation, float angle) {
   // opkr
   if (rotation) {
-    p.setOpacity(opacity);
+    p.setOpacity(1.0);
     p.setPen(Qt::NoPen);
     p.setBrush(bg);
     p.drawEllipse(x - btn_size / 2, y - btn_size / 2, btn_size, btn_size);
@@ -1488,6 +1492,7 @@ void AnnotatedCameraWidget::drawIcon(QPainter &p, int x, int y, QPixmap &img, QB
     QRect r = img.rect();
     r.moveCenter(QPoint(0,0));
     p.drawPixmap(r, img);
+    p.setOpacity(1.0);
     p.restore();
   } else {
     p.setOpacity(1.0);  // bg dictates opacity of ellipse
@@ -1636,7 +1641,7 @@ void AnnotatedCameraWidget::drawWheelState(QPainter &painter, const UIState *s) 
 
   if (scene.enabled) {
     drawIcon(painter, rect().right() - btn_size / 2 - 10, scene.low_ui_profile&&!scene.mapbox_running?(height() - btn_size/2 - 10):(btn_size/2 + 10),
-     scene.experimental_mode?experimental_img:engage_img, QColor(23, 134, 68, 150), 1.0, true, scene.angleSteers);
+     scene.experimental_mode?experimental_img:engage_img, QColor(23, 134, 68, 150), 0.9, true, scene.angleSteers);
   } else if (!scene.comma_stock_ui) {
     QString gear_text = "0";
     switch(int(scene.getGearShifter)) {

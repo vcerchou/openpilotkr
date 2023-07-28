@@ -328,7 +328,7 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
   QRect livetunepanel_right_btn = QRect(1360, 745, 210, 170);
 
   QRect stockui_btn = QRect(15, uiState()->scene.low_ui_profile?693:15, 184, 202);
-  QRect tuneui_btn = QRect(uiState()->scene.mapbox_enabled?1420:1960, uiState()->scene.low_ui_profile?895:15, 170, 170);
+  QRect tuneui_btn = QRect(uiState()->scene.mapbox_enabled?1420:1960, uiState()->scene.low_ui_profile&&!uiState()->scene.mapbox_enabled?895:15, 170, 170);
   QRect speedlimit_btn = QRect(220, uiState()->scene.low_ui_profile?700:15, 190, 190);
   QRect monitoring_btn = QRect(20, uiState()->scene.low_ui_profile?20:860, 190, 190);
   QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
@@ -399,17 +399,32 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     return;
   }
   // LiveTune UI Toggle
-  if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running || (uiState()->scene.multi_btn_touched && uiState()->scene.mapbox_enabled)) {
-    uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
-    if (uiState()->scene.opkr_livetune_ui) {
-      Params().putBool("OpkrLiveTunePanelEnable", true);
-      uiState()->scene.live_tune_panel_enable = true;
-    } else {
-      Params().putBool("OpkrLiveTunePanelEnable", false);
-      uiState()->scene.live_tune_panel_enable = false;
+  if (uiState()->scene.multi_btn_touched && uiState()->scene.mapbox_enabled) {
+    if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
+      uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
+      if (uiState()->scene.opkr_livetune_ui) {
+        Params().putBool("OpkrLiveTunePanelEnable", true);
+        uiState()->scene.live_tune_panel_enable = true;
+      } else {
+        Params().putBool("OpkrLiveTunePanelEnable", false);
+        uiState()->scene.live_tune_panel_enable = false;
+      }
+      return;
     }
-    return;
+  } else {
+    if (uiState()->scene.started && !sidebar->isVisible() && tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_running && !uiState()->scene.mapbox_enabled) {
+      uiState()->scene.opkr_livetune_ui = !uiState()->scene.opkr_livetune_ui;
+      if (uiState()->scene.opkr_livetune_ui) {
+        Params().putBool("OpkrLiveTunePanelEnable", true);
+        uiState()->scene.live_tune_panel_enable = true;
+      } else {
+        Params().putBool("OpkrLiveTunePanelEnable", false);
+        uiState()->scene.live_tune_panel_enable = false;
+      }
+      return;
+    }
   }
+
   // SpeedLimit Decel on/off Toggle
   if (uiState()->scene.started && !sidebar->isVisible() && speedlimit_btn.contains(e->pos()) && !uiState()->scene.mapbox_running) {
     uiState()->scene.sl_decel_off = !uiState()->scene.sl_decel_off;

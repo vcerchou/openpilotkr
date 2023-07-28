@@ -101,9 +101,9 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
   QRect rec_btn = QRect(1780, uiState()->scene.low_ui_profile?15:895, 160, 160);
   QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
 
-  if (multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
+  if ((multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
     stockui_btn.contains(e->pos()) || (tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_enabled) || uiState()->scene.live_tune_panel_enable ||
-    (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()) || (tuneui_btn.contains(e->pos()) && uiState()->scene.mapbox_enabled))) &&
+    (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()) || tuneui_btn.contains(e->pos())))) &&
     !uiState()->scene.mapbox_running) {
     QWidget::mousePressEvent(e);
     return;

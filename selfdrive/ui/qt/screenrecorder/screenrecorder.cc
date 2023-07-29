@@ -66,17 +66,17 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    QRect r = QRect(0, 0, width(), height());
+    int rl = 150;
+    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
 
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    p.setBrush(QBrush(QColor::fromRgbF(0, 0, 0, 0)));
-    r -= QMargins(0, 0, 40, 40);
+
     p.setPen(Qt::NoPen);
 
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
     p.setBrush(QBrush(bg));
-    p.drawEllipse(r);
+    p.drawPolygon(topleft, std::size(topleft));
 }
 
 void ScreenRecoder::btnReleased(void) {

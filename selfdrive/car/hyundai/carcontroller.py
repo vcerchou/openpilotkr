@@ -641,8 +641,8 @@ class CarController:
               if self.switch_timer > 0:
                 self.switch_timer -= 1
               else:
-                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * 3) if not self.longcontrol \
-                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * 3)
+                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * 15) if not self.longcontrol \
+                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * 15)
                 self.resume_cnt += 1
                 if self.resume_cnt >= randint(6, 8):
                   self.resume_cnt = 0
@@ -737,8 +737,8 @@ class CarController:
               elif self.switch_timer > 0:
                 self.switch_timer -= 1
               else:
-                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * 3) if not self.longcontrol \
-                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * 3)
+                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * 15) if not self.longcontrol \
+                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * 15)
                 self.resume_cnt += 1
                 if self.resume_cnt >= randint(6, 8):
                   self.resume_cnt = 0

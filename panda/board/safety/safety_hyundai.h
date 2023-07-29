@@ -17,6 +17,14 @@
   .has_steer_req_tolerance = true, \
 }
 
+const SteeringLimits HYUNDAI_STEERING_LIMITS = HYUNDAI_LIMITS(384, 3, 7);
+const SteeringLimits HYUNDAI_STEERING_LIMITS_ALT = HYUNDAI_LIMITS(270, 2, 3);
+
+const LongitudinalLimits HYUNDAI_LONG_LIMITS = {
+  .max_accel = 200,   // 1/100 m/s2
+  .min_accel = -350,  // 1/100 m/s2
+};
+
 int OP_LKAS_live = 0;
 int OP_MDPS_live = 0;
 int OP_CLU_live = 0;
@@ -32,14 +40,6 @@ bool HKG_forward_obd = false;
 bool HKG_forward_bus2 = true;
 int HKG_LKAS_bus0_cnt = 0;
 int HKG_Lcan_bus1_cnt = 0;
-
-const SteeringLimits HYUNDAI_STEERING_LIMITS = HYUNDAI_LIMITS(384, 3, 7);
-const SteeringLimits HYUNDAI_STEERING_LIMITS_ALT = HYUNDAI_LIMITS(270, 2, 3);
-
-const LongitudinalLimits HYUNDAI_LONG_LIMITS = {
-  .max_accel = 200,   // 1/100 m/s2
-  .min_accel = -350,  // 1/100 m/s2
-};
 
 const CanMsg HYUNDAI_TX_MSGS[] = {
   {832, 0, 8},  // LKAS11 Bus 0

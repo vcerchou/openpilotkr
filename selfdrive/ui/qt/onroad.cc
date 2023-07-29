@@ -65,6 +65,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 	record_timer->start(1000/UI_FREQ);
 
   recorder = new ScreenRecoder(this);
+  recorder.resize(2160, 1080)
   stacked_layout->addWidget(recorder);
   recorder->raise();
   alerts->raise();

@@ -885,7 +885,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.rotate(-90);
       p.setFont(InterFont(27, QFont::DemiBold));
       p.setPen(whiteColor(200));
-      p.drawText(-25, 0, QString::number(s->scene.satelliteCount, 'f', 0));
+      p.drawText(-35, 0, QString::number(s->scene.satelliteCount, 'f', 0));
       p.resetMatrix();
       // altitude
       num_r = num_r + 1;

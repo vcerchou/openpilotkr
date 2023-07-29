@@ -92,6 +92,8 @@ void OnroadWindow::updateState(const UIState &s) {
     split->setDirection(QBoxLayout::RightToLeft);
   }
 
+  if (s.scene.brakePress) bgColor = bg_colors[STATUS_DISENGAGED];
+
   nvg->updateState(s);
 
   if (bg != bgColor) {

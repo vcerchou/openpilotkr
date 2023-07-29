@@ -66,10 +66,10 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    QPoint topleft[] = {{0, 0}, {150,0}, {150, 20}, {20, 20}, {20, 150}, {0, 150}};
-    QPoint topright[] = {{2160, 0}, {2010,0}, {2010, 20}, {2140, 20}, {2140, 150}, {2160, 150}};
-    QPoint bottomleft[] = {{0, 1080}, {150,1080}, {150, 1060}, {20, 1060}, {20, 930}, {0, 930}};
-    QPoint bottomright[] = {{2160, 1080}, {2010,1080}, {2010, 1060}, {2140, 1060}, {2140, 930}, {2160, 930}};
+    QPointF topleft[] = {{0, 0}, {150,0}, {150, 20}, {20, 20}, {20, 150}, {0, 150}};
+    QPointF topright[] = {{width(), 0}, {width()-150,0}, {width()-150, 20}, {width()-20, 20}, {width()-20, 150}, {width(), 150}};
+    QPointF bottomleft[] = {{0, height()}, {150,height()}, {150, height()-20}, {20, height()-20}, {20, height()-150}, {0, height()-150}};
+    QPointF bottomright[] = {{width(), height()}, {width()-150,height()}, {width()-150, height()-20}, {width()-20, height()-20}, {width()-20, height()-150}, {width(), height()-150}};
 
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);

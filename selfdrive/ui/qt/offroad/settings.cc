@@ -377,6 +377,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   lastUpdateLbl = new LabelControl(tr("Last Update Check"), "", "");
   updateBtn = new ButtonControl(tr("Check for Updates"), "");
   connect(updateBtn, &ButtonControl::clicked, [=]() {
+    updateBtn->setText(tr("RUNNING"));
     std::system("/data/openpilot/selfdrive/assets/addon/script/gitcommit.sh");
     std::system("date '+%F %T' > /data/params/d/LastUpdateTime");
     QString last_ping = QString::fromStdString(params.get("LastAthenaPingTime"));
@@ -419,7 +420,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
         }
       }
     }
-  });
+  }updateBtn->setText(tr("CHECK")););
 
 
   auto uninstallBtn = new ButtonControl(tr("Uninstall %1").arg(getBrand()), tr("UNINSTALL"));

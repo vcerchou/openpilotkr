@@ -318,10 +318,10 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
 
   engage_img = loadPixmap("../assets/img_chffr_wheel.png", {img_size, img_size});
   experimental_img = loadPixmap("../assets/img_experimental.svg", {img_size + 5, img_size + 5});
-  gear_img_p = loadPixmap("../assets/addon/img/circle_red_letter-p.svg", {img_size, img_size});
-  gear_img_r = loadPixmap("../assets/addon/img/circle_green_letter-r.svg", {img_size, img_size});
-  gear_img_n = loadPixmap("../assets/addon/img/circle_blue_letter-n.svg", {img_size, img_size});
-  gear_img_d = loadPixmap("../assets/addon/img/circle_green_letter-d.svg", {img_size, img_size});
+  gear_img_p = loadPixmap("../assets/addon/img/circle_red_letter-p.svg", {img_size+20, img_size+20});
+  gear_img_r = loadPixmap("../assets/addon/img/circle_green_letter-r.svg", {img_size+20, img_size+20});
+  gear_img_n = loadPixmap("../assets/addon/img/circle_blue_letter-n.svg", {img_size+20, img_size+20});
+  gear_img_d = loadPixmap("../assets/addon/img/circle_green_letter-d.svg", {img_size+20, img_size+20});
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {

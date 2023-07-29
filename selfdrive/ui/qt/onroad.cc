@@ -1513,9 +1513,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     if(s->scene.rec_blinker >= 105) {
       s->scene.rec_blinker = 0;
     } else if (s->scene.rec_blinker >= 55) {
-      p.setBrush(redColor(0));
-    } else {
       p.setBrush(redColor(200));
+    } else {
+      p.setBrush(redColor(0));
     }
     
     p.drawPolygon(topleft, std::size(topleft));

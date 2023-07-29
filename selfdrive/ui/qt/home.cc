@@ -342,12 +342,12 @@ void HomeWindow::mousePressEvent(QMouseEvent* e)
     uiState()->scene.multi_btn_touched = !uiState()->scene.multi_btn_touched;
     return;
   }
-  // OPKR REC
-  if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && !uiState()->scene.mapbox_running &&
-      uiState()->scene.multi_btn_touched) {
-    uiState()->scene.touched = true;
-    return;
-  }
+  // // OPKR REC
+  // if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && rec_btn.contains(e->pos()) && !uiState()->scene.mapbox_running &&
+  //     uiState()->scene.multi_btn_touched) {
+  //   uiState()->scene.touched = true;
+  //   return;
+  // }
   // Laneless mode
   if (uiState()->scene.started && !sidebar->isVisible() && uiState()->scene.comma_stock_ui != 1 && laneless_btn.contains(e->pos()) && !uiState()->scene.mapbox_running &&
       uiState()->scene.multi_btn_touched) {

@@ -66,10 +66,13 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    QPoint topleft[] = {{0, 0}, {150,0}, {150, 20}, {20, 20}, {20, 150}, {0, 150}};
-    QPoint topright[] = {{width(), 0}, {width()-150,0}, {width()-150, 20}, {width()-20, 20}, {width()-20, 150}, {width(), 150}};
-    QPoint bottomleft[] = {{0, height()}, {150,height()}, {150, height()-20}, {20, height()-20}, {20, height()-150}, {0, height()-150}};
-    QPoint bottomright[] = {{width(), height()}, {width()-150,height()}, {width()-150, height()-20}, {width()-20, height()-20}, {width()-20, height()-150}, {width(), height()-150}};
+    int rw = 500;
+    int rh = 500;
+    int rl = 100;
+    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
+    QPoint topright[] = {{rw, 0}, {rw-rl, 0}, {rw-rl, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rl}, {rw, rl}};
+    QPoint bottomleft[] = {{0, rh}, {rl, rh}, {rl, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-rl}, {0, rh-rl}};
+    QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
 
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);

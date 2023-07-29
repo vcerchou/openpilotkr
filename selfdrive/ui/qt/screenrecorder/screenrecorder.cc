@@ -71,7 +71,7 @@ void ScreenRecoder::paintEvent(QPaintEvent *event) {
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
     p.setBrush(QBrush(QColor::fromRgbF(0, 0, 0, 0)));
-    r -= QMargins(50, 50, 50, 50);
+    r -= QMargins(0, 0, 40, 40);
     p.setPen(Qt::NoPen);
 
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);

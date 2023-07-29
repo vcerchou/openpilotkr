@@ -56,7 +56,7 @@ void ScreenRecoder::applyColor() {
   if(frame % (UI_FREQ/2) == 0) {
 
     if(frame % UI_FREQ < (UI_FREQ/2))
-      recording_color = QColor::fromRgbF(1, 0, 0, 0.8);
+      recording_color = QColor::fromRgbF(1, 0, 0, 0.9);
     else
       recording_color = QColor::fromRgbF(0, 0, 0, 0);
 
@@ -71,7 +71,7 @@ void ScreenRecoder::paintEvent(QPaintEvent *event) {
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
     p.setBrush(QBrush(QColor::fromRgbF(0, 0, 0, 0)));
-    r -= QMargins(UI_BORDER_SIZE+90, UI_BORDER_SIZE+90, 40, 40);
+    r -= QMargins(50, 50, 50, 50);
     p.setPen(Qt::NoPen);
 
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);

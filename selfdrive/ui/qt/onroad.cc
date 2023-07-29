@@ -68,11 +68,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   QVBoxLayout * recorder_layout = new QVBoxLayout (recorder_widget);
   recorder = new ScreenRecoder(this);
   recorder_layout->addWidget(recorder);
-  if (uiState()->scene.low_ui_profile) {
-    recorder_layout->setAlignment(recorder, Qt::AlignRight | Qt::AlignTop);
-  } else {
-    recorder_layout->setAlignment(recorder, Qt::AlignRight | Qt::AlignBottom);
-  }
+  recorder_layout->setAlignment(recorder, Qt::AlignRight | Qt::AlignBottom);
   stacked_layout->addWidget(recorder_widget);
   recorder_widget->raise();
   alerts->raise();

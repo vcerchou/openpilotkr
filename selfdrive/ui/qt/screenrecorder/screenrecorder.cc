@@ -77,10 +77,10 @@ void ScreenRecoder::paintEvent(QPaintEvent *event) {
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
     p.setBrush(QBrush(bg));
     p.setPen(Qt::NoPen);
-    p.drawPolygon(topleft);
-    p.drawPolygon(topright);
-    p.drawPolygon(bottomleft);
-    p.drawPolygon(bottomright);
+    p.drawPolygon(topleft, std::size(topleft));
+    p.drawPolygon(topright, std::size(topright));
+    p.drawPolygon(bottomleft, std::size(bottomleft));
+    p.drawPolygon(bottomright, std::size(bottomright));
 }
 
 void ScreenRecoder::btnReleased(void) {

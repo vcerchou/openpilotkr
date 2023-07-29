@@ -45,5 +45,5 @@ private:
   CameraWidget *cameraView;
   DriverViewScene *scene;
   QStackedLayout *layout;
-  const QRect d_rec_btn = QRect(1985, 905, 140, 140);
+  const QRect d_rec_btn = QRect(1800, 905, 140, 140);
 };

@@ -166,7 +166,7 @@ void OnroadWindow::offroadTransition(bool offroad) {
 
   alerts->updateAlert({});
 
-  if(offroad && recorder) recorder->stop(false);
+  if(offroad && recorder) recorder->stop();
 }
 
 void OnroadWindow::paintEvent(QPaintEvent *event) {

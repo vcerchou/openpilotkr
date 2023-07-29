@@ -48,7 +48,7 @@ ScreenRecoder::ScreenRecoder(QWidget *parent) : QPushButton(parent), image_queue
 }
 
 ScreenRecoder::~ScreenRecoder() {
-  stop(false);
+  stop();
 }
 
 void ScreenRecoder::applyColor() {
@@ -102,9 +102,9 @@ void ScreenRecoder::closeEncoder() {
 void ScreenRecoder::toggle() {
 
   if(!recording)
-      start(true);
+      start();
   else
-      stop(true);
+      stop();
 }
 
 void ScreenRecoder::start() {
@@ -171,8 +171,8 @@ void ScreenRecoder::update_screen() {
   if(recording) {
 
     if(milliseconds() - started > 1000*60*3) {
-      stop(false);
-      start(false);
+      stop();
+      start();
       return;
     }
 

@@ -66,10 +66,10 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    QPointF topleft[] = {{0, 0}, {150,0}, {150, 20}, {20, 20}, {20, 150}, {0, 150}};
-    QPointF topright[] = {{width(), 0}, {width()-150,0}, {width()-150, 20}, {width()-20, 20}, {width()-20, 150}, {width(), 150}};
-    QPointF bottomleft[] = {{0, height()}, {150,height()}, {150, height()-20}, {20, height()-20}, {20, height()-150}, {0, height()-150}};
-    QPointF bottomright[] = {{width(), height()}, {width()-150,height()}, {width()-150, height()-20}, {width()-20, height()-20}, {width()-20, height()-150}, {width(), height()-150}};
+    QPoint topleft[] = {{0, 0}, {150,0}, {150, 20}, {20, 20}, {20, 150}, {0, 150}};
+    QPoint topright[] = {{width(), 0}, {width()-150,0}, {width()-150, 20}, {width()-20, 20}, {width()-20, 150}, {width(), 150}};
+    QPoint bottomleft[] = {{0, height()}, {150,height()}, {150, height()-20}, {20, height()-20}, {20, height()-150}, {0, height()-150}};
+    QPoint bottomright[] = {{width(), height()}, {width()-150,height()}, {width()-150, height()-20}, {width()-20, height()-20}, {width()-20, height()-150}, {width(), height()-150}};
 
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
@@ -77,10 +77,10 @@ void ScreenRecoder::paintEvent(QPaintEvent *event) {
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
     p.setBrush(QBrush(bg));
     p.setPen(Qt::NoPen);
-    p.drawPolygon(topleft, std::size(topleft));
-    p.drawPolygon(topright, std::size(topright));
-    p.drawPolygon(bottomleft, std::size(bottomleft));
-    p.drawPolygon(bottomright, std::size(bottomright));
+    p.drawPolygon(topleft);
+    p.drawPolygon(topright);
+    p.drawPolygon(bottomleft);
+    p.drawPolygon(bottomright);
 }
 
 void ScreenRecoder::btnReleased(void) {

@@ -420,8 +420,8 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
         }
       }
     }
-  }updateBtn->setText(tr("CHECK")););
-
+    updateBtn->setText(tr("CHECK"));
+  });
 
   auto uninstallBtn = new ButtonControl(tr("Uninstall %1").arg(getBrand()), tr("UNINSTALL"));
   connect(uninstallBtn, &ButtonControl::clicked, [&]() {

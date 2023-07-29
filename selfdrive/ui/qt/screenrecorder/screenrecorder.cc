@@ -80,7 +80,6 @@ void ScreenRecoder::paintEvent(QPaintEvent *event) {
     p.drawPolygon(topright, std::size(topright));
     p.drawPolygon(bottomleft, std::size(bottomleft));
     p.drawPolygon(bottomright, std::size(bottomright));
-
 }
 
 void ScreenRecoder::btnReleased(void) {

@@ -641,8 +641,10 @@ class CarController:
               if self.switch_timer > 0:
                 self.switch_timer -= 1
               else:
-                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * 4) if not self.longcontrol \
-                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * 4)
+                btn_count = 1
+                btn_count = int(interp(self.NC.t_interval, [10,70],[1,4])) if CS.is_set_speed_in_mph else int(interp(self.NC.t_interval, [7,40],[1,4]))
+                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * btn_count) if not self.longcontrol \
+                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * btn_count)
                 self.resume_cnt += 1
                 if self.resume_cnt >= randint(6, 8):
                   self.resume_cnt = 0
@@ -737,8 +739,10 @@ class CarController:
               elif self.switch_timer > 0:
                 self.switch_timer -= 1
               else:
-                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * 4) if not self.longcontrol \
-                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * 4)
+                btn_count = 1
+                btn_count = int(interp(self.NC.t_interval, [10,70],[1,4])) if CS.is_set_speed_in_mph else int(interp(self.NC.t_interval, [7,40],[1,4]))
+                can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * btn_count) if not self.longcontrol \
+                else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * btn_count)
                 self.resume_cnt += 1
                 if self.resume_cnt >= randint(6, 8):
                   self.resume_cnt = 0

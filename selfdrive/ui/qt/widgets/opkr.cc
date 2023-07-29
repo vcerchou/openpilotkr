@@ -193,8 +193,6 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Branch Change") )
 {
    QVBoxLayout *pBoxLayout = CreateBoxLayout();
 
-
-
   const char* git_reset = "/data/openpilot/selfdrive/assets/addon/script/git_reset.sh ''";
   auto gitresetbtn = new ButtonControl(tr("Git Reset"), tr("RUN"));
   QObject::connect(gitresetbtn, &ButtonControl::clicked, [=]() {
@@ -204,7 +202,6 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Branch Change") )
     }
   });
 
-
   const char* gitpull_cancel = "/data/openpilot/selfdrive/assets/addon/script/gitpull_cancel.sh ''";
   auto gitpullcanceltbtn = new ButtonControl(tr("GitPull Restore"), tr("RUN"));
   QObject::connect(gitpullcanceltbtn, &ButtonControl::clicked, [=]() {
@@ -212,11 +209,7 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Branch Change") )
     GitPullCancel::confirm(this);
   });
 
-
-
-
   pBoxLayout->addWidget( new GitPullOnBootToggle() );
-
 
   pBoxLayout->addWidget( new SwitchOpenpilot() ); // opkr
   pBoxLayout->addWidget( new BranchSelectCombo() ); // opkr
@@ -740,6 +733,7 @@ void BranchSelectCombo::refresh() {
   QFile branchlistfile("/data/branches");
   if (branchlistfile.open(QIODevice::ReadOnly)) {
     QTextStream branchname(&branchlistfile);
+    stringList = QStringList();
     while (!branchname.atEnd()) {
       QString line = branchname.readLine();
       stringList.append(line);

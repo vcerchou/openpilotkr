@@ -438,7 +438,7 @@ SoftwarePanel::SoftwarePanel(QWidget* parent) : ListWidget(parent) {
   addItem(new GitHash());
   addItem(new CPresetWidget());
   addItem(new CGitGroup());
-  addItem(new CUtilWidget(this));
+  //addItem(new CUtilWidget(this));
 
   addItem(uninstallBtn);
 }

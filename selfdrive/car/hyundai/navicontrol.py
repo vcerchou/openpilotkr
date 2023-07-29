@@ -349,8 +349,10 @@ class NaviControl():
     dist_sel = self.lead_1.dRel if 0 < self.lead_1.dRel < 85 else self.lead_0.dRel if 0 < self.lead_0.dRel < 85 else CS.lead_distance
     cut_in_ed_rd_diff = True if 0 < CS.lead_distance <= 90 and (CS.lead_distance - dist_sel) > 8.0 else False
 
-    #self.cut_in = cut_in_model or cut_in_ed_rd_diff
-    self.cut_in = cut_in_ed_rd_diff
+    if CS.CP.sccBus == 0 and CS.CP.openpilotLongitudinalControl:
+      self.cut_in = cut_in_model or cut_in_ed_rd_diff
+    else:
+      self.cut_in = cut_in_ed_rd_diff
 
     self.cutInControl = False
     self.driverSccSetControl = False

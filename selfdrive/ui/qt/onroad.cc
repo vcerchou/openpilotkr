@@ -54,6 +54,15 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   setAttribute(Qt::WA_OpaquePaintEvent);
   QObject::connect(uiState(), &UIState::uiUpdate, this, &OnroadWindow::updateState);
   QObject::connect(uiState(), &UIState::offroadTransition, this, &OnroadWindow::offroadTransition);
+
+  // neokii screen recoder, thx for sharing:)
+  record_timer = std::make_shared<QTimer>();
+	QObject::connect(record_timer.get(), &QTimer::timeout, [=]() {
+    if(recorder) {
+      recorder->update_screen();
+    }
+  });
+	record_timer->start(1000/UI_FREQ);
 }
 
 void OnroadWindow::updateState(const UIState &s) {
@@ -100,6 +109,12 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
   QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
   QRect rec_btn = QRect(1780, uiState()->scene.low_ui_profile?15:895, 160, 160);
   QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
+
+  if (uiState()->scene.multi_btn_touched && rec_btn.contains(e->pos())) {
+    if (recorder) recorder->toggle();
+    return;
+  }
+
 
   if ((multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
     stockui_btn.contains(e->pos()) || (tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_enabled) || uiState()->scene.live_tune_panel_enable ||
@@ -150,6 +165,8 @@ void OnroadWindow::offroadTransition(bool offroad) {
 #endif
 
   alerts->updateAlert({});
+
+  if(offroad && recorder) recorder->stop(false);
 }
 
 void OnroadWindow::paintEvent(QPaintEvent *event) {

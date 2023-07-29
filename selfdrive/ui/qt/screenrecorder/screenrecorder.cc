@@ -45,12 +45,6 @@ ScreenRecoder::ScreenRecoder(QWidget *parent) : QPushButton(parent), image_queue
   rgb_buffer = std::make_unique<uint8_t[]>(src_width*src_height*4);
   rgb_scale_buffer = std::make_unique<uint8_t[]>(dst_width*dst_height*4);
   encoder = std::make_unique<OmxEncoder>(path.c_str(), dst_width, dst_height, UI_FREQ, 2*1024*1024, false, false);
-
-  soundStart.setSource(QUrl::fromLocalFile("../assets/sounds/start_record.wav"));
-  soundStop.setSource(QUrl::fromLocalFile("../assets/sounds/stop_record.wav"));
-
-  soundStart.setVolume(0.5f);
-  soundStop.setVolume(0.5f);
 }
 
 ScreenRecoder::~ScreenRecoder() {
@@ -62,9 +56,9 @@ void ScreenRecoder::applyColor() {
   if(frame % (UI_FREQ/2) == 0) {
 
     if(frame % UI_FREQ < (UI_FREQ/2))
-      recording_color = QColor::fromRgbF(1, 0, 0, 0.6);
+      recording_color = QColor::fromRgbF(1, 0, 0, 0.8);
     else
-      recording_color = QColor::fromRgbF(0, 0, 0, 0.3);
+      recording_color = QColor::fromRgbF(0, 0, 0, 0);
 
     update();
   }
@@ -72,21 +66,21 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    QRect r = QRect(0, 0, width(), height());
-    r -= QMargins(5, 5, 5, 5);
+    QPoint topleft[] = {{0, 0}, {150,0}, {150, 20}, {20, 20}, {20, 150}, {0, 150}};
+    QPoint topright[] = {{2160, 0}, {2010,0}, {2010, 20}, {2140, 20}, {2140, 150}, {2160, 150}};
+    QPoint bottomleft[] = {{0, 1080}, {150,1080}, {150, 1060}, {20, 1060}, {20, 930}, {0, 930}};
+    QPoint bottomright[] = {{2160, 1080}, {2010,1080}, {2010, 1060}, {2140, 1060}, {2140, 930}, {2160, 930}};
+
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
-    p.setPen(QPen(QColor::fromRgbF(1, 1, 1, 0.4), 10, Qt::SolidLine, Qt::FlatCap));
 
-    p.setBrush(QBrush(QColor::fromRgbF(0, 0, 0, 0)));
-    p.drawEllipse(r);
-
-    r -= QMargins(40, 40, 40, 40);
-    p.setPen(Qt::NoPen);
-
-    QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0.3);
+    QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
     p.setBrush(QBrush(bg));
-    p.drawEllipse(r);
+    p.drawPolygon(topleft, std::size(topleft));
+    p.drawPolygon(topright, std::size(topright));
+    p.drawPolygon(bottomleft, std::size(bottomleft));
+    p.drawPolygon(bottomright, std::size(bottomright));
+
 }
 
 void ScreenRecoder::btnReleased(void) {
@@ -113,7 +107,7 @@ void ScreenRecoder::toggle() {
       stop(true);
 }
 
-void ScreenRecoder::start(bool sound) {
+void ScreenRecoder::start() {
 
   if(recording)
     return;
@@ -138,9 +132,6 @@ void ScreenRecoder::start(bool sound) {
   update();
 
   started = milliseconds();
-
-  if(sound)
-      soundStart.play();
 }
 
 void ScreenRecoder::encoding_thread_func() {
@@ -162,7 +153,7 @@ void ScreenRecoder::encoding_thread_func() {
   }
 }
 
-void ScreenRecoder::stop(bool sound) {
+void ScreenRecoder::stop() {
 
   if(recording) {
     recording = false;
@@ -172,9 +163,6 @@ void ScreenRecoder::stop(bool sound) {
   image_queue.clear();
   if(encoding_thread.joinable())
     encoding_thread.join();
-
-  if(sound)
-      soundStop.play();
   }
 }
 

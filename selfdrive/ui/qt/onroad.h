@@ -12,6 +12,9 @@
 const int btn_size = 192;
 const int img_size = (btn_size / 4) * 3; // 144
 
+#include <QTimer>
+#include "selfdrive/ui/qt/screenrecorder/screenrecorder.h"
+
 
 // ***** onroad widgets *****
 class OnroadAlerts : public QWidget {
@@ -184,6 +187,12 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
+
+// neokii screen recorder. thx for sharing your source. 
+private:
+  ScreenRecoder* recorder;
+  std::shared_ptr<QTimer> record_timer;
+
 
 private slots:
   void offroadTransition(bool offroad);

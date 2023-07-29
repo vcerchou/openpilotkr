@@ -1461,7 +1461,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     }
     int tw = tvalue.length();
     if (s->scene.mapbox_running) {
-      rect_w = (road_name.length() > 1)?tw*22:tw*16;
+      rect_w = (road_name.length() > 1)?tw*22:tw*19;
     } else {
       rect_w = (road_name.length() > 1)?tw*40:tw*33;
     }

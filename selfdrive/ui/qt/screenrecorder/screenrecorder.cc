@@ -33,7 +33,7 @@ ScreenRecoder::ScreenRecoder(QWidget *parent) : QPushButton(parent), image_queue
   connect(this, SIGNAL(pressed()),this,SLOT(btnPressed()));
   connect(this, SIGNAL(released()),this,SLOT(btnReleased()));
 
-  std::string path = "/data/media/0/videos";
+  std::string path = "/data/media";
   src_width = 2160;
   src_height = 1080;
 
@@ -76,6 +76,7 @@ void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
     p.setBrush(QBrush(bg));
+    p.setPen(Qt::NoPen);
     p.drawPolygon(topleft, std::size(topleft));
     p.drawPolygon(topright, std::size(topright));
     p.drawPolygon(bottomleft, std::size(bottomleft));

@@ -1509,7 +1509,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     QPoint bottomleft[] = {{0, rh}, {rl, rh}, {rl, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-rl}, {0, rh-rl}};
     QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
 
-    s->scene.rec_blinker += 2;
+    s->scene.rec_blinker += 3;
     if(s->scene.rec_blinker >= 105) {
       s->scene.rec_blinker = 0;
     } else if (s->scene.rec_blinker >= 55) {

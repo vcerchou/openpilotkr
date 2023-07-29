@@ -65,6 +65,7 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
 	record_timer->start(1000/UI_FREQ);
 
   recorder = new ScreenRecoder(this);
+  recorder->hide();
 }
 
 void OnroadWindow::updateState(const UIState &s) {
@@ -115,6 +116,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
   QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
 
   if (uiState()->scene.multi_btn_touched && rec_btn.contains(e->pos())) {
+    uiState()->scene.rec_blinker = 0;
     if (recorder) recorder->toggle();
     return;
   }
@@ -1495,6 +1497,31 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setBrush(blackColor(60));
     p.setPen(QPen(blackColor(0), 0));
     p.drawRoundedRect(datetime_panel, 15, 15);
+  }
+
+  // rec_stat
+  if (s->scene.rec_stat) {
+    int rw = 2160;
+    int rh = 1080;
+    int rl = 100;
+    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
+    QPoint topright[] = {{rw, 0}, {rw-rl, 0}, {rw-rl, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rl}, {rw, rl}};
+    QPoint bottomleft[] = {{0, rh}, {rl, rh}, {rl, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-rl}, {0, rh-rl}};
+    QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
+
+    s->scene.rec_blinker += 5;
+    if(s->scene.rec_blinker >= 105) {
+      s->scene.rec_blinker = 0;
+    } else if (s->scene.rec_blinker >= 55) {
+      p.setBrush(redColor(0));
+    } else {
+      p.setBrush(redColor(200));
+    }
+    
+    p.drawPolygon(topleft, std::size(topleft));
+    p.drawPolygon(topright, std::size(topright));
+    p.drawPolygon(bottomleft, std::size(bottomleft));
+    p.drawPolygon(bottomright, std::size(bottomright));
   }
 
   p.restore();

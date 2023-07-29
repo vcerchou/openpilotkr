@@ -66,17 +66,17 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    int rl = 150;
-    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
+    // int rl = 150;
+    // QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
 
-    QPainter p(this);
-    p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    // QPainter p(this);
+    // p.setCompositionMode(QPainter::CompositionMode_SourceOver);
 
-    p.setPen(Qt::NoPen);
+    // p.setPen(Qt::NoPen);
 
-    QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
-    p.setBrush(QBrush(bg));
-    p.drawPolygon(topleft, std::size(topleft));
+    // QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
+    // p.setBrush(QBrush(bg));
+    // p.drawPolygon(topleft, std::size(topleft));
 }
 
 void ScreenRecoder::btnReleased(void) {
@@ -128,6 +128,7 @@ void ScreenRecoder::start() {
   update();
 
   started = milliseconds();
+  uiState()->scene.rec_stat = true;
 }
 
 void ScreenRecoder::encoding_thread_func() {
@@ -160,6 +161,7 @@ void ScreenRecoder::stop() {
   if(encoding_thread.joinable())
     encoding_thread.join();
   }
+  uiState()->scene.rec_stat = false;
 }
 
 void ScreenRecoder::update_screen() {
@@ -172,7 +174,7 @@ void ScreenRecoder::update_screen() {
       return;
     }
 
-    applyColor();
+    //applyColor();
 
     if(rootWidget != nullptr) {
       QPixmap pixmap = rootWidget->grab();

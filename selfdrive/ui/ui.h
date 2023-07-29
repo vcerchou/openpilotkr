@@ -125,7 +125,6 @@ typedef struct UIScene {
   bool brakePress;
   bool gasPress;
   bool autoHold;
-  bool touched = false;
 
   float gpsAccuracyUblox;
   float altitudeUblox;
@@ -226,6 +225,8 @@ typedef struct UIScene {
   int comma_stock_ui;
   bool OPKR_Debug;
   bool rec_stat = false;
+  int rec_blinker = 0;
+
   bool experimental_mode = false;
   bool low_ui_profile;
   bool multi_btn_touched = false;

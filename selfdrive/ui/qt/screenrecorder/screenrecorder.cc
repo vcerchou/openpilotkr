@@ -66,24 +66,17 @@ void ScreenRecoder::applyColor() {
 
 void ScreenRecoder::paintEvent(QPaintEvent *event) {
 
-    int rw = 500;
-    int rh = 500;
-    int rl = 100;
-    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
-    QPoint topright[] = {{rw, 0}, {rw-rl, 0}, {rw-rl, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rl}, {rw, rl}};
-    QPoint bottomleft[] = {{0, rh}, {rl, rh}, {rl, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-rl}, {0, rh-rl}};
-    QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
+    QRect r = QRect(0, 0, width(), height());
 
     QPainter p(this);
     p.setCompositionMode(QPainter::CompositionMode_SourceOver);
+    p.setBrush(QBrush(QColor::fromRgbF(0, 0, 0, 0)));
+    r -= QMargins(UI_BORDER_SIZE+90, UI_BORDER_SIZE+90, 40, 40);
+    p.setPen(Qt::NoPen);
 
     QColor bg = recording ? recording_color : QColor::fromRgbF(0, 0, 0, 0);
     p.setBrush(QBrush(bg));
-    p.setPen(Qt::NoPen);
-    p.drawPolygon(topleft, std::size(topleft));
-    p.drawPolygon(topright, std::size(topright));
-    p.drawPolygon(bottomleft, std::size(bottomleft));
-    p.drawPolygon(bottomright, std::size(bottomright));
+    p.drawEllipse(r);
 }
 
 void ScreenRecoder::btnReleased(void) {

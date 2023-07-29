@@ -93,12 +93,15 @@ class CarState(CarStateBase):
     self.cruise_set_mode = int(Params().get("CruiseStatemodeSelInit", encoding="utf8"))
     self.gasPressed = False
 
-
     self.sm = messaging.SubMaster(['controlsState'])
 
   #@staticmethod
   def cruise_speed_button(self):
+    self.sm.update(0)
     set_speed_kph = self.cruise_set_speed_kph
+    if 0 < round(self.sm['controlsState'].vCruise) < 255:
+      set_speed_kph = round(self.sm['controlsState'].vCruise)
+
     if self.cruise_buttons[-1]:
       self.cruise_buttons_time += 1
     else:
@@ -119,7 +122,7 @@ class CarState(CarStateBase):
           if self.cruise_set_mode > 5:
             self.cruise_set_mode = 0
           return None
-        elif not self.prev_acc_set_btn and (self.VSetDis < 19 or self.VSetDis > 180): # first scc active
+        elif not self.prev_acc_set_btn: # first scc active
           self.prev_acc_set_btn = self.acc_active
           self.cruise_set_speed_kph = self.VSetDis
           return self.cruise_set_speed_kph
@@ -139,9 +142,9 @@ class CarState(CarStateBase):
         else:
           set_speed_kph -= 1
 
-      if set_speed_kph < 30 and not self.is_set_speed_in_mph:
+      if set_speed_kph <= 30 and not self.is_set_speed_in_mph:
         set_speed_kph = 30
-      elif set_speed_kph < 20 and self.is_set_speed_in_mph:
+      elif set_speed_kph <= 20 and self.is_set_speed_in_mph:
         set_speed_kph = 20
 
       self.cruise_set_speed_kph = set_speed_kph
@@ -237,6 +240,11 @@ class CarState(CarStateBase):
     self.is_set_speed_in_mph = bool(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
     ret.isMph = self.is_set_speed_in_mph
 
+    self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
+    self.prev_cruise_buttons = self.cruise_buttons[-1]
+    self.cruise_buttons[-1] = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]
+    ret.cruiseButtons = self.cruise_buttons[-1]
+
     # cruise state
     if self.CP.openpilotLongitudinalControl and self.CP.sccBus <= 0:
       # These are not used for engage/disengage since openpilot keeps track of state using the buttons
@@ -249,8 +257,7 @@ class CarState(CarStateBase):
       ret.cruiseState.standstill = cp_scc.vl["SCC11"]["SCCInfoDisplay"] == 4.
 
       self.acc_active = cp_scc.vl["SCC12"]['ACCMode'] != 0
-      self.cruise_active = self.acc_active
-      if self.cruise_active:
+      if self.acc_active:
         self.brake_check = False
         self.cancel_check = False
       elif not ret.cruiseState.available:
@@ -264,16 +271,12 @@ class CarState(CarStateBase):
                                           cp.vl["LVR12"]["CF_Lvr_CruiseSet"] * speed_conv
       else:
         ret.cruiseState.speed = 0
+      self.cruise_active = self.acc_active
 
     ret.cruiseState.accActive = self.acc_active
     ret.cruiseState.gapSet = cp.vl["SCC11"]['TauGapSet']
     ret.cruiseState.cruiseSwState = self.cruise_buttons[-1]
     ret.cruiseState.modeSel = self.cruise_set_mode
-
-    self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
-    self.prev_cruise_buttons = self.cruise_buttons[-1]
-    self.cruise_buttons[-1] = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]
-    ret.cruiseButtons = self.cruise_buttons[-1]
 
     if self.prev_gap_button != self.cruise_buttons[-1]:
       if self.cruise_buttons[-1] == 3:

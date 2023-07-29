@@ -261,7 +261,6 @@ class Controls:
     self.osm_speedlimit_enabled = self.params.get_bool("OSMSpeedLimitEnable")
     self.osm_waze_speedlimit = 255
     self.osm_waze_off_spdlimit_init = False
-    self.v_cruise_kph_set_timer = 0
     self.safety_speed = 0
     self.lkas_temporary_off = False
     self.gap_by_spd_on_temp = True

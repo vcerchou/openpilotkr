@@ -89,18 +89,15 @@ MapSettings::MapSettings(bool closeable, QWidget *parent) : QFrame(parent) {
 }
 
 void MapSettings::mousePressEvent(QMouseEvent *ev) {
-  printf("re5");
   // Prevent mouse event from propagating up
   ev->accept();
 }
 
 void MapSettings::showEvent(QShowEvent *event) {
-  printf("nav show evnt.....");
   updateCurrentRoute();
 }
 
 void MapSettings::updateCurrentRoute() {
-  printf("re3");
   auto dest = QString::fromStdString(params.get("NavDestination"));
   if (dest.size()) {
     QJsonDocument doc = QJsonDocument::fromJson(dest.trimmed().toUtf8());
@@ -118,13 +115,11 @@ void MapSettings::updateCurrentRoute() {
 }
 
 void MapSettings::updateLocations(const QJsonArray &locations) {
-  printf("re2");
   current_locations = locations;
   refresh();
 }
 
 void MapSettings::refresh() {
-  printf("re1");
   setUpdatesEnabled(false);
 
   auto get_w = [this](int i) {
@@ -158,7 +153,6 @@ void MapSettings::refresh() {
 }
 
 void MapSettings::navigateTo(const QJsonObject &place) {
-  printf("re7");
   QJsonDocument doc(place);
   params.put("NavDestination", doc.toJson().toStdString());
   updateCurrentRoute();
@@ -228,7 +222,6 @@ DestinationWidget::DestinationWidget(QWidget *parent) : QPushButton(parent) {
 }
 
 void DestinationWidget::set(const QJsonObject &destination, bool current) {
-  printf("dsfas1");
   if (dest == destination) return;
 
   dest = destination;
@@ -268,7 +261,6 @@ void DestinationWidget::set(const QJsonObject &destination, bool current) {
 }
 
 void DestinationWidget::unset(const QString &label, bool current) {
-  printf("rount unsetsdagsgdds");
   dest = {};
   setProperty("current", current);
   setProperty("set", false);
@@ -292,49 +284,46 @@ void DestinationWidget::unset(const QString &label, bool current) {
 // singleton NavigationRequest
 
 NavigationRequest *NavigationRequest::instance() {
-  printf("nnan instance....");
   static NavigationRequest *request = new NavigationRequest(qApp);
   return request;
 }
 
 NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
-  printf("local Nav1");
+  if (!params.get("MapboxToken").empty()) {
+    QString local_response = QString::fromStdString(params.get("NavList"));
+    parseLocationsResponse(local_response, true);
+    return;
+  }
   if (auto dongle_id = getDongleId()) {
-    if (!params.get("MapboxToken").empty()) {
-      QString local_response = QString::fromStdString(params.get("NavList"));
-      printf("local Nav");
-      parseLocationsResponse(local_response, true);
-    } else {
-      {
-        // Fetch favorite and recent locations
-        QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/locations";
-        RequestRepeater *repeater = new RequestRepeater(this, url, "ApiCache_NavDestinations", 30, true);
-        QObject::connect(repeater, &RequestRepeater::requestDone, this, &NavigationRequest::parseLocationsResponse);
-      }
-      {
-        auto param_watcher = new ParamWatcher(this);
-        QObject::connect(param_watcher, &ParamWatcher::paramChanged, this, &NavigationRequest::nextDestinationUpdated);
+    {
+      // Fetch favorite and recent locations
+      QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/locations";
+      RequestRepeater *repeater = new RequestRepeater(this, url, "ApiCache_NavDestinations", 30, true);
+      QObject::connect(repeater, &RequestRepeater::requestDone, this, &NavigationRequest::parseLocationsResponse);
+    }
+    {
+      auto param_watcher = new ParamWatcher(this);
+      QObject::connect(param_watcher, &ParamWatcher::paramChanged, this, &NavigationRequest::nextDestinationUpdated);
 
-        // Destination set while offline
-        QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/next";
-        HttpRequest *deleter = new HttpRequest(this);
-        RequestRepeater *repeater = new RequestRepeater(this, url, "", 10, true);
-        QObject::connect(repeater, &RequestRepeater::requestDone, [=](const QString &resp, bool success) {
-          if (success && resp != "null") {
-            if (params.get("NavDestination").empty()) {
-              qWarning() << "Setting NavDestination from /next" << resp;
-              params.put("NavDestination", resp.toStdString());
-            } else {
-              qWarning() << "Got location from /next, but NavDestination already set";
-            }
-            // Send DELETE to clear destination server side
-            deleter->sendRequest(url, HttpRequest::Method::DELETE);
+      // Destination set while offline
+      QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/next";
+      HttpRequest *deleter = new HttpRequest(this);
+      RequestRepeater *repeater = new RequestRepeater(this, url, "", 10, true);
+      QObject::connect(repeater, &RequestRepeater::requestDone, [=](const QString &resp, bool success) {
+        if (success && resp != "null") {
+          if (params.get("NavDestination").empty()) {
+            qWarning() << "Setting NavDestination from /next" << resp;
+            params.put("NavDestination", resp.toStdString());
+          } else {
+            qWarning() << "Got location from /next, but NavDestination already set";
           }
+          // Send DELETE to clear destination server side
+          deleter->sendRequest(url, HttpRequest::Method::DELETE);
+        }
 
-          // athena can set destination at any time
-          param_watcher->addParam("NavDestination");
-        });
-      }
+        // athena can set destination at any time
+        param_watcher->addParam("NavDestination");
+      });
     }
   }
 }
@@ -342,7 +331,6 @@ NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
 static void swap(QJsonValueRef v1, QJsonValueRef v2) { std::swap(v1, v2); }
 
 void NavigationRequest::parseLocationsResponse(const QString &response, bool success) {
-  printf("nav requesst.....");
   if (!success || response == prev_response) return;
 
   prev_response = response;

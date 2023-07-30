@@ -4,7 +4,7 @@ from traceback import print_exception
 import numpy as np
 from time import strftime, gmtime
 import cereal.messaging as messaging
-from common.realtime import Ratekeeper
+from common.realtime import Ratekeeper, sec_since_boot, config_realtime_process
 from selfdrive.mapd.lib.osm import OSM
 from selfdrive.mapd.lib.geo import distance_to_points
 from selfdrive.mapd.lib.WayCollection import WayCollection
@@ -253,6 +253,7 @@ class MapD():
 
 # provides live map data information
 def mapd_thread(sm=None, pm=None):
+  config_realtime_process([2], 5)
   mapd = MapD()
   rk = Ratekeeper(1., print_delay_threshold=None)  # Keeps rate at 1 hz
 

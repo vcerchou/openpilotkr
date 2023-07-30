@@ -268,7 +268,7 @@ static void update_state(UIState *s) {
     scene.cpuTemp = scene.deviceState.getCpuTempC()[0];
     scene.ambientTemp = scene.deviceState.getAmbientTempC();
     scene.fanSpeed = scene.deviceState.getFanSpeedPercentDesired();
-    scene.storageUsage = scene.deviceState.getFreeSpacePercent();
+    scene.storageUsage = scene.deviceState.getStorageUsage();
   }
   if (sm.updated("peripheralState")) {
     scene.peripheralState = sm["peripheralState"].getPeripheralState();

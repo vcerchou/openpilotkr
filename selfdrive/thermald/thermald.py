@@ -266,6 +266,8 @@ def thermald_thread(end_event, hw_queue):
 
     msg.deviceState.screenBrightnessPercent = HARDWARE.get_screen_brightness()
 
+    msg.deviceState.storageUsage = HARDWARE.get_storage_usage_percent()
+
     # this subset is only used for offroad
     temp_sources = [
       msg.deviceState.memoryTempC,

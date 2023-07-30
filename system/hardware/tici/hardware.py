@@ -598,6 +598,14 @@ class Tici(HardwareBase):
     time.sleep(1)
     gpio_set(GPIO.STM_BOOT0, 0)
 
+  def get_storage_usage_percent(self):
+    percent = 0
+    try:
+      out = subprocess.check_output("df -h | grep /data | awk '{print $5}'", shell=True)
+      percent = int(out.strip().decode().replace('%',''))
+    except Exception:
+      pass
+    return percent
 
 if __name__ == "__main__":
   t = Tici()

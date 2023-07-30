@@ -332,8 +332,8 @@ NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
 static void swap(QJsonValueRef v1, QJsonValueRef v2) { std::swap(v1, v2); }
 
 void NavigationRequest::parseLocationsResponse(const QString &response, bool success) {
-  printf("r: %s", response);
-  printf("p: %s", prev_response);
+  Debug() << response.toUtf8().constData();
+  Debug() << prev_response.toUtf8().constData();
   if (!success || response == prev_response) return;
 
   prev_response = response;

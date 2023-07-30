@@ -2097,6 +2097,10 @@ struct LiveENaviData {
   wazeNavDistance @29 :Int32;
   wazeCurrentSpeed @30 :Int32;
   wazeAlertType @31 :Text;
+  opkrLatitude @32 :Float32;
+  opkrLongitude @33 :Float32;
+  wazeLatitude @34 :Float32;
+  wazeLongitude @35 :Float32;
 }
 
 struct LiveMapDataDEPRECATED {

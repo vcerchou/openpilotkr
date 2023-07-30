@@ -30,6 +30,8 @@ def navid_thread(end_event, nv_queue):
   road_name = ""
   is_highway = 0
   is_tunnel = 0
+  opkr_lat = 0
+  opkr_lon = 0
 
   OPKR_Debug = Params().get_bool("OPKRDebug")
   if OPKR_Debug:
@@ -73,6 +75,8 @@ def navid_thread(end_event, nv_queue):
     waze_alert_type = ""
     waze_is_metric = Params().get_bool("IsMetric")
     waze_current_speed_prev = 0
+    waze_lat = 0
+    waze_lon = 0
 
   while not end_event.is_set():
     if not ip_bind:
@@ -176,7 +180,13 @@ def navid_thread(end_event, nv_queue):
         if "opkristunnel" in line:
           arr = line.split('opkristunnel: ')
           is_tunnel = arr[1]
-        if navi_selection == 5: # NAV unit should be metric. Do not use miles unit.(Distance factor is not detailed.)
+        if "opkrdestlat" in line:
+          arr = line.split('opkrdestlat: ')
+          opkr_lat = arr[1]
+        if "opkrdestlon" in line:
+          arr = line.split('opkrdestlon: ')
+          opkr_lon = arr[1]
+        if navi_selection == 2: # NAV unit should be metric. Do not use miles unit.(Distance factor is not detailed.)
           if "opkrwazereportid" in line:
             arr = line.split('opkrwazereportid: ')
             try:
@@ -240,7 +250,18 @@ def navid_thread(end_event, nv_queue):
               waze_nav_distance = arr[1]
             except:
               pass
-
+          if "opkrwazedestlat" in line: # route should be set.
+            arr = line.split('opkrwazedestlat: ')
+            try:
+              waze_lat = arr[1]
+            except:
+              pass
+          if "opkrwazedestlon" in line: # route should be set.
+            arr = line.split('opkrwazedestlon: ')
+            try:
+              waze_lon = arr[1]
+            except:
+              pass
         if OPKR_Debug:
           try:
             if "opkr0" in line:
@@ -317,6 +338,8 @@ def navid_thread(end_event, nv_queue):
       navi_msg.liveENaviData.roadName = str(road_name)
       navi_msg.liveENaviData.isHighway = bool(int(is_highway))
       navi_msg.liveENaviData.isTunnel = bool(int(is_tunnel))
+      navi_msg.liveENaviData.opkrLatitude = float(opkr_lat)
+      navi_msg.liveENaviData.opkrLongitude = float(opkr_lon)
 
       if OPKR_Debug:
         navi_msg.liveENaviData.opkr0 = str(opkr_0)
@@ -391,6 +414,8 @@ def navid_thread(end_event, nv_queue):
         navi_msg.liveENaviData.wazeNavSign = int(waze_nav_sign)
         navi_msg.liveENaviData.wazeNavDistance = int(waze_nav_distance)
         navi_msg.liveENaviData.wazeAlertType = str(waze_alert_type)
+        navi_msg.liveENaviData.wazeLatitude = str(waze_lat)
+        navi_msg.liveENaviData.wazeLongitude = str(waze_lon)
 
       pm.send('liveENaviData', navi_msg)
 

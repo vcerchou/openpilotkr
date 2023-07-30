@@ -918,12 +918,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       num_r = num_r + 1;
       sp_yr = sp_yr + j_num;
       p.setPen(whiteColor(200));
-      debugText(p, sp_xr, sp_yr, QString("ALTITUDE"), 150, 27);
-      debugText(p, sp_xr, sp_yr+60, QString::number(s->scene.altitudeUblox, 'f', 0), 150, 57);
+      debugText(p, sp_xr, sp_yr, QString("STO USAGE"), 150, 27);
+      debugText(p, sp_xr, sp_yr+60, QString::number(s->scene.storageUsage, 'f', 0) + "%", 150, 57);
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);
       p.setFont(InterFont(27, QFont::DemiBold));
-      p.drawText(-30, 0, "m");
+      p.drawText(-35, 0, QString::number(s->scene.altitudeUblox, 'f', 0) + "m");
       p.resetMatrix();
     }
 

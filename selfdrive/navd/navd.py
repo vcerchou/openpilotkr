@@ -51,7 +51,12 @@ class RouteEngine:
 
     self.reroute_counter = 0
 
-    self.mapbox_token = Params().get("MapboxToken", encoding='utf8').rstrip('\n')
+    try:
+      self.mapbox_token = Params().get("MapboxToken", encoding='utf8').rstrip('\n')
+    except:
+      self.mapbox_token = ""
+      pass
+
     if self.mapbox_token:
     	self.mapbox_host = "https://api.mapbox.com"
     else:

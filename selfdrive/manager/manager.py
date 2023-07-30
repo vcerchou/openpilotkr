@@ -61,7 +61,7 @@ def manager_init() -> None:
     ("OpkrLaneChangeSpeed", "30"),
     ("OpkrAutoLaneChangeDelay", "0"),
     ("OpkrSteerAngleCorrection", "0"),
-    ("PutPrebuiltOn", "1"),
+    ("PutPrebuiltOn", "0"),
     ("LdwsCarFix", "0"),
     ("LateralControlMethod", "3"),
     ("CruiseStatemodeSelInit", "1"),

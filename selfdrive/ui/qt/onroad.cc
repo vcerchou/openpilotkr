@@ -267,9 +267,9 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
     if(uiState()->scene.rec_blinker >= 105) {
       uiState()->scene.rec_blinker = 0;
     } else if (uiState()->scene.rec_blinker >= 55) {
-      p.setBrush(redColor(200));
+      p.setBrush(QColor(255, 0, 0, 200));
     } else {
-      p.setBrush(redColor(0));
+      p.setBrush(QColor(0, 0, 0, 0));
     }
     
     p.drawPolygon(topleft, std::size(topleft));

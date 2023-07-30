@@ -99,6 +99,7 @@ void MapSettings::showEvent(QShowEvent *event) {
 
 void MapSettings::updateCurrentRoute() {
   auto dest = QString::fromStdString(params.get("NavDestination"));
+  qDebug() << dest.toUtf8().constData();
   if (dest.size()) {
     QJsonDocument doc = QJsonDocument::fromJson(dest.trimmed().toUtf8());
     if (doc.isNull()) {

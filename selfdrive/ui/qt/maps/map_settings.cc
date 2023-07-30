@@ -289,6 +289,7 @@ NavigationRequest *NavigationRequest::instance() {
 }
 
 NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
+  printf("local Nav1");
   if (auto dongle_id = getDongleId()) {
     if (!params.get("MapboxToken").empty()) {
       QString local_response = QString::fromStdString(params.get("NavList"));

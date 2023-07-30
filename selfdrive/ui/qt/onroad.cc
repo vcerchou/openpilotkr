@@ -918,7 +918,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       num_r = num_r + 1;
       sp_yr = sp_yr + j_num;
       p.setPen(whiteColor(200));
-      debugText(p, sp_xr, sp_yr, QString("USAGE"), 150, 27);
+      debugText(p, sp_xr, sp_yr, QString("ST USAGE"), 150, 27);
       debugText(p, sp_xr, sp_yr+60, QString::number(s->scene.storageUsage, 'f', 0) + "%", 150, 57);
       p.translate(sp_xr + 90, sp_yr + 20);
       p.rotate(-90);

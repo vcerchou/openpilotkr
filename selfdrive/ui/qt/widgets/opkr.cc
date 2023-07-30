@@ -525,7 +525,7 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     if (stat) {
       params.putBool("IsOpenpilotViewEnabled", false);
       uiState()->scene.cal_view = false;
-      std::system("/data/openpilot/selfdrive/boardd//pandad.py &");
+      std::system("/data/openpilot/selfdrive/boardd/pandad.py &");
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
       uiState()->scene.cal_view = false;
@@ -538,7 +538,7 @@ OpenpilotView::OpenpilotView() : AbstractControl(tr("Driving Camera"), tr("Previ
     if (stat) {
       params.putBool("IsOpenpilotViewEnabled", false);
       uiState()->scene.cal_view = false;
-      std::system("/data/openpilot/selfdrive/boardd//pandad.py &");
+      std::system("/data/openpilot/selfdrive/boardd/pandad.py &");
     } else {
       params.putBool("IsOpenpilotViewEnabled", true);
       uiState()->scene.cal_view = true;

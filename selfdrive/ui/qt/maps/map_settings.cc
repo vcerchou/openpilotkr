@@ -290,35 +290,40 @@ NavigationRequest *NavigationRequest::instance() {
 
 NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
   if (auto dongle_id = getDongleId()) {
-    {
-      // Fetch favorite and recent locations
-      QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/locations";
-      RequestRepeater *repeater = new RequestRepeater(this, url, "ApiCache_NavDestinations", 30, true);
-      QObject::connect(repeater, &RequestRepeater::requestDone, this, &NavigationRequest::parseLocationsResponse);
-    }
-    {
-      auto param_watcher = new ParamWatcher(this);
-      QObject::connect(param_watcher, &ParamWatcher::paramChanged, this, &NavigationRequest::nextDestinationUpdated);
+    if (!params.get("MapboxToken").empty()) {
+      QString local_response = QString::fromStdString(params.get("NavList"));
+      parseLocationsResponse(local_response, true);
+    } else {
+      {
+        // Fetch favorite and recent locations
+        QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/locations";
+        RequestRepeater *repeater = new RequestRepeater(this, url, "ApiCache_NavDestinations", 30, true);
+        QObject::connect(repeater, &RequestRepeater::requestDone, this, &NavigationRequest::parseLocationsResponse);
+      }
+      {
+        auto param_watcher = new ParamWatcher(this);
+        QObject::connect(param_watcher, &ParamWatcher::paramChanged, this, &NavigationRequest::nextDestinationUpdated);
 
-      // Destination set while offline
-      QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/next";
-      HttpRequest *deleter = new HttpRequest(this);
-      RequestRepeater *repeater = new RequestRepeater(this, url, "", 10, true);
-      QObject::connect(repeater, &RequestRepeater::requestDone, [=](const QString &resp, bool success) {
-        if (success && resp != "null") {
-          if (params.get("NavDestination").empty()) {
-            qWarning() << "Setting NavDestination from /next" << resp;
-            params.put("NavDestination", resp.toStdString());
-          } else {
-            qWarning() << "Got location from /next, but NavDestination already set";
+        // Destination set while offline
+        QString url = CommaApi::BASE_URL + "/v1/navigation/" + *dongle_id + "/next";
+        HttpRequest *deleter = new HttpRequest(this);
+        RequestRepeater *repeater = new RequestRepeater(this, url, "", 10, true);
+        QObject::connect(repeater, &RequestRepeater::requestDone, [=](const QString &resp, bool success) {
+          if (success && resp != "null") {
+            if (params.get("NavDestination").empty()) {
+              qWarning() << "Setting NavDestination from /next" << resp;
+              params.put("NavDestination", resp.toStdString());
+            } else {
+              qWarning() << "Got location from /next, but NavDestination already set";
+            }
+            // Send DELETE to clear destination server side
+            deleter->sendRequest(url, HttpRequest::Method::DELETE);
           }
-          // Send DELETE to clear destination server side
-          deleter->sendRequest(url, HttpRequest::Method::DELETE);
-        }
 
-        // athena can set destination at any time
-        param_watcher->addParam("NavDestination");
-      });
+          // athena can set destination at any time
+          param_watcher->addParam("NavDestination");
+        });
+      }
     }
   }
 }

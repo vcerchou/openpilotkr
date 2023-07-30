@@ -232,6 +232,9 @@ def manager_init() -> None:
     ("SetSpeedFive", "0"),
     ("OPKRLongAlt", "0"),
     ("LowUIProfile", "0"),
+    ("NavHome", ""),
+    ("NavWork", ""),
+    ("NavList", ""),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

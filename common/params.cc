@@ -411,6 +411,9 @@ std::unordered_map<std::string, uint32_t> keys = {
     {"SetSpeedFive", PERSISTENT},
     {"OPKRLongAlt", PERSISTENT},
     {"LowUIProfile", PERSISTENT},
+    {"NavHome", PERSISTENT},
+    {"NavWork", PERSISTENT},
+    {"NavList", PERSISTENT},
 };
 
 } // namespace

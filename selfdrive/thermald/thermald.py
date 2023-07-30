@@ -36,7 +36,7 @@ DISCONNECT_TIMEOUT = 5.  # wait 5 seconds before going offroad after disconnect 
 PANDA_STATES_TIMEOUT = int(1000 * 1.5 * DT_TRML)  # 1.5x the expected pandaState frequency
 
 ThermalBand = namedtuple("ThermalBand", ['min_temp', 'max_temp'])
-HardwareState = namedtuple("HardwareState", ['network_type', 'network_info', 'network_strength', 'network_stats', 'network_metered', 'nvme_temps', 'modem_temps'])
+HardwareState = namedtuple("HardwareState", ['network_type', 'network_info', 'network_strength', 'network_stats', 'network_metered', 'nvme_temps', 'modem_temps', 'storage_usage'])
 
 # List of thermal bands. We will stay within this region as long as we are within the bounds.
 # When exiting the bounds, we'll jump to the lower or higher band. Bands are ordered in the dict.
@@ -108,9 +108,12 @@ def hw_state_thread(end_event, hw_queue):
   modem_restarted = False
   modem_missing_count = 0
 
+  storage_usage = 0
+
   while not end_event.is_set():
     # these are expensive calls. update every 10s
     if (count % int(10. / DT_TRML)) == 0:
+
       try:
         network_type = HARDWARE.get_network_type()
         modem_temps = HARDWARE.get_modem_temperatures()
@@ -137,6 +140,8 @@ def hw_state_thread(end_event, hw_queue):
 
         tx, rx = HARDWARE.get_modem_data_usage()
 
+        storage_usage = HARDWARE.get_storage_usage_percent()
+
         hw_state = HardwareState(
           network_type=network_type,
           network_info=HARDWARE.get_network_info(),
@@ -145,6 +150,7 @@ def hw_state_thread(end_event, hw_queue):
           network_metered=HARDWARE.get_network_metered(network_type),
           nvme_temps=HARDWARE.get_nvme_temperatures(),
           modem_temps=modem_temps,
+          storage_usage=storage_usage,
         )
 
         try:
@@ -195,6 +201,7 @@ def thermald_thread(end_event, hw_queue):
     network_stats={'wwanTx': -1, 'wwanRx': -1},
     nvme_temps=[],
     modem_temps=[],
+    storage_usage = 0,
   )
 
   all_temp_filter = FirstOrderFilter(0., TEMP_TAU, DT_TRML, initialized=False)
@@ -269,7 +276,7 @@ def thermald_thread(end_event, hw_queue):
 
     msg.deviceState.screenBrightnessPercent = HARDWARE.get_screen_brightness()
 
-    msg.deviceState.storageUsage = HARDWARE.get_storage_usage_percent()
+    msg.deviceState.storageUsage = last_hw_state.storage_usage
 
     # this subset is only used for offroad
     temp_sources = [

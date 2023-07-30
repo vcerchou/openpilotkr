@@ -328,7 +328,7 @@ OmxEncoder::OmxEncoder(const char* path, int width, int height, int fps, int bit
   if (err != OMX_ErrorNone) {
     LOGE("error getting codec: %x", err);
   }
-  assert(err == OMX_ErrorNone);
+  // assert(err == OMX_ErrorNone);
   // printf("handle: %p\n", this->handle);
 
   // setup input port

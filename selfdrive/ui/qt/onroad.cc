@@ -252,6 +252,31 @@ void OnroadAlerts::paintEvent(QPaintEvent *event) {
     p.setFont(InterFont(88));
     p.drawText(QRect(0, r.height() - (l ? 361 : 420), width(), 300), Qt::AlignHCenter | Qt::TextWordWrap, alert.text2);
   }
+
+  // rec_stat
+  if (uiState()->scene.rec_stat) {
+    const int rw = width()-UI_BORDER_SIZE*2;
+    const int rh = height()-UI_BORDER_SIZE*2;
+    const int rl = 125;
+    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
+    QPoint topright[] = {{rw, 0}, {rw-rl, 0}, {rw-rl, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rl}, {rw, rl}};
+    QPoint bottomleft[] = {{0, rh}, {rl, rh}, {rl, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-rl}, {0, rh-rl}};
+    QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
+
+    uiState()->scene.rec_blinker += 3;
+    if(uiState()->scene.rec_blinker >= 105) {
+      uiState()->scene.rec_blinker = 0;
+    } else if (uiState()->scene.rec_blinker >= 55) {
+      p.setBrush(redColor(200));
+    } else {
+      p.setBrush(redColor(0));
+    }
+    
+    p.drawPolygon(topleft, std::size(topleft));
+    p.drawPolygon(topright, std::size(topright));
+    p.drawPolygon(bottomleft, std::size(bottomleft));
+    p.drawPolygon(bottomright, std::size(bottomright));
+  }
 }
 
 // ExperimentalButton
@@ -1497,31 +1522,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setBrush(blackColor(60));
     p.setPen(QPen(blackColor(0), 0));
     p.drawRoundedRect(datetime_panel, 15, 15);
-  }
-
-  // rec_stat
-  if (s->scene.rec_stat) {
-    int rw = 2160-UI_BORDER_SIZE*2;
-    int rh = 1080-UI_BORDER_SIZE*2;
-    int rl = 100;
-    QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
-    QPoint topright[] = {{rw, 0}, {rw-rl, 0}, {rw-rl, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rl}, {rw, rl}};
-    QPoint bottomleft[] = {{0, rh}, {rl, rh}, {rl, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {UI_BORDER_SIZE, rh-rl}, {0, rh-rl}};
-    QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
-
-    s->scene.rec_blinker += 3;
-    if(s->scene.rec_blinker >= 105) {
-      s->scene.rec_blinker = 0;
-    } else if (s->scene.rec_blinker >= 55) {
-      p.setBrush(redColor(200));
-    } else {
-      p.setBrush(redColor(0));
-    }
-    
-    p.drawPolygon(topleft, std::size(topleft));
-    p.drawPolygon(topright, std::size(topright));
-    p.drawPolygon(bottomleft, std::size(bottomleft));
-    p.drawPolygon(bottomright, std::size(bottomright));
   }
 
   p.restore();

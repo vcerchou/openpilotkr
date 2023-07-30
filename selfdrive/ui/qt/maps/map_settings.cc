@@ -343,6 +343,7 @@ void NavigationRequest::parseLocationsResponse(const QString &response, bool suc
   // Sort: alphabetical FAVORITES, and then most recent (as returned by API).
   // We don't need to care about the ordering of HOME and WORK. DestinationWidget always displays them at the top.
   locations = doc.array();
+  qWarning() << "JSON Data format" << locations;
   std::stable_sort(locations.begin(), locations.end(), [](const QJsonValue &a, const QJsonValue &b) {
     bool has_favorite = a["save_type"] == NAV_TYPE_FAVORITE || b["save_type"] == NAV_TYPE_FAVORITE;
     return has_favorite && (std::tuple(a["save_type"].toString(), a["place_name"].toString()) <

@@ -95,7 +95,7 @@ void MapSettings::mousePressEvent(QMouseEvent *ev) {
 }
 
 void MapSettings::showEvent(QShowEvent *event) {
-  print("nav show evnt.....")
+  printf("nav show evnt.....");
   updateCurrentRoute();
 }
 
@@ -228,7 +228,7 @@ DestinationWidget::DestinationWidget(QWidget *parent) : QPushButton(parent) {
 }
 
 void DestinationWidget::set(const QJsonObject &destination, bool current) {
-  printf("dsfas1")
+  printf("dsfas1");
   if (dest == destination) return;
 
   dest = destination;
@@ -268,7 +268,7 @@ void DestinationWidget::set(const QJsonObject &destination, bool current) {
 }
 
 void DestinationWidget::unset(const QString &label, bool current) {
-  print("rount unsetsdagsgdds")
+  printf("rount unsetsdagsgdds");
   dest = {};
   setProperty("current", current);
   setProperty("set", false);
@@ -292,7 +292,7 @@ void DestinationWidget::unset(const QString &label, bool current) {
 // singleton NavigationRequest
 
 NavigationRequest *NavigationRequest::instance() {
-  print("nnan instance....")
+  printf("nnan instance....");
   static NavigationRequest *request = new NavigationRequest(qApp);
   return request;
 }
@@ -342,7 +342,7 @@ NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
 static void swap(QJsonValueRef v1, QJsonValueRef v2) { std::swap(v1, v2); }
 
 void NavigationRequest::parseLocationsResponse(const QString &response, bool success) {
-  print("nav requesst.....")
+  printf("nav requesst.....");
   if (!success || response == prev_response) return;
 
   prev_response = response;

@@ -89,17 +89,19 @@ MapSettings::MapSettings(bool closeable, QWidget *parent) : QFrame(parent) {
 }
 
 void MapSettings::mousePressEvent(QMouseEvent *ev) {
+  printf("re5");
   // Prevent mouse event from propagating up
   ev->accept();
 }
 
 void MapSettings::showEvent(QShowEvent *event) {
+  print("nav show evnt.....")
   updateCurrentRoute();
 }
 
 void MapSettings::updateCurrentRoute() {
+  printf("re3");
   auto dest = QString::fromStdString(params.get("NavDestination"));
-  qDebug() << dest.toUtf8().constData();
   if (dest.size()) {
     QJsonDocument doc = QJsonDocument::fromJson(dest.trimmed().toUtf8());
     if (doc.isNull()) {
@@ -116,11 +118,13 @@ void MapSettings::updateCurrentRoute() {
 }
 
 void MapSettings::updateLocations(const QJsonArray &locations) {
+  printf("re2");
   current_locations = locations;
   refresh();
 }
 
 void MapSettings::refresh() {
+  printf("re1");
   setUpdatesEnabled(false);
 
   auto get_w = [this](int i) {
@@ -154,6 +158,7 @@ void MapSettings::refresh() {
 }
 
 void MapSettings::navigateTo(const QJsonObject &place) {
+  printf("re7");
   QJsonDocument doc(place);
   params.put("NavDestination", doc.toJson().toStdString());
   updateCurrentRoute();
@@ -223,6 +228,7 @@ DestinationWidget::DestinationWidget(QWidget *parent) : QPushButton(parent) {
 }
 
 void DestinationWidget::set(const QJsonObject &destination, bool current) {
+  printf("dsfas1")
   if (dest == destination) return;
 
   dest = destination;
@@ -262,6 +268,7 @@ void DestinationWidget::set(const QJsonObject &destination, bool current) {
 }
 
 void DestinationWidget::unset(const QString &label, bool current) {
+  print("rount unsetsdagsgdds")
   dest = {};
   setProperty("current", current);
   setProperty("set", false);
@@ -285,6 +292,7 @@ void DestinationWidget::unset(const QString &label, bool current) {
 // singleton NavigationRequest
 
 NavigationRequest *NavigationRequest::instance() {
+  print("nnan instance....")
   static NavigationRequest *request = new NavigationRequest(qApp);
   return request;
 }
@@ -334,8 +342,7 @@ NavigationRequest::NavigationRequest(QObject *parent) : QObject(parent) {
 static void swap(QJsonValueRef v1, QJsonValueRef v2) { std::swap(v1, v2); }
 
 void NavigationRequest::parseLocationsResponse(const QString &response, bool success) {
-  qDebug() << response.toUtf8().constData();
-  qDebug() << prev_response.toUtf8().constData();
+  print("nav requesst.....")
   if (!success || response == prev_response) return;
 
   prev_response = response;

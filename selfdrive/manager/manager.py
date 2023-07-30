@@ -235,6 +235,7 @@ def manager_init() -> None:
     ("NavHome", ""),
     ("NavWork", ""),
     ("NavList", ""),
+    ("MapboxToken", ""),
   ]
   if not PC:
     default_params.append(("LastUpdateTime", datetime.datetime.utcnow().isoformat().encode('utf8')))

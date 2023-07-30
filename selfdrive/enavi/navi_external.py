@@ -5,6 +5,7 @@ import threading
 import time
 import subprocess
 import re
+import json
 
 import cereal.messaging as messaging
 from common.params import Params
@@ -32,6 +33,8 @@ def navid_thread(end_event, nv_queue):
   is_tunnel = 0
   opkr_lat = 0
   opkr_lon = 0
+  opkr_lat_prev = 0
+  opkr_lon_prev = 0
 
   OPKR_Debug = Params().get_bool("OPKRDebug")
   if OPKR_Debug:
@@ -77,6 +80,8 @@ def navid_thread(end_event, nv_queue):
     waze_current_speed_prev = 0
     waze_lat = 0
     waze_lon = 0
+    waze_lat_prev = 0
+    waze_lon_prev = 0
 
   while not end_event.is_set():
     if not ip_bind:
@@ -186,6 +191,17 @@ def navid_thread(end_event, nv_queue):
         if "opkrdestlon" in line:
           arr = line.split('opkrdestlon: ')
           opkr_lon = arr[1]
+
+        if opkr_lat and opkr_lon and opkr_lat != opkr_lat_prev and opkr_lon != opkr_lon_prev:
+          opkr_lat_prev = opkr_lat
+          opkr_lon_prev = opkr_lon
+          opkr_lat_ = float(opkr_lat)
+          opkr_lon_ = float(opkr_lon)
+          dest = {"latitude": opkr_lat_, "longitude": opkr_lon_,}
+          Params().put("NavDestination", json.dumps(dest))
+          waypoints = [(opkr_lon_, opkr_lat_),]
+          Params().put("NavDestinationWaypoints", json.dumps(waypoints))
+
         if navi_selection == 2: # NAV unit should be metric. Do not use miles unit.(Distance factor is not detailed.)
           if "opkrwazereportid" in line:
             arr = line.split('opkrwazereportid: ')
@@ -262,6 +278,17 @@ def navid_thread(end_event, nv_queue):
               waze_lon = arr[1]
             except:
               pass
+
+          if waze_lat and waze_lon and waze_lat != waze_lat_prev and waze_lon != waze_lon_prev:
+            waze_lat_prev = waze_lat
+            waze_lon_prev = waze_lon
+            waze_lat_ = float(waze_lat)
+            waze_lon_ = float(waze_lon)
+            dest = {"latitude": waze_lat_, "longitude": waze_lon_,}
+            Params().put("NavDestination", json.dumps(dest))
+            waypoints = [(waze_lon_, waze_lat_),]
+            Params().put("NavDestinationWaypoints", json.dumps(waypoints))
+
         if OPKR_Debug:
           try:
             if "opkr0" in line:
@@ -414,8 +441,8 @@ def navid_thread(end_event, nv_queue):
         navi_msg.liveENaviData.wazeNavSign = int(waze_nav_sign)
         navi_msg.liveENaviData.wazeNavDistance = int(waze_nav_distance)
         navi_msg.liveENaviData.wazeAlertType = str(waze_alert_type)
-        navi_msg.liveENaviData.wazeLatitude = str(waze_lat)
-        navi_msg.liveENaviData.wazeLongitude = str(waze_lon)
+        navi_msg.liveENaviData.wazeLatitude = float(waze_lat)
+        navi_msg.liveENaviData.wazeLongitude = float(waze_lon)
 
       pm.send('liveENaviData', navi_msg)
 

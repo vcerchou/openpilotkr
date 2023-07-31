@@ -91,12 +91,12 @@ DynamicTRSpd:0,20,40,60,110
 DynamicTRSet:1.1,1.2,1.3,1.4,1.5
 CustomTREnabled:1
 LCTimingFactorUD:1
-LCTimingFactor30:10
-LCTimingFactor60:40
-LCTimingFactor80:60
-LCTimingFactor110:80
+LCTimingFactor30:30
+LCTimingFactor60:60
+LCTimingFactor80:80
+LCTimingFactor110:100
+LCTimingFactorEnable:0
 OpkrUIBrightnessOff:10
-LCTimingFactorEnable:1
 AutoEnableSpeed:9
 SafetyCamDecelDistGain:0
 OpkrLiveTunePanelEnable:0
@@ -152,7 +152,7 @@ OPKREarlyStop:1
 DoNotDisturbMode:0
 DepartChimeAtResume:0
 CruiseGapBySpdOn:0
-CruiseGapBySpdSpd:25,65,130
+CruiseGapBySpdSpd:25,55,130
 CruiseGapBySpdGap:1,2,3,4
 CruiseSetwithRoadLimitSpeedEnabled:0
 CruiseSetwithRoadLimitSpeedOffset:0

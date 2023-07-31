@@ -128,7 +128,7 @@ void ScreenRecoder::start() {
   update();
 
   started = milliseconds();
-  uiState()->scene.rec_stat = true;
+  uiState()->scene.rec_stat3 = true;
 }
 
 void ScreenRecoder::encoding_thread_func() {
@@ -161,7 +161,7 @@ void ScreenRecoder::stop() {
   if(encoding_thread.joinable())
     encoding_thread.join();
   }
-  uiState()->scene.rec_stat = false;
+  uiState()->scene.rec_stat3 = false;
 }
 
 void ScreenRecoder::update_screen() {

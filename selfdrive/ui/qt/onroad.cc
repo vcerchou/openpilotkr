@@ -105,7 +105,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   if (uiState()->scene.multi_btn_touched && rec_btn.contains(e->pos())) {
     uiState()->scene.rec_blinker = 0;
-    uiState()->scene.rec_stat = !uiState()->scene.rec_stat
+    uiState()->scene.rec_stat = !uiState()->scene.rec_stat;
     return;
   }
 
@@ -1505,9 +1505,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     if (recorder) recorder->toggle();
     s->scene.rec_stat = s->scene.rec_stat2;
   }
-  if (s->scene.rec_stat) {
-    const int rw = 2160-UI_BORDER_SIZE*2;
-    const int rh = 1080-UI_BORDER_SIZE*2;
+  if (s->scene.rec_stat3) {
+    const int rw = 2160-UI_BORDER_SIZE;
+    const int rh = 1080-UI_BORDER_SIZE;
     const int rl = 100;
     QPoint topleft[] = {{0, 0}, {rl, 0}, {rl, UI_BORDER_SIZE}, {UI_BORDER_SIZE, UI_BORDER_SIZE}, {UI_BORDER_SIZE, rl}, {0, rl}};
     QPoint topright[] = {{rw, 0}, {rw-rl, 0}, {rw-rl, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rl}, {rw, rl}};

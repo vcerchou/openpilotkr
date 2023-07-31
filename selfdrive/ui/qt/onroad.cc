@@ -54,18 +54,6 @@ OnroadWindow::OnroadWindow(QWidget *parent) : QWidget(parent) {
   setAttribute(Qt::WA_OpaquePaintEvent);
   QObject::connect(uiState(), &UIState::uiUpdate, this, &OnroadWindow::updateState);
   QObject::connect(uiState(), &UIState::offroadTransition, this, &OnroadWindow::offroadTransition);
-
-  // neokii screen recorder, thx for sharing:)
-  record_timer = std::make_shared<QTimer>();
-	QObject::connect(record_timer.get(), &QTimer::timeout, [=]() {
-    if(recorder) {
-      recorder->update_screen();
-    }
-  });
-	record_timer->start(1000/UI_FREQ);
-
-  recorder = new ScreenRecoder(this);
-  recorder->hide();
 }
 
 void OnroadWindow::updateState(const UIState &s) {
@@ -150,7 +138,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 void OnroadWindow::offroadTransition(bool offroad) {
 #ifdef ENABLE_MAPS
   if (!offroad) {
-    if (map == nullptr && (!MAPBOX_TOKEN.isEmpty())) {
+    if (map == nullptr && (uiState()->primeType() || !MAPBOX_TOKEN.isEmpty())) {
       auto m = new MapPanel(get_mapbox_settings());
       map = m;
       uiState()->scene.mapbox_enabled = true;
@@ -171,8 +159,6 @@ void OnroadWindow::offroadTransition(bool offroad) {
 #endif
 
   alerts->updateAlert({});
-
-  if(offroad && recorder) recorder->stop();
 }
 
 void OnroadWindow::paintEvent(QPaintEvent *event) {
@@ -345,6 +331,18 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   gear_img_r = loadPixmap("../assets/addon/img/circle_green_letter-r.svg", {img_size+45, img_size+45});
   gear_img_n = loadPixmap("../assets/addon/img/circle_blue_letter-n.svg", {img_size+45, img_size+45});
   gear_img_d = loadPixmap("../assets/addon/img/circle_green_letter-d.svg", {img_size+45, img_size+45});
+
+  // neokii screen recorder, thx for sharing:)
+  record_timer = std::make_shared<QTimer>();
+  QObject::connect(record_timer.get(), &QTimer::timeout, [=]() {
+    if(recorder) {
+      recorder->update_screen();
+    }
+  });
+  record_timer->start(1000/UI_FREQ);
+
+  recorder = new ScreenRecoder(this);
+  recorder->hide();
 }
 
 void AnnotatedCameraWidget::updateState(const UIState &s) {

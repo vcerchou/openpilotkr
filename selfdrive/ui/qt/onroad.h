@@ -143,6 +143,10 @@ private:
   float dist_rel = 0;
   float vel_rel = 0;
 
+  // neokii screen recorder. thx for sharing your source. 
+  ScreenRecoder* recorder;
+  std::shared_ptr<QTimer> record_timer;
+
 protected:
   void paintGL() override;
   void initializeGL() override;
@@ -187,12 +191,6 @@ private:
   QColor bg = bg_colors[STATUS_DISENGAGED];
   QWidget *map = nullptr;
   QHBoxLayout* split;
-
-// neokii screen recorder. thx for sharing your source. 
-private:
-  ScreenRecoder* recorder;
-  std::shared_ptr<QTimer> record_timer;
-
 
 private slots:
   void offroadTransition(bool offroad);

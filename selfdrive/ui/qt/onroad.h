@@ -15,9 +15,6 @@ const int img_size = (btn_size / 4) * 3; // 144
 #include <QTimer>
 #include "selfdrive/ui/qt/screenrecorder/screenrecorder.h"
 
-// neokii screen recorder. thx for sharing your source. 
-ScreenRecoder* recorder;
-std::shared_ptr<QTimer> record_timer;
 
 // ***** onroad widgets *****
 class OnroadAlerts : public QWidget {
@@ -145,6 +142,10 @@ private:
   bool lead_stat = false;
   float dist_rel = 0;
   float vel_rel = 0;
+
+  // neokii screen recorder. thx for sharing your source. 
+  ScreenRecoder* recorder;
+  std::shared_ptr<QTimer> record_timer;
 
 protected:
   void paintGL() override;

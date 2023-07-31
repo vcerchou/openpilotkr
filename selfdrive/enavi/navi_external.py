@@ -36,6 +36,9 @@ def navid_thread(end_event, nv_queue):
   opkr_lat_prev = 0
   opkr_lon_prev = 0
 
+  dest_changed = False
+  dest_changed_count = 0
+
   OPKR_Debug = Params().get_bool("OPKRDebug")
   if OPKR_Debug:
     opkr_0 = ""
@@ -193,14 +196,25 @@ def navid_thread(end_event, nv_queue):
           opkr_lon = arr[1]
 
         if opkr_lat and opkr_lon and opkr_lat != opkr_lat_prev and opkr_lon != opkr_lon_prev:
+          dest_changed = True
+          dest_changed_count = 0
+          try:
+            Params().remove("NavDestination")
+            Params().remove("NavDestinationWaypoints")
+          except:
+            pass
           opkr_lat_prev = opkr_lat
           opkr_lon_prev = opkr_lon
           opkr_lat_ = float(opkr_lat)
           opkr_lon_ = float(opkr_lon)
           dest = {"latitude": opkr_lat_, "longitude": opkr_lon_,}
-          Params().put("NavDestination", json.dumps(dest))
           waypoints = [(opkr_lon_, opkr_lat_),]
-          Params().put("NavDestinationWaypoints", json.dumps(waypoints))
+        elif dest_changed:
+          dest_changed_count += 1
+          if dest_changed_count > 2:
+            dest_changed = False
+            Params().put("NavDestination", json.dumps(dest))
+            Params().put("NavDestinationWaypoints", json.dumps(waypoints))
 
         if navi_selection == 2: # NAV unit should be metric. Do not use miles unit.(Distance factor is not detailed.)
           if "opkrwazereportid" in line:
@@ -280,14 +294,25 @@ def navid_thread(end_event, nv_queue):
               pass
 
           if waze_lat and waze_lon and waze_lat != waze_lat_prev and waze_lon != waze_lon_prev:
+            dest_changed = True
+            dest_changed_count = 0
+            try:
+              Params().remove("NavDestination")
+              Params().remove("NavDestinationWaypoints")
+            except:
+              pass
             waze_lat_prev = waze_lat
             waze_lon_prev = waze_lon
             waze_lat_ = float(waze_lat)
             waze_lon_ = float(waze_lon)
             dest = {"latitude": waze_lat_, "longitude": waze_lon_,}
-            Params().put("NavDestination", json.dumps(dest))
             waypoints = [(waze_lon_, waze_lat_),]
-            Params().put("NavDestinationWaypoints", json.dumps(waypoints))
+          elif dest_changed:
+            dest_changed_count += 1
+            if dest_changed_count > 2:
+              dest_changed = False
+              Params().put("NavDestination", json.dumps(dest))
+              Params().put("NavDestinationWaypoints", json.dumps(waypoints))
 
         if OPKR_Debug:
           try:

@@ -642,7 +642,7 @@ class CarController:
                 self.switch_timer -= 1
               else:
                 btn_count = 1
-                btn_count = int(interp(self.NC.t_interval, [10,70],[1,4])) if CS.is_set_speed_in_mph else int(interp(self.NC.t_interval, [7,40],[1,3]))
+                btn_count = int(interp(self.NC.t_interval, [10,70],[1,2])) if CS.is_set_speed_in_mph else int(interp(self.NC.t_interval, [7,40],[1,2]))
                 can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * btn_count) if not self.longcontrol \
                 else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * btn_count)
                 self.resume_cnt += 1
@@ -740,7 +740,7 @@ class CarController:
                 self.switch_timer -= 1
               else:
                 btn_count = 1
-                btn_count = int(interp(self.NC.t_interval, [10,70],[1,4])) if CS.is_set_speed_in_mph else int(interp(self.NC.t_interval, [7,40],[1,3]))
+                btn_count = int(interp(self.NC.t_interval, [10,70],[1,2])) if CS.is_set_speed_in_mph else int(interp(self.NC.t_interval, [7,40],[1,2]))
                 can_sends.extend([hyundaican.create_clu11(self.packer, self.resume_cnt, CS.clu11, btn_signal)] * btn_count) if not self.longcontrol \
                 else can_sends.extend([hyundaican.create_clu11(self.packer, self.frame, CS.clu11, btn_signal, clu11_speed, self.CP.sccBus)] * btn_count)
                 self.resume_cnt += 1

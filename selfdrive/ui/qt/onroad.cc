@@ -105,7 +105,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   if (uiState()->scene.multi_btn_touched && rec_btn.contains(e->pos())) {
     uiState()->scene.rec_blinker = 0;
-    if (recorder) recorder->toggle();
+    if (recorder2) recorder2->toggle();
     return;
   }
 

@@ -460,7 +460,8 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   //else if (has_eu_speed_limit) set_speed_size.rheight() += eu_sign_size + sign_margin;
 
   int top_radius = 32;
-  int bottom_radius = has_eu_speed_limit ? 100 : 32;
+  //int bottom_radius = has_eu_speed_limit ? 100 : 32;
+  int bottom_radius = 32;
 
   QRect set_speed_rect(QPoint(15 + (default_size.width() - set_speed_size.width()) / 2, s->scene.low_ui_profile?(height()-default_size.height()-35-150):15), set_speed_size);
   p.setPen(QPen(whiteColor(75), 6));
@@ -1875,16 +1876,16 @@ void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
       }
     }
 
-    drawLaneLines(painter, s);
+    drawLaneLines(p, s);
 
     if (true) {
       auto lead_one = radar_state.getLeadOne();
       auto lead_two = radar_state.getLeadTwo();
       if (lead_one.getStatus()) {
-        drawLead(painter, lead_one, s->scene.lead_vertices[0]);
+        drawLead(p, lead_one, s->scene.lead_vertices[0]);
       }
       if (lead_two.getStatus() && (std::abs(lead_one.getDRel() - lead_two.getDRel()) > 3.0)) {
-        drawLead(painter, lead_two, s->scene.lead_vertices[1]);
+        drawLead(p, lead_two, s->scene.lead_vertices[1]);
       }
     }
   }
@@ -1892,11 +1893,11 @@ void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
   // DMoji
   if (!hideBottomIcons && (sm.rcv_frame("driverStateV2") > s->scene.started_frame)) {
     update_dmonitoring(s, sm["driverStateV2"].getDriverStateV2(), dm_fade_state, rightHandDM);
-    drawDriverState(painter, s);
+    drawDriverState(p, s);
   }
 
   if (!s->scene.mapbox_enabled || s->scene.mapbox_running) {
-    drawWheelState(painter, s);
+    drawWheelState(p, s);
   }
 
   drawHud(p);

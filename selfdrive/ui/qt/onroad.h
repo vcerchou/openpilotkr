@@ -149,6 +149,7 @@ private:
 
 protected:
   void paintGL() override;
+  void paintEvent(QPaintEvent *event) override;
   void initializeGL() override;
   void showEvent(QShowEvent *event) override;
   void updateFrameMat() override;

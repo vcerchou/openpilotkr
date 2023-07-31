@@ -1868,6 +1868,8 @@ void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
     p.endNativePainting();
   }
 
+  p.setPen(Qt::NoPen);
+
   if (s->worldObjectsVisible()) {
     if (sm.rcv_frame("modelV2") > s->scene.started_frame) {
       update_model(s, model, sm["uiPlan"].getUiPlan());

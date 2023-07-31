@@ -105,7 +105,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   if (uiState()->scene.multi_btn_touched && rec_btn.contains(e->pos())) {
     uiState()->scene.rec_blinker = 0;
-    if (recorder2) recorder2->toggle();
+    uiState()->scene.rec_stat = !uiState()->scene.rec_stat
     return;
   }
 
@@ -1497,7 +1497,14 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.drawRoundedRect(datetime_panel, 15, 15);
   }
 
-  // rec_stat
+  // rec_stat and toggle
+  if (s->scene.rec_stat && !s->scene.rec_stat2) {
+    if (recorder) recorder->toggle();
+    s->scene.rec_stat2 = s->scene.rec_stat;
+  } else if (!s->scene.rec_stat && s->scene.rec_stat2) {
+    if (recorder) recorder->toggle();
+    s->scene.rec_stat = s->scene.rec_stat2;
+  }
   if (s->scene.rec_stat) {
     const int rw = 2160-UI_BORDER_SIZE*2;
     const int rh = 1080-UI_BORDER_SIZE*2;

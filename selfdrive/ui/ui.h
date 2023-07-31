@@ -226,6 +226,7 @@ typedef struct UIScene {
   int comma_stock_ui;
   bool OPKR_Debug;
   bool rec_stat = false;
+  bool rec_stat2 = false;
   int rec_blinker = 0;
 
   bool experimental_mode = false;

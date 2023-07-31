@@ -192,8 +192,6 @@ private:
   QWidget *map = nullptr;
   QHBoxLayout* split;
 
-  ScreenRecoder* recorder2;
-
 private slots:
   void offroadTransition(bool offroad);
   void updateState(const UIState &s);

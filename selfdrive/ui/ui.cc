@@ -538,9 +538,9 @@ void UIState::update() {
   update_state(this);
   updateStatus();
 
-//  if (sm->frame % UI_FREQ == 0) {
-//    watchdog_kick(nanos_since_boot());
-//  }
+  if (sm->frame % UI_FREQ == 0) {
+    watchdog_kick(nanos_since_boot());
+  }
   emit uiUpdate(*this);
 }
 

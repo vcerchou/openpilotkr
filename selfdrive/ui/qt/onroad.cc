@@ -1810,11 +1810,16 @@ void AnnotatedCameraWidget::uiText(QPainter &p, int x, int y, const QString &tex
 }
 
 void AnnotatedCameraWidget::paintGL() {
+}
+
+void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
   UIState *s = uiState();
   SubMaster &sm = *(s->sm);
   const double start_draw_t = millis_since_boot();
   const cereal::ModelDataV2::Reader &model = sm["modelV2"].getModelV2();
   const cereal::RadarState::Reader &radar_state = sm["radarState"].getRadarState();
+
+  QPainter p(this);
 
   // draw camera frame
   {
@@ -1855,13 +1860,12 @@ void AnnotatedCameraWidget::paintGL() {
     } else {
       CameraWidget::updateCalibration(DEFAULT_CALIBRATION);
     }
+
+    p.beginNativePainting();
     CameraWidget::setFrameId(model.getFrameId());
     CameraWidget::paintGL();
+    p.endNativePainting();
   }
-
-  QPainter painter(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setPen(Qt::NoPen);
 
   if (s->worldObjectsVisible()) {
     if (sm.rcv_frame("modelV2") > s->scene.started_frame) {
@@ -1895,7 +1899,7 @@ void AnnotatedCameraWidget::paintGL() {
     drawWheelState(painter, s);
   }
 
-  drawHud(painter);
+  drawHud(p);
 
   double cur_draw_t = millis_since_boot();
   double dt = cur_draw_t - prev_draw_t;

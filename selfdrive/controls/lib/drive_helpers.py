@@ -111,7 +111,10 @@ class VCruiseHelper:
             self.v_cruise_cluster_kph = self.v_cruise_kph
           elif CS.cruiseButtons == Buttons.RES_ACCEL or CS.cruiseButtons == Buttons.SET_DECEL:
             if self.cruise_road_limit_spd_enabled and CS.cruiseButtons == Buttons.SET_DECEL:
-              self.cruise_road_limit_spd_switch = True
+              if 1 < int(self.sm['liveENaviData'].roadLimitSpeed) < 150:
+                self.cruise_road_limit_spd_switch = True
+              else:
+                self.cruise_road_limit_spd_switch = False
             elif self.cruise_road_limit_spd_enabled and CS.cruiseButtons == Buttons.RES_ACCEL:
               self.cruise_road_limit_spd_switch_prev = self.sm['liveENaviData'].roadLimitSpeed
               self.cruise_road_limit_spd_switch = False

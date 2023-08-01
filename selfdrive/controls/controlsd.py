@@ -398,18 +398,18 @@ class Controls:
     for i, pandaState in enumerate(self.sm['pandaStates']):
       # All pandas must match the list of safetyConfigs, and if outside this list, must be silent or noOutput
       if i < len(self.CP.safetyConfigs):
-        #print('safety_mismatch1')
+        print('safety_mismatch1')
         safety_mismatch = pandaState.safetyModel != self.CP.safetyConfigs[i].safetyModel or \
                           pandaState.safetyParam != self.CP.safetyConfigs[i].safetyParam or \
                           pandaState.alternativeExperience != self.CP.alternativeExperience
-        #print('safetyModel={}, safetyParam={}, alternativeExperience={}'.format(self.CP.safetyConfigs[i].safetyModel, self.CP.safetyConfigs[i].safetyParam, self.CP.alternativeExperience))
-        #print('pafetyModel={}, pafetyParam={}, plternativeExperience={}'.format(pandaState.safetyModel, pandaState.safetyParam, pandaState.alternativeExperience))
+        print('safetyModel={}, safetyParam={}, alternativeExperience={}'.format(self.CP.safetyConfigs[i].safetyModel, self.CP.safetyConfigs[i].safetyParam, self.CP.alternativeExperience))
+        print('pafetyModel={}, pafetyParam={}, plternativeExperience={}'.format(pandaState.safetyModel, pandaState.safetyParam, pandaState.alternativeExperience))
       else:
-        #print('safety_mismatch2')
+        print('safety_mismatch2')
         safety_mismatch = pandaState.safetyModel not in IGNORED_SAFETY_MODES
 
       if safety_mismatch or pandaState.safetyRxChecksInvalid or self.mismatch_counter >= 200:
-        #print('safety_mismatch={} safetyRxChecksInvalid={} mismatch_counter={}'.format(safety_mismatch, pandaState.safetyRxChecksInvalid, self.mismatch_counter))
+        print('safety_mismatch={} safetyRxChecksInvalid={} mismatch_counter={}'.format(safety_mismatch, pandaState.safetyRxChecksInvalid, self.mismatch_counter))
         self.events.add(EventName.controlsMismatch)
 
       if log.PandaState.FaultType.relayMalfunction in pandaState.faults:

@@ -416,8 +416,6 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   bool over_sl = false;
   if (s.scene.navi_select == 2) {
     over_sl = s.scene.limitSpeedCamera > 19 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
-  } else if (s.scene.navi_select == 1 && (s.scene.mapSign != 20 && s.scene.mapSign != 21)) {
-    over_sl = s.scene.limitSpeedCamera > 19 && ((s.scene.car_state.getVEgo() * (s.scene.is_metric ? MS_TO_KPH : MS_TO_MPH)) > s.scene.ctrl_speed+1.5);
   }
 
   auto lead_one = sm["radarState"].getRadarState().getLeadOne();

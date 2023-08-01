@@ -403,6 +403,7 @@ class Controls:
                           pandaState.safetyParam != self.CP.safetyConfigs[i].safetyParam or \
                           pandaState.alternativeExperience != self.CP.alternativeExperience
         print('safetyModel={}, safetyParam={}, alternativeExperience={}'.format(self.CP.safetyConfigs[i].safetyModel, self.CP.safetyConfigs[i].safetyParam, self.CP.alternativeExperience))
+        print('pafetyModel={}, pafetyParam={}, plternativeExperience={}'.format(pandaState.safetyModel, pandaState.safetyParam, pandaState.alternativeExperience))
       else:
         print('safety_mismatch2')
         safety_mismatch = pandaState.safetyModel not in IGNORED_SAFETY_MODES

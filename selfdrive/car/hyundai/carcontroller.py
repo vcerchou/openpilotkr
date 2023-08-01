@@ -986,7 +986,7 @@ class CarController:
         can_sends.append(hyundaican.create_frt_radar_opt(self.packer))
 
 
-      if self.CP.sccBus != 0 and self.counter_init and self.longcontrol and not self.experimental_long_enabled:
+      if self.CP.sccBus == 2 and self.counter_init and self.longcontrol and not self.experimental_long_enabled:
         if self.frame % 2 == 0:
           self.scc12cnt += 1
           self.scc12cnt %= 0xF
@@ -994,8 +994,8 @@ class CarController:
           self.scc11cnt %= 0x10
           lead_objspd = CS.lead_objspd  # vRel (km/h)
           aReqValue = CS.scc12["aReqValue"]
-          faccel = actuators.accel if c.active and not CS.out.gasPressed else 0
-          accel = actuators.oaccel if c.active and not CS.out.gasPressed else 0
+          faccel = actuators.accel if CC.longActive and not CS.out.gasPressed else 0
+          accel = actuators.oaccel if CC.longActive and not CS.out.gasPressed else 0
           stopping = (actuators.longControlState == LongCtrlState.stopping)
           radar_recog = (0 < CS.lead_distance <= 149)
           if self.joystick_debug_mode:
@@ -1150,20 +1150,21 @@ class CarController:
           accel = clip(accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
           self.aq_value = accel
           self.aq_value_raw = aReqValue
-          can_sends.append(hyundaican.create_scc11(self.packer, self.frame, set_speed, lead_visible, self.scc_live, self.dRel, self.vRel, self.yRel, 
+          can_sends.append(hyundaican.create_scc11(self.packer, self.frame, set_speed_in_units, hud_control.leadVisible, self.scc_live, self.dRel, self.vRel, self.yRel, 
           self.car_fingerprint, CS.out.vEgo * CV.MS_TO_KPH, self.acc_standstill, self.gapsettingdance, self.stopped, radar_recog, CS.scc11))
-          if (CS.brake_check or CS.cancel_check) and self.car_fingerprint != CAR.NIRO_EV_DE:
+          if (CS.brake_check or CS.cancel_check) and self.car_fingerprint != CAR.KIA_NIRO_EV:
             can_sends.append(hyundaican.create_scc12(self.packer, accel, CC.enabled, self.scc_live, CS.out.gasPressed, 1, 
             CS.out.stockAeb, self.car_fingerprint, CS.out.vEgo * CV.MS_TO_KPH, self.stopped, self.acc_standstill, radar_recog, self.scc12_cnt, CS.scc12))
           else:
             can_sends.append(hyundaican.create_scc12(self.packer, accel, CC.enabled, self.scc_live, CS.out.gasPressed, CS.out.brakePressed, 
             CS.out.stockAeb, self.car_fingerprint, CS.out.vEgo * CV.MS_TO_KPH, self.stopped, self.acc_standstill, radar_recog, self.scc12_cnt, CS.scc12))
           self.scc12_cnt += 1
-          can_sends.append(hyundaican.create_scc14(self.packer, CC.enabled, CS.scc14, CS.out.stockAeb, lead_visible, self.dRel, 
-          CS.out.vEgo, self.acc_standstill, self.car_fingerprint))
+          if self.CP.scc14Available:
+            can_sends.append(hyundaican.create_scc14(self.packer, CC.enabled, CS.scc14, CS.out.stockAeb, hud_control.leadVisible, self.dRel, 
+             CS.out.vEgo, self.acc_standstill, self.car_fingerprint))
           self.accel = accel
 
-        if self.frame % 20 == 0:
+        if self.frame % 20 == 0 and self.CP.scc13Available:
           can_sends.append(hyundaican.create_scc13(self.packer, CS.scc13))
         if self.frame % 50 == 0:
           can_sends.append(hyundaican.create_scc42a(self.packer))

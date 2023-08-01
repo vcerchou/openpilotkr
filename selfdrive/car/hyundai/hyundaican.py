@@ -244,7 +244,7 @@ def create_scc11(packer, frame, set_speed, lead_visible, scc_live, lead_dist, le
 def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepressed, aebcmdact, car_fingerprint, speed, stopping, standstill, radar_recognition, cnt, scc12):
   values = scc12
   if not aebcmdact:
-    if enabled and car_fingerprint == CAR.NIRO_EV_DE:
+    if enabled and car_fingerprint == CAR.KIA_NIRO_EV:
       values["ACCMode"] = 2 if gaspressed and (apply_accel > -0.2) else 1
       values["aReqRaw"] = apply_accel
       values["aReqValue"] = apply_accel
@@ -280,3 +280,65 @@ def create_scc12(packer, apply_accel, enabled, scc_live, gaspressed, brakepresse
   values["CR_VSM_ChkSum"] = 16 - sum([sum(divmod(i, 16)) for i in dat]) % 16
 
   return packer.make_can_msg("SCC12", 0, values)
+
+def create_scc13(packer, scc13):
+  values = scc13
+  return packer.make_can_msg("SCC13", 0, values)
+
+def create_scc14(packer, enabled, scc14, aebcmdact, lead_visible, lead_dist, v_ego, standstill, car_fingerprint):
+  values = scc14
+  if enabled and not aebcmdact and car_fingerprint == CAR.NIRO_EV_DE:
+    if standstill:
+      values["JerkUpperLimit"] = 0.5
+      values["JerkLowerLimit"] = 10.
+      values["ComfortBandUpper"] = 0.
+      values["ComfortBandLower"] = 0.
+      if v_ego > 0.27:
+        values["ComfortBandUpper"] = 2.
+        values["ComfortBandLower"] = 0.
+    else:
+      values["JerkUpperLimit"] = 50.
+      values["JerkLowerLimit"] = 50.
+      values["ComfortBandUpper"] = 50.
+      values["ComfortBandLower"] = 50.
+  elif enabled and not aebcmdact:
+    values["JerkUpperLimit"] = 12.7
+    values["JerkLowerLimit"] = 12.7
+    values["ComfortBandUpper"] = 0
+    values["ComfortBandLower"] = 0
+    values["ACCMode"] = 1 # stock will always be 4 instead of 0 after first disengage
+    values["ObjGap"] = int(min(lead_dist+2, 10)/2) if lead_visible else 0 # 1-5 based on distance to lead vehicle
+  else:
+    values["JerkUpperLimit"] = 0
+    values["JerkLowerLimit"] = 0
+    values["ComfortBandUpper"] = 0
+    values["ComfortBandLower"] = 0
+    values["ACCMode"] = 4 # stock will always be 4 instead of 0 after first disengage
+    values["ObjGap"] = 0
+
+  return packer.make_can_msg("SCC14", 0, values)
+
+def create_scc42a(packer):
+  values = {
+    "CF_FCA_Equip_Front_Radar": 1
+  }
+  return packer.make_can_msg("FRT_RADAR11", 0, values)
+
+def create_fca11(packer, fca11, fca11cnt, fca11supcnt):
+  values = fca11
+  values["CR_FCA_Alive"] = fca11cnt
+  values["Supplemental_Counter"] = fca11supcnt
+  values["CR_FCA_ChkSum"] = 0
+  dat = packer.make_can_msg("FCA11", 0, values)[2]
+  values["CR_FCA_ChkSum"] = 16 - sum([sum(divmod(i, 16)) for i in dat]) % 16
+  return packer.make_can_msg("FCA11", 0, values)
+
+def create_fca12(packer):
+  values = {
+    "FCA_USM": 3,
+    "FCA_DrvSetState": 2,
+  }
+  return packer.make_can_msg("FCA12", 0, values)
+
+def create_scc7d0(cmd):
+  return[2000, 0, cmd, 0]

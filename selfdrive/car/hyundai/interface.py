@@ -404,8 +404,6 @@ class CarInterface(CarInterfaceBase):
         ret.radarUnavailable = False
         if Params().get_bool("OPKRLongAlt"):
           ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity)]
-        else:
-          ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
         ret.pcmCruise = True
       else:
         ret.pcmCruise = not ret.openpilotLongitudinalControl

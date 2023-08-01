@@ -1150,7 +1150,7 @@ class CarController:
           accel = clip(accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
           self.aq_value = accel
           self.aq_value_raw = aReqValue
-          can_sends.append(hyundaican.create_scc11(self.packer, self.frame, set_speed_in_units, lead_visible, self.scc_live, self.dRel, self.vRel, self.yRel, 
+          can_sends.append(hyundaican.create_scc11(self.packer, self.frame, set_speed_in_units, hud_control.leadVisible, self.scc_live, self.dRel, self.vRel, self.yRel, 
           self.car_fingerprint, CS.out.vEgo * CV.MS_TO_KPH, self.acc_standstill, self.gapsettingdance, self.stopped, radar_recog, CS.scc11))
           if (CS.brake_check or CS.cancel_check) and self.car_fingerprint != CAR.NIRO_EV_DE:
             can_sends.append(hyundaican.create_scc12(self.packer, accel, CC.enabled, self.scc_live, CS.out.gasPressed, 1, 
@@ -1159,7 +1159,7 @@ class CarController:
             can_sends.append(hyundaican.create_scc12(self.packer, accel, CC.enabled, self.scc_live, CS.out.gasPressed, CS.out.brakePressed, 
             CS.out.stockAeb, self.car_fingerprint, CS.out.vEgo * CV.MS_TO_KPH, self.stopped, self.acc_standstill, radar_recog, self.scc12_cnt, CS.scc12))
           self.scc12_cnt += 1
-          can_sends.append(hyundaican.create_scc14(self.packer, CC.enabled, CS.scc14, CS.out.stockAeb, lead_visible, self.dRel, 
+          can_sends.append(hyundaican.create_scc14(self.packer, CC.enabled, CS.scc14, CS.out.stockAeb, hud_control.leadVisible, self.dRel, 
           CS.out.vEgo, self.acc_standstill, self.car_fingerprint))
           self.accel = accel
 

@@ -986,7 +986,7 @@ class CarController:
         can_sends.append(hyundaican.create_frt_radar_opt(self.packer))
 
 
-      if self.CP.sccBus != 0 and self.counter_init and self.longcontrol and not self.experimental_long_enabled:
+      if self.CP.sccBus == 2 and self.counter_init and self.longcontrol and not self.experimental_long_enabled:
         if self.frame % 2 == 0:
           self.scc12cnt += 1
           self.scc12cnt %= 0xF

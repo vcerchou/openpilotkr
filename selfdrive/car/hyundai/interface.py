@@ -363,8 +363,7 @@ class CarInterface(CarInterfaceBase):
       ret.enableBsm = 0x58b in fingerprint[0]
       ret.mdpsBus = 1 if 593 in fingerprint[1] and 1296 not in fingerprint[1] else 0
       ret.sasBus = 1 if 688 in fingerprint[1] and 1296 not in fingerprint[1] else 0
-      ret.sccBus = 0 if 1056 in fingerprint[0] else 1 if 1056 in fingerprint[1] and 1296 not in fingerprint[1] \
-                                                                     else 2 if 1056 in fingerprint[2] else -1
+      ret.sccBus = 2 if 1056 in fingerprint[2] else 0 if 1056 in fingerprint[0] else 1 if 1056 in fingerprint[1] and 1296 not in fingerprint[1] else -1
       ret.fcaBus = 0 if 909 in fingerprint[0] else 2 if 909 in fingerprint[2] else -1
       ret.bsmAvailable = True if 1419 in fingerprint[0] else False
       ret.lfaAvailable = True if 1157 in fingerprint[2] else False
@@ -403,12 +402,15 @@ class CarInterface(CarInterfaceBase):
         ret.scc14Available = 905 in fingerprint[0] or 905 in fingerprint[2]
         ret.openpilotLongitudinalControl = True
         ret.radarUnavailable = False
-        ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
+        if Params().get_bool("OPKRLongAlt"):
+          ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity)]
+        else:
+          ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiLegacy)]
         ret.pcmCruise = True
       else:
         ret.pcmCruise = not ret.openpilotLongitudinalControl
 
-    if ret.openpilotLongitudinalControl:
+    if ret.openpilotLongitudinalControl and not Params().get_bool("OPKRLongAlt"):
       ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_LONG
     if candidate in HYBRID_CAR:
       ret.safetyConfigs[-1].safetyParam |= Panda.FLAG_HYUNDAI_HYBRID_GAS

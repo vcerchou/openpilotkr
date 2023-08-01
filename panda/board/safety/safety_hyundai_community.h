@@ -67,7 +67,7 @@ static int hyundai_community_rx_hook(CANPacket_t *to_push) {
 
   bool valid = addr_safety_check(to_push, &hyundai_community_rx_checks,
                             hyundai_get_checksum, hyundai_compute_checksum,
-                            hyundai_get_counter, NULL),;
+                            hyundai_get_counter, NULL);
 
   if (!valid){
     puth(addr);

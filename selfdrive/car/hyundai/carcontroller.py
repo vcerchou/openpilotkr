@@ -1159,11 +1159,12 @@ class CarController:
             can_sends.append(hyundaican.create_scc12(self.packer, accel, CC.enabled, self.scc_live, CS.out.gasPressed, CS.out.brakePressed, 
             CS.out.stockAeb, self.car_fingerprint, CS.out.vEgo * CV.MS_TO_KPH, self.stopped, self.acc_standstill, radar_recog, self.scc12_cnt, CS.scc12))
           self.scc12_cnt += 1
-          can_sends.append(hyundaican.create_scc14(self.packer, CC.enabled, CS.scc14, CS.out.stockAeb, hud_control.leadVisible, self.dRel, 
-          CS.out.vEgo, self.acc_standstill, self.car_fingerprint))
+          if self.CP.scc14Available:
+            can_sends.append(hyundaican.create_scc14(self.packer, CC.enabled, CS.scc14, CS.out.stockAeb, hud_control.leadVisible, self.dRel, 
+             CS.out.vEgo, self.acc_standstill, self.car_fingerprint))
           self.accel = accel
 
-        if self.frame % 20 == 0:
+        if self.frame % 20 == 0 and self.CP.scc13Available:
           can_sends.append(hyundaican.create_scc13(self.packer, CS.scc13))
         if self.frame % 50 == 0:
           can_sends.append(hyundaican.create_scc42a(self.packer))

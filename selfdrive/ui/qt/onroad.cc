@@ -317,7 +317,8 @@ AnnotatedCameraWidget::AnnotatedCameraWidget(VisionStreamType type, QWidget* par
   main_layout->setMargin(UI_BORDER_SIZE);
   main_layout->setSpacing(0);
 
-  // experimental_btn = new ExperimentalButton(this);
+  experimental_btn = new ExperimentalButton(this);
+  experimental_btn->hide();
   // main_layout->addWidget(experimental_btn, 0, Qt::AlignTop | Qt::AlignRight);
 
   map_settings_btn = new MapSettingsButton(this);
@@ -391,7 +392,7 @@ void AnnotatedCameraWidget::updateState(const UIState &s) {
   setProperty("status", s.status);
 
   // update engageability/experimental mode button
-  //experimental_btn->updateState(s);
+  experimental_btn->updateState(s);
 
   // update DM icon
   auto dm_state = sm["driverMonitoringState"].getDriverMonitoringState();

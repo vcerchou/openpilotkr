@@ -265,7 +265,6 @@ static int hyundai_tx_hook(CANPacket_t *to_send) {
 
   int tx = 1;
   int addr = GET_ADDR(to_send);
-  int bus = GET_BUS(to_send);
 
   if (hyundai_longitudinal) {
     tx = msg_allowed(to_send, HYUNDAI_LONG_TX_MSGS, sizeof(HYUNDAI_LONG_TX_MSGS)/sizeof(HYUNDAI_LONG_TX_MSGS[0]));

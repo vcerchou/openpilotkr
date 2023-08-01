@@ -1,22 +1,5 @@
 #include "safety_hyundai_common.h"
 
-#define HYUNDAI_LIMITS(steer, rate_up, rate_down) { \
-  .max_steer = (steer), \
-  .max_rate_up = (rate_up), \
-  .max_rate_down = (rate_down), \
-  .max_rt_delta = 112, \
-  .max_rt_interval = 250000, \
-  .driver_torque_allowance = 50, \
-  .driver_torque_factor = 2, \
-  .type = TorqueDriverLimited, \
-   /* the EPS faults when the steering angle is above a certain threshold for too long. to prevent this, */ \
-   /* we allow setting CF_Lkas_ActToi bit to 0 while maintaining the requested torque value for two consecutive frames */ \
-  .min_valid_request_frames = 89, \
-  .max_invalid_request_frames = 2, \
-  .min_valid_request_rt_interval = 810000,  /* 810ms; a ~10% buffer on cutting every 90 frames */ \
-  .has_steer_req_tolerance = true, \
-}
-
 int OP_LKAS_live = 0;
 int OP_MDPS_live = 0;
 int OP_CLU_live = 0;
@@ -65,10 +48,9 @@ static int hyundai_community_rx_hook(CANPacket_t *to_push) {
   int addr = GET_ADDR(to_push);
   int bus = GET_BUS(to_push);
 
-  //bool valid = addr_safety_check(to_push, &hyundai_community_rx_checks,
-  //                          hyundai_get_checksum, hyundai_compute_checksum,
-  //                          hyundai_get_counter, NULL);
-  bool valid = true;
+  bool valid = addr_safety_check(to_push, &hyundai_community_rx_checks,
+                            hyundai_get_checksum, hyundai_compute_checksum,
+                            hyundai_get_counter, NULL);
 
   if (!valid){
     puth(addr);
@@ -148,15 +130,7 @@ static int hyundai_community_tx_hook(CANPacket_t *to_send) {
   int addr = GET_ADDR(to_send);
   int bus = GET_BUS(to_send);
 
-  if (!msg_allowed(to_send, HYUNDAI_COMMUNITY_TX_MSGS, sizeof(HYUNDAI_COMMUNITY_TX_MSGS)/sizeof(HYUNDAI_COMMUNITY_TX_MSGS[0]))) {
-    tx = 0;
-    puth(addr);
-	puth(bus);
-  }
-
-  if (relay_malfunction) {
-    tx = 0;
-  }
+  tx = msg_allowed(to_send, HYUNDAI_COMMUNITY_TX_MSGS, sizeof(HYUNDAI_COMMUNITY_TX_MSGS)/sizeof(HYUNDAI_COMMUNITY_TX_MSGS[0]));
 
   // LKA STEER: safety check
   if (addr == 832) {
@@ -255,7 +229,7 @@ static int hyundai_community_fwd_hook(int bus_num, int addr) {
 }
 
 static const addr_checks* hyundai_community_init(uint16_t param) {
-  UNUSED(param);
+  hyundai_common_init(param);
   controls_allowed = false;
   relay_malfunction_reset();
 

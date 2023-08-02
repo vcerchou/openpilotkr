@@ -107,7 +107,7 @@ static int hyundai_community1_rx_hook(CANPacket_t *to_push) {
   if (valid && (addr == 1056)) {
     // 1 bits: 0
     int cruise_available = GET_BIT(to_push, 0U);
-    hyundai_common_cruise_state_check(cruise_available);
+    hyundai_common_cruise_state_check_alt(cruise_available);
   }
 
   if (valid && (bus == 0)) {

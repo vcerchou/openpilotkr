@@ -299,7 +299,6 @@ class CarController:
     if self.frame % 10 == 0:
       self.model_speed = self.sm['lateralPlan'].modelSpeed
 
-
     self.dRel = self.sm['radarState'].leadOne.dRel #Vision Lead
     self.vRel = self.sm['radarState'].leadOne.vRel #Vision Lead
     self.yRel = self.sm['radarState'].leadOne.yRel #Vision Lead
@@ -359,20 +358,6 @@ class CarController:
 
     self.apply_steer_last = apply_steer
 
-    if CS.cruise_active and CS.lead_distance > 149 and self.dRel < ((CS.out.vEgo * CV.MS_TO_KPH)+5) < 100 and \
-     self.vRel*3.6 < -(CS.out.vEgo * CV.MS_TO_KPH * 0.16) and CS.out.vEgo > 7 and abs(CS.out.steeringAngleDeg) < 10 and not self.longcontrol:
-      self.need_brake_timer += 1
-      if self.need_brake_timer > 100:
-        self.need_brake = True
-    elif not CS.cruise_active and 1 < self.dRel < (CS.out.vEgo * CV.MS_TO_KPH * 0.5) < 13 and self.vRel*3.6 < -(CS.out.vEgo * CV.MS_TO_KPH * 0.6) and \
-     5 < (CS.out.vEgo * CV.MS_TO_KPH) < 20 and not (CS.out.brakeLights or CS.out.brakePressed or CS.out.gasPressed): # generate an event to avoid collision when SCC is not activated at low speed.
-      self.need_brake_timer += 1
-      if self.need_brake_timer > 50:
-        self.need_brake = True
-    else:
-      self.need_brake = False
-      self.need_brake_timer = 0
-
     # accel + longitudinal
     accel = clip(actuators.accel, CarControllerParams.ACCEL_MIN, CarControllerParams.ACCEL_MAX)
     stopping = actuators.longControlState == LongCtrlState.stopping
@@ -381,72 +366,8 @@ class CarController:
     # HUD messages
     sys_warning, sys_state, left_lane_warning, right_lane_warning = process_hud_alert(CC.enabled, self.car_fingerprint,
                                                                                       hud_control)
-    clu11_speed = CS.clu11["CF_Clu_Vanz"]
-    enabled_speed = 38 if CS.is_set_speed_in_mph else 60
-    if clu11_speed > enabled_speed or not lat_active or CS.out.gearShifter != GearShifter.drive:
-      enabled_speed = clu11_speed
-
-    if CS.cruise_active: # to toggle lkas, hold gap button for 1 sec
-      if CS.cruise_buttons[-1] == 3:
-        self.lkas_onoff_counter += 1
-        self.gap_by_spd_on_sw = True
-        self.gap_by_spd_on_sw_cnt2 = 0
-        if self.lkas_onoff_counter > 100:
-          self.lkas_onoff_counter = 0
-          self.lkas_temp_disabled = not self.lkas_temp_disabled
-          if self.lkas_temp_disabled:
-            self.lkas_temp_disabled_timer = 0
-          else:
-            self.lkas_temp_disabled_timer = 15
-      else:
-        if self.lkas_temp_disabled_timer:
-          self.lkas_temp_disabled_timer -= 1
-        self.lkas_onoff_counter = 0
-        if self.gap_by_spd_on_sw:
-          self.gap_by_spd_on_sw = False
-          self.gap_by_spd_on_sw_cnt += 1
-          if self.gap_by_spd_on_sw_cnt > 4: #temporary disable of auto gap if you press gap button 5 times quickly.
-            self.gap_by_spd_on_sw_trg = not self.gap_by_spd_on_sw_trg
-            self.gap_by_spd_on_sw_cnt = 0
-            self.gap_by_spd_on_sw_cnt2 = 0
-        elif self.gap_by_spd_on_sw_cnt:
-          self.gap_by_spd_on_sw_cnt2 += 1
-          if self.gap_by_spd_on_sw_cnt2 > 20:
-            self.gap_by_spd_on_sw_cnt = 0
-            self.gap_by_spd_on_sw_cnt2 = 0
-    else:
-      self.lkas_onoff_counter = 0
-      if self.lkas_temp_disabled_timer:
-        self.lkas_temp_disabled_timer -= 1
-      self.gap_by_spd_on_sw_cnt = 0
-      self.gap_by_spd_on_sw_cnt2 = 0
-      self.gap_by_spd_on_sw = False
-      self.gap_by_spd_on_sw_trg = True
 
     can_sends = []
-
-    # *** common hyundai stuff ***
-
-    if CS.out.cruiseState.modeSel == 0 and self.mode_change_switch == 5:
-      self.mode_change_timer = 50
-      self.mode_change_switch = 0
-    elif CS.out.cruiseState.modeSel == 1 and self.mode_change_switch == 0:
-      self.mode_change_timer = 50
-      self.mode_change_switch = 1
-    elif CS.out.cruiseState.modeSel == 2 and self.mode_change_switch == 1:
-      self.mode_change_timer = 50
-      self.mode_change_switch = 2
-    elif CS.out.cruiseState.modeSel == 3 and self.mode_change_switch == 2:
-      self.mode_change_timer = 50
-      self.mode_change_switch = 3
-    elif CS.out.cruiseState.modeSel == 4 and self.mode_change_switch == 3:
-      self.mode_change_timer = 50
-      self.mode_change_switch = 4
-    elif CS.out.cruiseState.modeSel == 5 and self.mode_change_switch == 4:
-      self.mode_change_timer = 50
-      self.mode_change_switch = 5
-    if self.mode_change_timer > 0:
-      self.mode_change_timer -= 1
 
     # tester present - w/ no response (keeps relevant ECU disabled)
     if self.frame % 100 == 0 and not (self.CP.flags & HyundaiFlags.CANFD_CAMERA_SCC.value) and self.CP.openpilotLongitudinalControl and self.CP.sccBus == 0:
@@ -524,6 +445,83 @@ class CarController:
                 can_sends.append(hyundaicanfd.create_buttons(self.packer, self.CP, self.CAN, CS.buttons_counter+1, Buttons.RES_ACCEL))
               self.last_button_frame = self.frame
     else:
+      if CS.cruise_active and CS.lead_distance > 149 and self.dRel < ((CS.out.vEgo * CV.MS_TO_KPH)+5) < 100 and \
+      self.vRel*3.6 < -(CS.out.vEgo * CV.MS_TO_KPH * 0.16) and CS.out.vEgo > 7 and abs(CS.out.steeringAngleDeg) < 10 and not self.longcontrol:
+        self.need_brake_timer += 1
+        if self.need_brake_timer > 100:
+          self.need_brake = True
+      elif not CS.cruise_active and 1 < self.dRel < (CS.out.vEgo * CV.MS_TO_KPH * 0.5) < 13 and self.vRel*3.6 < -(CS.out.vEgo * CV.MS_TO_KPH * 0.6) and \
+       5 < (CS.out.vEgo * CV.MS_TO_KPH) < 20 and not (CS.out.brakeLights or CS.out.brakePressed or CS.out.gasPressed): # generate an event to avoid collision when SCC is not activated at low speed.
+        self.need_brake_timer += 1
+        if self.need_brake_timer > 50:
+          self.need_brake = True
+      else:
+        self.need_brake = False
+        self.need_brake_timer = 0
+
+      clu11_speed = CS.clu11["CF_Clu_Vanz"]
+      enabled_speed = 38 if CS.is_set_speed_in_mph else 60
+      if clu11_speed > enabled_speed or not lat_active or CS.out.gearShifter != GearShifter.drive:
+        enabled_speed = clu11_speed
+
+      if CS.cruise_active: # to toggle lkas, hold gap button for 1 sec
+        if CS.cruise_buttons[-1] == 3:
+          self.lkas_onoff_counter += 1
+          self.gap_by_spd_on_sw = True
+          self.gap_by_spd_on_sw_cnt2 = 0
+          if self.lkas_onoff_counter > 100:
+            self.lkas_onoff_counter = 0
+            self.lkas_temp_disabled = not self.lkas_temp_disabled
+            if self.lkas_temp_disabled:
+              self.lkas_temp_disabled_timer = 0
+            else:
+              self.lkas_temp_disabled_timer = 15
+        else:
+          if self.lkas_temp_disabled_timer:
+            self.lkas_temp_disabled_timer -= 1
+          self.lkas_onoff_counter = 0
+          if self.gap_by_spd_on_sw:
+            self.gap_by_spd_on_sw = False
+            self.gap_by_spd_on_sw_cnt += 1
+            if self.gap_by_spd_on_sw_cnt > 4: #temporary disable of auto gap if you press gap button 5 times quickly.
+              self.gap_by_spd_on_sw_trg = not self.gap_by_spd_on_sw_trg
+              self.gap_by_spd_on_sw_cnt = 0
+              self.gap_by_spd_on_sw_cnt2 = 0
+          elif self.gap_by_spd_on_sw_cnt:
+            self.gap_by_spd_on_sw_cnt2 += 1
+            if self.gap_by_spd_on_sw_cnt2 > 20:
+              self.gap_by_spd_on_sw_cnt = 0
+              self.gap_by_spd_on_sw_cnt2 = 0
+      else:
+        self.lkas_onoff_counter = 0
+        if self.lkas_temp_disabled_timer:
+          self.lkas_temp_disabled_timer -= 1
+        self.gap_by_spd_on_sw_cnt = 0
+        self.gap_by_spd_on_sw_cnt2 = 0
+        self.gap_by_spd_on_sw = False
+        self.gap_by_spd_on_sw_trg = True
+
+      if CS.out.cruiseState.modeSel == 0 and self.mode_change_switch == 5:
+        self.mode_change_timer = 50
+        self.mode_change_switch = 0
+      elif CS.out.cruiseState.modeSel == 1 and self.mode_change_switch == 0:
+        self.mode_change_timer = 50
+        self.mode_change_switch = 1
+      elif CS.out.cruiseState.modeSel == 2 and self.mode_change_switch == 1:
+        self.mode_change_timer = 50
+        self.mode_change_switch = 2
+      elif CS.out.cruiseState.modeSel == 3 and self.mode_change_switch == 2:
+        self.mode_change_timer = 50
+        self.mode_change_switch = 3
+      elif CS.out.cruiseState.modeSel == 4 and self.mode_change_switch == 3:
+        self.mode_change_timer = 50
+        self.mode_change_switch = 4
+      elif CS.out.cruiseState.modeSel == 5 and self.mode_change_switch == 4:
+        self.mode_change_timer = 50
+        self.mode_change_switch = 5
+      if self.mode_change_timer > 0:
+        self.mode_change_timer -= 1
+
       can_sends.append(hyundaican.create_lkas11(self.packer, self.frame, self.car_fingerprint, apply_steer, lat_active and not self.lkas_temp_disabled,
                                                 torque_fault, CS.lkas11, sys_warning, sys_state, CC.enabled,
                                                 hud_control.leftLaneVisible, hud_control.rightLaneVisible,

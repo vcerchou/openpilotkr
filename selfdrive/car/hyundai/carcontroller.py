@@ -26,8 +26,8 @@ LaneChangeState = log.LateralPlan.LaneChangeState
 
 # EPS faults if you apply torque while the steering angle is above 90 degrees for more than 1 second
 # All slightly below EPS thresholds to avoid fault
-MAX_ANGLE = int(Params().get("AvoidLKASFaultMaxAngle", encoding="utf8"))
-MAX_ANGLE_FRAMES = int(Params().get("AvoidLKASFaultMaxFrame", encoding="utf8"))
+MAX_ANGLE = int(Params().get("AvoidLKASFaultMaxAngle", encoding="utf8")) # 85
+MAX_ANGLE_FRAMES = int(Params().get("AvoidLKASFaultMaxFrame", encoding="utf8")) # 89
 MAX_ANGLE_CONSECUTIVE_FRAMES = 2
 
 
@@ -383,17 +383,22 @@ class CarController:
 
     # >90 degree steering fault prevention
     # Count up to MAX_ANGLE_FRAMES, at which point we need to cut torque to avoid a steering fault
-    if lat_active and abs(CS.out.steeringAngleDeg) >= MAX_ANGLE:
-      self.angle_limit_counter += 1
+
+    if self.to_avoid_lkas_fault_enabled:
+      if lat_active and abs(CS.out.steeringAngleDeg) >= self.to_avoid_lkas_fault_max_angle:
+        self.angle_limit_counter += 1
+      else:
+        self.angle_limit_counter = 0
+
+      # Cut steer actuation bit for two frames and hold torque with induced temporary fault
+      torque_fault = lat_active and self.angle_limit_counter > self.to_avoid_lkas_fault_max_frame
+      lat_active = lat_active and not torque_fault
+
+      if self.angle_limit_counter >= self.to_avoid_lkas_fault_max_frame + MAX_ANGLE_CONSECUTIVE_FRAMES:
+        self.angle_limit_counter = 0
     else:
-      self.angle_limit_counter = 0
+      torque_fault = False
 
-    # Cut steer actuation bit for two frames and hold torque with induced temporary fault
-    torque_fault = lat_active and self.angle_limit_counter > MAX_ANGLE_FRAMES
-    lat_active = lat_active and not torque_fault
-
-    if self.angle_limit_counter >= MAX_ANGLE_FRAMES + MAX_ANGLE_CONSECUTIVE_FRAMES:
-      self.angle_limit_counter = 0
 
     # CAN-FD platforms
     if self.CP.carFingerprint in CANFD_CAR:
@@ -1190,9 +1195,9 @@ class CarController:
         # self.stopping_dist_adj_enabled = self.c_params.get_bool("StoppingDistAdj")
         # self.standstill_res_count = int(self.c_params.get("RESCountatStandstill", encoding="utf8"))
         # self.opkr_cruisegap_auto_adj = self.c_params.get_bool("CruiseGapAdjust")
-        # self.to_avoid_lkas_fault_enabled = self.c_params.get_bool("AvoidLKASFaultEnabled")
-        # self.to_avoid_lkas_fault_max_angle = int(self.c_params.get("AvoidLKASFaultMaxAngle", encoding="utf8"))
-        # self.to_avoid_lkas_fault_max_frame = int(self.c_params.get("AvoidLKASFaultMaxFrame", encoding="utf8"))
+        self.to_avoid_lkas_fault_enabled = self.c_params.get_bool("AvoidLKASFaultEnabled")
+        self.to_avoid_lkas_fault_max_angle = int(self.c_params.get("AvoidLKASFaultMaxAngle", encoding="utf8"))
+        self.to_avoid_lkas_fault_max_frame = int(self.c_params.get("AvoidLKASFaultMaxFrame", encoding="utf8"))
         # self.e2e_long_enabled = self.c_params.get_bool("E2ELong")
         # self.stopsign_enabled = self.c_params.get_bool("StopAtStopSign")
         # self.gap_by_spd_on = self.c_params.get_bool("CruiseGapBySpdOn")

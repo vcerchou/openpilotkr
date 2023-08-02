@@ -199,7 +199,7 @@ def manager_init() -> None:
     ("RightEdgeOffset", "0"),
     ("AvoidLKASFaultEnabled", "0"),
     ("AvoidLKASFaultMaxAngle", "85"),
-    ("AvoidLKASFaultMaxFrame", "90"),
+    ("AvoidLKASFaultMaxFrame", "89"),
     ("AvoidLKASFaultBeyond", "0"),
     ("UseStockDecelOnSS", "0"),
     ("AnimatedRPM", "1"),

@@ -54,6 +54,7 @@
 #define SAFETY_BODY 27U
 #define SAFETY_HYUNDAI_CANFD 28U
 #define SAFETY_HYUNDAI_COMMUNITY2 29U
+#define SAFETY_HYUNDAI_COMMUNITY1_LEGACY 30U
 
 uint16_t current_safety_mode = SAFETY_SILENT;
 uint16_t current_safety_param = 0;
@@ -310,6 +311,7 @@ const safety_hook_config safety_hook_registry[] = {
   {SAFETY_HYUNDAI_LEGACY, &hyundai_legacy_hooks},
   {SAFETY_HYUNDAI_COMMUNITY1, &hyundai_community1_hooks},
   {SAFETY_HYUNDAI_COMMUNITY2, &hyundai_community2_hooks},
+  {SAFETY_HYUNDAI_COMMUNITY1_LEGACY, &hyundai_community1_legacy_hooks},
   {SAFETY_MAZDA, &mazda_hooks},
   {SAFETY_BODY, &body_hooks},
   {SAFETY_FORD, &ford_hooks},

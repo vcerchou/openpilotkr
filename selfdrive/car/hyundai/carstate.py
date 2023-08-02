@@ -93,7 +93,7 @@ class CarState(CarStateBase):
     self.cruise_set_mode = int(Params().get("CruiseStatemodeSelInit", encoding="utf8"))
     self.gasPressed = False
 
-    self.long_alt = Params().get_bool("OPKRLongAlt")
+    self.long_alt = int(Params().get("OPKRLongAlt", encoding="utf8"))
 
     self.sm = messaging.SubMaster(['controlsState'])
 
@@ -248,7 +248,7 @@ class CarState(CarStateBase):
     ret.cruiseButtons = self.cruise_buttons[-1]
 
     # cruise state
-    if self.CP.openpilotLongitudinalControl and (self.CP.sccBus <= 0 and not self.long_alt):
+    if self.CP.openpilotLongitudinalControl and (self.CP.sccBus <= 0 and self.long_alt not in (1, 2)):
       # These are not used for engage/disengage since openpilot keeps track of state using the buttons
       ret.cruiseState.available = cp.vl["TCS13"]["ACCEnable"] == 0 or cp.vl["EMS16"]["CRUISE_LAMP_M"] != 0
       ret.cruiseState.enabled = cp.vl["TCS13"]["ACC_REQ"] == 1 or cp.vl["LVR12"]["CF_Lvr_CruiseSet"] != 0

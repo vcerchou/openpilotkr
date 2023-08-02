@@ -9,7 +9,8 @@
 #include "safety/safety_gm.h"
 #include "safety/safety_ford.h"
 #include "safety/safety_hyundai.h"
-#include "safety/safety_hyundai_community.h"
+#include "safety/safety_hyundai_community1.h"
+#include "safety/safety_hyundai_community2.h"
 #include "safety/safety_chrysler.h"
 #include "safety/safety_subaru.h"
 #include "safety/safety_subaru_preglobal.h"
@@ -47,11 +48,12 @@
 #define SAFETY_VOLKSWAGEN_PQ 21U
 #define SAFETY_SUBARU_PREGLOBAL 22U
 #define SAFETY_HYUNDAI_LEGACY 23U
-#define SAFETY_HYUNDAI_COMMUNITY 24U
+#define SAFETY_HYUNDAI_COMMUNITY1 24U
 #define SAFETY_STELLANTIS 25U
 #define SAFETY_FAW 26U
 #define SAFETY_BODY 27U
 #define SAFETY_HYUNDAI_CANFD 28U
+#define SAFETY_HYUNDAI_COMMUNITY2 29U
 
 uint16_t current_safety_mode = SAFETY_SILENT;
 uint16_t current_safety_param = 0;
@@ -306,7 +308,8 @@ const safety_hook_config safety_hook_registry[] = {
   {SAFETY_NISSAN, &nissan_hooks},
   {SAFETY_NOOUTPUT, &nooutput_hooks},
   {SAFETY_HYUNDAI_LEGACY, &hyundai_legacy_hooks},
-  {SAFETY_HYUNDAI_COMMUNITY, &hyundai_community_hooks},
+  {SAFETY_HYUNDAI_COMMUNITY1, &hyundai_community1_hooks},
+  {SAFETY_HYUNDAI_COMMUNITY2, &hyundai_community2_hooks},
   {SAFETY_MAZDA, &mazda_hooks},
   {SAFETY_BODY, &body_hooks},
   {SAFETY_FORD, &ford_hooks},

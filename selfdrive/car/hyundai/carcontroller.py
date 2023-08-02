@@ -245,7 +245,6 @@ class CarController:
     self.e2e_standstill_timer_buf = 0
 
     self.experimental_long_enabled = self.c_params.get_bool("ExperimentalLongitudinalEnabled")
-    self.long_alt = self.c_params.get_bool("OPKRLongAlt")
     self.live_torque_params = self.c_params.get_bool("OpkrLiveTorque")
 
     self.btnsignal = 0

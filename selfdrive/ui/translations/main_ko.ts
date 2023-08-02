@@ -3945,12 +3945,24 @@ This may take up to a minute.</source>
 <context>
     <name>LongAlternative</name>
     <message>
-        <source>Long Alternative</source>
-        <translation>롱컨트롤 대안</translation>
+        <source>Long for BUS2</source>
+        <translation>롱컨트롤(BUS2)</translation>
     </message>
     <message>
-        <source>Long Alternative to get throw away the cluster error.</source>
-        <translation>배선개조 롱컨트롤 사용 대안 옵션입니다.</translation>
+        <source>Long for Bus 2. If your radar is on bus2, choose mode 1 or mode 2.</source>
+        <translation>배선개조 롱컨트롤(SCC Bus 2)일 경우, 1번모드 or 2번모드 선택해서 사용하십시오.</translation>
+    </message>
+    <message>
+        <source>Mode 1</source>
+        <translation>모드 1</translation>
+    </message>
+    <message>
+        <source>Mode 2</source>
+        <translation>모드 2</translation>
+    </message>
+    <message>
+        <source>None</source>
+        <translation>사용안함</translation>
     </message>
 </context>
 <context>

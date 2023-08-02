@@ -986,18 +986,6 @@ public:
   }
 };
 
-class LongAlternative : public ToggleControl {
-  Q_OBJECT
-
-public:
-  LongAlternative() : ToggleControl(tr("Long Alternative"), tr("Long Alternative to get throw away the cluster error."), "../assets/offroad/icon_shell.png", Params().getBool("OPKRLongAlt")) {
-    QObject::connect(this, &LongAlternative::toggleFlipped, [=](int state) {
-      bool status = state ? true : false;
-      Params().putBool("OPKRLongAlt", status);
-    });
-  }
-};
-
 class LowUIProfile : public ToggleControl {
   Q_OBJECT
 
@@ -2737,6 +2725,21 @@ class CruiseSetwithRoadLimitSpeedOffset : public AbstractControl {
 
 public:
   CruiseSetwithRoadLimitSpeedOffset();
+
+private:
+  QPushButton btnplus;
+  QPushButton btnminus;
+  QLabel label;
+  Params params;
+  
+  void refresh();
+};
+
+class LongAlternative : public AbstractControl {
+  Q_OBJECT
+
+public:
+  LongAlternative();
 
 private:
   QPushButton btnplus;

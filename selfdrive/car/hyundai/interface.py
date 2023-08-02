@@ -404,8 +404,10 @@ class CarInterface(CarInterfaceBase):
         ret.scc14Available = 905 in fingerprint[0] or 905 in fingerprint[2]
         ret.openpilotLongitudinalControl = True
         ret.radarUnavailable = False
-        if Params().get_bool("OPKRLongAlt"):
-          ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity)]
+        if int(Params().get("OPKRLongAlt", encoding="utf8")) == 1:
+          ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity1)]
+        elif int(Params().get("OPKRLongAlt", encoding="utf8")) == 2:
+          ret.safetyConfigs = [get_safety_config(car.CarParams.SafetyModel.hyundaiCommunity2)]
         ret.pcmCruise = True
       else:
         ret.pcmCruise = not ret.openpilotLongitudinalControl

@@ -8554,3 +8554,69 @@ CruiseSetwithRoadLimitSpeedOffset::CruiseSetwithRoadLimitSpeedOffset() : Abstrac
 void CruiseSetwithRoadLimitSpeedOffset::refresh() {
   label.setText(QString::fromStdString(params.get("CruiseSetwithRoadLimitSpeedOffset")));
 }
+
+LongAlternative::LongAlternative() : AbstractControl(tr("Long for BUS2"), tr("Long for Bus 2. If your radar is on bus2, choose mode 1 or mode 2."), "../assets/offroad/icon_shell.png") {
+
+  label.setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+  label.setStyleSheet("color: #e0e879");
+  hlayout->addWidget(&label);
+
+  btnminus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnplus.setStyleSheet(R"(
+    padding: 0;
+    border-radius: 50px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  btnminus.setFixedSize(150, 100);
+  btnplus.setFixedSize(150, 100);
+  btnminus.setText("－");
+  btnplus.setText("＋");
+  hlayout->addWidget(&btnminus);
+  hlayout->addWidget(&btnplus);
+
+  QObject::connect(&btnminus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OPKRLongAlt"));
+    int value = str.toInt();
+    value = value - 1;
+    if (value <= -1) {
+      value = 2;
+    }
+    QString values = QString::number(value);
+    params.put("OPKRLongAlt", values.toStdString());
+    refresh();
+  });
+  
+  QObject::connect(&btnplus, &QPushButton::clicked, [=]() {
+    auto str = QString::fromStdString(params.get("OPKRLongAlt"));
+    int value = str.toInt();
+    value = value + 1;
+    if (value >= 3) {
+      value = 0;
+    }
+    QString values = QString::number(value);
+    params.put("OPKRLongAlt", values.toStdString());
+    refresh();
+  });
+  refresh();
+}
+
+void LongAlternative::refresh() {
+  QString option = QString::fromStdString(params.get("OPKRLongAlt"));
+  if (option == "1") {
+    label.setText(tr("Mode 1"));
+  } else if (option == "2") {
+    label.setText(tr("Mode 2"));
+  } else {
+    label.setText(tr("None"));
+  }
+}

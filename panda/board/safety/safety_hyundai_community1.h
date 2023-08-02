@@ -53,7 +53,7 @@ AddrCheckStruct hyundai_community1_addr_checks[] = {
   {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
   {.msg = {{1057, 0, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
-#define HYUNDAI_ADDR_CHECK_LEN (sizeof(hyundai_addr_checks) / sizeof(hyundai_addr_checks[0]))
+#define HYUNDAI_COMMUNITY1_ADDR_CHECK_LEN (sizeof(hyundai_community1_addr_checks) / sizeof(hyundai_community1_addr_checks[0]))
 
 AddrCheckStruct hyundai_community1_cam_scc_addr_checks[] = {
   {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U},
@@ -62,7 +62,7 @@ AddrCheckStruct hyundai_community1_cam_scc_addr_checks[] = {
   {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
   {.msg = {{1057, 2, 8, .check_checksum = true, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
-#define HYUNDAI_CAM_SCC_ADDR_CHECK_LEN (sizeof(hyundai_cam_scc_addr_checks) / sizeof(hyundai_cam_scc_addr_checks[0]))
+#define HYUNDAI_COMMUINTY1_CAM_SCC_ADDR_CHECK_LEN (sizeof(hyundai_community1_cam_scc_addr_checks) / sizeof(hyundai_community1_cam_scc_addr_checks[0]))
 
 AddrCheckStruct hyundai_community1_long_addr_checks[] = {
   {.msg = {{608, 0, 8, .check_checksum = true, .max_counter = 3U, .expected_timestep = 10000U},
@@ -71,7 +71,7 @@ AddrCheckStruct hyundai_community1_long_addr_checks[] = {
   {.msg = {{916, 0, 8, .check_checksum = true, .max_counter = 7U, .expected_timestep = 10000U}, { 0 }, { 0 }}},
   {.msg = {{1265, 0, 4, .check_checksum = false, .max_counter = 15U, .expected_timestep = 20000U}, { 0 }, { 0 }}},
 };
-#define HYUNDAI_LONG_ADDR_CHECK_LEN (sizeof(hyundai_long_addr_checks) / sizeof(hyundai_long_addr_checks[0]))
+#define HYUNDAI_COMMUNITY1_LONG_ADDR_CHECK_LEN (sizeof(hyundai_community1_long_addr_checks) / sizeof(hyundai_community1_long_addr_checks[0]))
 
 // older hyundai models have less checks due to missing counters and checksums
 AddrCheckStruct hyundai_community1_legacy_addr_checks[] = {

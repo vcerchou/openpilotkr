@@ -119,7 +119,7 @@ static int hyundai_community2_rx_hook(CANPacket_t *to_push) {
       hyundai_speed /= 2;
       vehicle_moving = hyundai_speed > HYUNDAI_STANDSTILL_THRSLD;
     }
-    generic_rx_checks(addr == 832);
+    generic_rx_checks((addr == 832 && bus == 0));
   }
   return valid;
 }

@@ -17,19 +17,19 @@ int HKG_LKAS_bus0_cnt = 0;
 int HKG_Lcan_bus1_cnt = 0;
 
 const CanMsg HYUNDAI_COMMUNITY2_TX_MSGS[] = {
-  {832, 0, 8},  // LKAS11 Bus 0
-  {1265, 0, 4}, // CLU11 Bus 0
+  {832, 0, 8}, {832, 1, 8}, // LKAS11 Bus 0, 1
+  {1265, 0, 4}, {1265, 1, 4}, {1265, 2, 4}, // CLU11 Bus 0, 1, 2
   {1157, 0, 4}, // LFAHDA_MFC Bus 0
-  {1056, 0, 8}, // SCC11 Bus 0
-  {1057, 0, 8}, // SCC12 Bus 0
-  {1290, 0, 8}, // SCC13 Bus 0
-  {905, 0, 8},  // SCC14 Bus 0
-  {1186, 0, 2}, // FRT_RADAR11 Bus 0
-  {909, 0, 8},  // FCA11 Bus 0
-  {1155, 0, 8}, // FCA12 Bus 0
-  {2000, 0, 8}, // radar UDS TX addr Bus 0 (for radar disable)
-  {1265, 2, 4}, // CLU11 Bus 2
-  {593, 2, 8},  // MDPS12 Bus 2
+  {593, 2, 8},  // MDPS12, Bus 2
+  {1056, 0, 8}, //   SCC11,  Bus 0
+  {1057, 0, 8}, //   SCC12,  Bus 0
+  {1290, 0, 8}, //   SCC13,  Bus 0
+  {905, 0, 8},  //   SCC14,  Bus 0
+  {1186, 0, 8},  //   4a2SCC, Bus 0
+  {790, 1, 8}, // EMS11, Bus 1
+  {1155, 0, 8}, //   FCA12,  Bus 0
+  {909, 0, 8},  //   FCA11,  Bus 0
+  {2000, 0, 8},  // SCC_DIAG, Bus 0
 };
 
 // older hyundai models have less checks due to missing counters and checksums
@@ -45,13 +45,16 @@ addr_checks hyundai_community2_rx_checks = {hyundai_community2_addr_checks, HYUN
 
 static int hyundai_community2_rx_hook(CANPacket_t *to_push) {
 
+  int addr = GET_ADDR(to_push);
+  int bus = GET_BUS(to_push);
+
   bool valid = addr_safety_check(to_push, &hyundai_community2_rx_checks,
                             hyundai_get_checksum, hyundai_compute_checksum,
                             hyundai_get_counter, NULL);
 
-  int addr = GET_ADDR(to_push);
-  int bus = GET_BUS(to_push);
-
+  if (!valid){
+    puth(addr);
+  }
   if (bus == 1 && HKG_LCAN_on_bus1) {valid = false;}
   // check if we have a LCAN on Bus1
   if (bus == 1 && (addr == 1296 || addr == 524)) {
@@ -116,10 +119,6 @@ static int hyundai_community2_rx_hook(CANPacket_t *to_push) {
       hyundai_speed /= 2;
       vehicle_moving = hyundai_speed > HYUNDAI_STANDSTILL_THRSLD;
     }
-    if (addr == 916) {
-      brake_pressed = GET_BIT(to_push, 55U) != 0U;
-    }
-    gas_pressed = brake_pressed = false;
     generic_rx_checks((addr == 832 && bus == 0));
   }
   return valid;
@@ -131,37 +130,10 @@ static int hyundai_community2_tx_hook(CANPacket_t *to_send) {
   int addr = GET_ADDR(to_send);
   int bus = GET_BUS(to_send);
 
-  tx = msg_allowed(to_send, HYUNDAI_COMMUNITY2_TX_MSGS, sizeof(HYUNDAI_COMMUNITY2_TX_MSGS)/sizeof(HYUNDAI_COMMUNITY2_TX_MSGS[0]));
-
-  // FCA11: Block any potential actuation
-  if (addr == 909) {
-    int CR_VSM_DecCmd = GET_BYTE(to_send, 1);
-    int FCA_CmdAct = GET_BIT(to_send, 20U);
-    int CF_VSM_DecCmdAct = GET_BIT(to_send, 31U);
-
-    if ((CR_VSM_DecCmd != 0) || (FCA_CmdAct != 0) || (CF_VSM_DecCmdAct != 0)) {
-      tx = 0;
-    }
-  }
-
-  // ACCEL: safety check
-  if (addr == 1057) {
-    int desired_accel_raw = (((GET_BYTE(to_send, 4) & 0x7U) << 8) | GET_BYTE(to_send, 3)) - 1023U;
-    int desired_accel_val = ((GET_BYTE(to_send, 5) << 3) | (GET_BYTE(to_send, 4) >> 5)) - 1023U;
-
-    //int aeb_decel_cmd = GET_BYTE(to_send, 2);
-    //int aeb_req = GET_BIT(to_send, 54U);
-
-    bool violation = false;
-
-    violation |= longitudinal_accel_checks(desired_accel_raw, HYUNDAI_LONG_LIMITS);
-    violation |= longitudinal_accel_checks(desired_accel_val, HYUNDAI_LONG_LIMITS);
-    //violation |= (aeb_decel_cmd != 0);
-    //violation |= (aeb_req != 0);
-
-    if (violation) {
-      tx = 0;
-    }
+  if (!msg_allowed(to_send, HYUNDAI_COMMUNITY2_TX_MSGS, sizeof(HYUNDAI_COMMUNITY2_TX_MSGS)/sizeof(HYUNDAI_COMMUNITY2_TX_MSGS[0]))) {
+    tx = 0;
+    puth(addr);
+    puth(bus);
   }
 
   // LKA STEER: safety check

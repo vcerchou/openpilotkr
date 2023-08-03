@@ -381,9 +381,11 @@ class NaviControl():
         var_speed = min(navi_speed, 30 if CS.is_set_speed_in_mph else 50)
       elif (self.lead_0.status or self.lead_1.status) and CS.CP.vFuture >= (min_control_speed-(4 if CS.is_set_speed_in_mph else 7)):
         self.faststart = False
-        dRel = CS.lead_distance if 0 < CS.lead_distance < 149 and not self.cut_in_run_timer else int(self.lead_0.dRel)
-        vRel = CS.lead_objspd * (CV.KPH_TO_MPH if CS.is_set_speed_in_mph else 1) if 0 < CS.lead_distance < 149 and \
-         not self.cut_in_run_timer else int(self.lead_0.vRel * (CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH))
+        # dRel = CS.lead_distance if 0 < CS.lead_distance < 149 and not self.cut_in_run_timer else int(self.lead_0.dRel)
+        # vRel = CS.lead_objspd * (CV.KPH_TO_MPH if CS.is_set_speed_in_mph else 1) if 0 < CS.lead_distance < 149 and \
+        #  not self.cut_in_run_timer else int(self.lead_0.vRel * (CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH))
+        dRel = int(self.lead_0.dRel)
+        vRel = int(self.lead_0.vRel * (CV.MS_TO_MPH if CS.is_set_speed_in_mph else CV.MS_TO_KPH))
         if self.cut_in_run_timer > 0:
           self.cut_in_run_timer -= 1
         elif self.cut_in:
@@ -399,7 +401,7 @@ class NaviControl():
           self.inc_change_time += 1
           if self.inc_change_time > inc_time:
             self.inc_change_time = 0
-            if (self.var_speed_prev == tar_speed):
+            if (tar_speed == round(CS.VSetDis)):
               var_speed = tar_speed
             elif (tar_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
               var_speed = min(tar_speed, round(self.var_speed_prev + 1))
@@ -411,10 +413,28 @@ class NaviControl():
               pass
             else:
               self.var_speed_prev = round(CS.VSetDis)
-              var_speed = self.var_speed_prev
+            var_speed = self.var_speed_prev
           self.cutInControl = False
         else:
-          var_speed = min(CS.CP.vFuture, navi_speed)
+          tar_speed = min(CS.CP.vFuture, navi_speed)
+          ttime = 40 if CS.is_set_speed_in_mph else 20
+          inc_time = int(interp(dRel, [15, 50], [self.t_interval, ttime]))
+          self.inc_change_time += 1
+          if self.inc_change_time > inc_time:
+            self.inc_change_time = 0
+            if (tar_speed == round(CS.VSetDis)):
+              var_speed = tar_speed
+            elif (tar_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
+              var_speed = min(tar_speed, round(self.var_speed_prev + 1))
+            elif (tar_speed < self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
+              var_speed = max(tar_speed, round(self.var_speed_prev - 1))
+            self.var_speed_prev = var_speed
+          else:
+            if self.var_speed_prev != 0 and self.var_speed_prev != round(CS.VSetDis):
+              pass
+            else:
+              self.var_speed_prev = round(CS.VSetDis)
+            var_speed = self.var_speed_prev
           self.cut_in_run_timer = 0
           self.cutInControl = False
       elif self.lead_0.status and CS.CP.vFuture < min_control_speed:
@@ -423,23 +443,25 @@ class NaviControl():
         self.cutInControl = False
       else:
         self.faststart = False
+        tar_speed = navi_speed
         inc_time = 70 if CS.is_set_speed_in_mph else 40
         self.inc_change_time += 1
         if self.inc_change_time > inc_time:
           self.inc_change_time = 0
-          if (self.var_speed_prev == navi_speed):
-            var_speed = navi_speed
-          elif (navi_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-            var_speed = min(navi_speed, round(self.var_speed_prev + 1))
-          elif (navi_speed < self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-            var_speed = max(navi_speed, round(self.var_speed_prev - 1))
+          if (tar_speed == round(CS.VSetDis)):
+            var_speed = tar_speed
+          elif (tar_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
+            var_speed = min(tar_speed, round(self.var_speed_prev + 1))
+          elif (tar_speed < self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
+            var_speed = max(tar_speed, round(self.var_speed_prev - 1))
           self.var_speed_prev = var_speed
         else:
           if self.var_speed_prev != 0 and self.var_speed_prev != round(CS.VSetDis):
             pass
           else:
             self.var_speed_prev = round(CS.VSetDis)
-            var_speed = self.var_speed_prev
+          var_speed = self.var_speed_prev
+
         self.cutInControl = False
     else:
       var_speed = navi_speed

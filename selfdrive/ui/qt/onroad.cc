@@ -1021,7 +1021,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.drawEllipse(m_x-15, m_y-15, m_btn_size+30, m_btn_size+30);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.setBrush(Qt::NoBrush);
-    if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(greenColor(100));
+    if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(QColor(13, 177, 248, 100));
     p.drawEllipse(multi_btn_draw);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(43, QFont::DemiBold));
@@ -1037,7 +1037,9 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       p.drawEllipse(multi_btn_draw1);
       p.drawEllipse(multi_btn_draw2);
       p.drawEllipse(multi_btn_draw3);
+      if(s->scene.rec_stat3) p.setBrush(redColor(100));
       p.drawText(multi_btn_draw1, Qt::AlignCenter, QString("REC"));
+      p.setBrush(Qt::NoBrush);
       if (s->scene.laneless_mode == 0) {
         p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
         p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y+20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LINE"));
@@ -1515,11 +1517,11 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     QPoint bottomright[] = {{rw, rh}, {rw-rl, rh}, {rw-rl, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-UI_BORDER_SIZE}, {rw-UI_BORDER_SIZE, rh-rl}, {rw, rh-rl}};
 
     p.setPen(Qt::NoPen);
-    s->scene.rec_blinker += 3;
+    s->scene.rec_blinker += 4;
     if(s->scene.rec_blinker >= 105) {
       s->scene.rec_blinker = 0;
     } else if (s->scene.rec_blinker >= 55) {
-      p.setBrush(redColor(200));
+      p.setBrush(redColor(255));
     } else {
       p.setBrush(redColor(0));
     }
@@ -1605,15 +1607,17 @@ void AnnotatedCameraWidget::drawLaneLines(QPainter &painter, const UIState *s) {
   SubMaster &sm = *(s->sm);
 
   // lanelines
-  for (int i = 0; i < std::size(scene.lane_line_vertices); ++i) {
-    painter.setBrush(QColor::fromRgbF(1.0, 1.0, 1.0, std::clamp<float>(scene.lane_line_probs[i], 0.0, 0.7)));
-    painter.drawPolygon(scene.lane_line_vertices[i]);
-  }
+  if (!scene.lateralPlan.lanelessModeStatus) {
+    for (int i = 0; i < std::size(scene.lane_line_vertices); ++i) {
+      painter.setBrush(QColor::fromRgbF(1.0, 1.0, 1.0, std::clamp<float>(scene.lane_line_probs[i], 0.0, 0.7)));
+      painter.drawPolygon(scene.lane_line_vertices[i]);
+    }
 
-  // road edges
-  for (int i = 0; i < std::size(scene.road_edge_vertices); ++i) {
-    painter.setBrush(QColor::fromRgbF(1.0, 0, 0, std::clamp<float>(1.0 - scene.road_edge_stds[i], 0.0, 1.0)));
-    painter.drawPolygon(scene.road_edge_vertices[i]);
+    // road edges
+    for (int i = 0; i < std::size(scene.road_edge_vertices); ++i) {
+      painter.setBrush(QColor::fromRgbF(1.0, 0, 0, std::clamp<float>(1.0 - scene.road_edge_stds[i], 0.0, 1.0)));
+      painter.drawPolygon(scene.road_edge_vertices[i]);
+    }
   }
 
   // paint path
@@ -1646,9 +1650,15 @@ void AnnotatedCameraWidget::drawLaneLines(QPainter &painter, const UIState *s) {
     }
 
   } else {
-    bg.setColorAt(0.0, QColor::fromHslF(148 / 360., 0.94, 0.51, 0.4));
-    bg.setColorAt(0.5, QColor::fromHslF(112 / 360., 1.0, 0.68, 0.35));
-    bg.setColorAt(1.0, QColor::fromHslF(112 / 360., 1.0, 0.68, 0.0));
+    if (scene.lateralPlan.lanelessModeStatus) {
+      bg.setColorAt(0.0, QColor::fromHslF(198 / 360., 0.94, 0.51, 0.4));
+      bg.setColorAt(0.5, QColor::fromHslF(162 / 360., 1.0, 0.68, 0.35));
+      bg.setColorAt(1.0, QColor::fromHslF(162 / 360., 1.0, 0.68, 0.0));
+    } else {
+      bg.setColorAt(0.0, QColor::fromHslF(148 / 360., 0.94, 0.51, 0.4));
+      bg.setColorAt(0.5, QColor::fromHslF(112 / 360., 1.0, 0.68, 0.35));
+      bg.setColorAt(1.0, QColor::fromHslF(112 / 360., 1.0, 0.68, 0.0));
+    }
   }
 
   painter.setBrush(bg);

@@ -96,12 +96,12 @@ void OnroadWindow::updateState(const UIState &s) {
 void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
   QRect stockui_btn = QRect(15, uiState()->scene.low_ui_profile?693:15, 184, 202);
-  QRect tuneui_btn = QRect(uiState()->scene.mapbox_enabled?1420:1960, uiState()->scene.low_ui_profile&&!uiState()->scene.mapbox_enabled?895:15, 170, 170);
+  QRect tuneui_btn = QRect(1420, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
   QRect speedlimit_btn = QRect(220, uiState()->scene.low_ui_profile?700:15, 190, 190);
   QRect monitoring_btn = QRect(20, uiState()->scene.low_ui_profile?20:860, 190, 190);
   QRect multi_btn = QRect(1960, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
-  QRect rec_btn = QRect(1780, uiState()->scene.low_ui_profile?15:895, 160, 160);
-  QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile?15:895, 160, 160);
+  QRect rec_btn = QRect(1780, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
+  QRect laneless_btn = QRect(1600, uiState()->scene.low_ui_profile||uiState()->scene.mapbox_enabled?15:895, 160, 160);
 
   if (uiState()->scene.multi_btn_touched && rec_btn.contains(e->pos())) {
     uiState()->scene.rec_blinker = 0;
@@ -111,7 +111,7 @@ void OnroadWindow::mousePressEvent(QMouseEvent* e) {
 
 
   if ((multi_btn.contains(e->pos()) || speedlimit_btn.contains(e->pos()) || monitoring_btn.contains(e->pos()) ||
-    stockui_btn.contains(e->pos()) || (tuneui_btn.contains(e->pos()) && !uiState()->scene.mapbox_enabled) || uiState()->scene.live_tune_panel_enable ||
+    stockui_btn.contains(e->pos()) || uiState()->scene.live_tune_panel_enable ||
     (uiState()->scene.multi_btn_touched && (rec_btn.contains(e->pos()) || laneless_btn.contains(e->pos()) || tuneui_btn.contains(e->pos())))) &&
     !uiState()->scene.mapbox_running) {
     QWidget::mousePressEvent(e);
@@ -729,7 +729,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.rotate(-90);
     p.setPen(whiteColor(200));
     p.setFont(InterFont(27, QFont::DemiBold));
-    if (s->scene.is_metric) {p.drawText(-50, 0, "km/h");} else {p.drawText(0, 0, "mi/h");}
+    if (s->scene.is_metric) {p.drawText(-50, 0, "km/h");} else {p.drawText(-50, 0, "mi/h");}
     p.resetMatrix();
 
     // steer angle
@@ -1036,7 +1036,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       QRect multi_btn_draw3(m_x-(int)s->scene.multi_btn_slide_timer*3, m_y, m_btn_size, m_btn_size);
       p.drawEllipse(multi_btn_draw1);
       p.drawEllipse(multi_btn_draw2);
-      if (s->scene.mapbox_enabled) p.drawEllipse(multi_btn_draw3);
+      p.drawEllipse(multi_btn_draw3);
       p.drawText(multi_btn_draw1, Qt::AlignCenter, QString("REC"));
       if (s->scene.laneless_mode == 0) {
         p.drawText(QRect(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y-20, m_btn_size, m_btn_size), Qt::AlignCenter, QString("LANE"));
@@ -1047,7 +1047,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       } else if (s->scene.laneless_mode == 2) {
         p.drawText(multi_btn_draw2, Qt::AlignCenter, QString("AUTO"));
       }
-      if (s->scene.mapbox_enabled) p.drawText(multi_btn_draw3, Qt::AlignCenter, QString("TUNE"));
+      p.drawText(multi_btn_draw3, Qt::AlignCenter, QString("TUNE"));
     } else {
       s->scene.multi_btn_slide_timer -= 20;
       s->scene.multi_btn_slide_timer = fmax(s->scene.multi_btn_slide_timer, 0);
@@ -1057,7 +1057,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       if (s->scene.multi_btn_slide_timer != 0) {
         p.drawEllipse(multi_btn_draw1);
         p.drawEllipse(multi_btn_draw2);
-        if (s->scene.mapbox_enabled) p.drawEllipse(multi_btn_draw3);
+        p.drawEllipse(multi_btn_draw3);
       }
     }
   }
@@ -1897,7 +1897,7 @@ void AnnotatedCameraWidget::paintEvent(QPaintEvent *event) {
     drawDriverState(p, s);
   }
 
-  if (!s->scene.mapbox_enabled || s->scene.mapbox_running) {
+  if (s->scene.mapbox_running || !s->scene.mapbox_enabled) {
     drawWheelState(p, s);
   }
 

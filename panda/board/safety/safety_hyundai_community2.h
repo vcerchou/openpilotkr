@@ -114,7 +114,7 @@ static int hyundai_community2_rx_hook(CANPacket_t *to_push) {
     }
 
     // sample wheel speed, averaging opposite corners
-    if (addr == 902) {
+    if (addr == 902 && bus == 0) {
       uint32_t hyundai_speed = (GET_BYTES(to_push, 0, 4) & 0x3FFFU) + ((GET_BYTES(to_push, 4, 4) >> 16) & 0x3FFFU);  // FL + RR
       hyundai_speed /= 2;
       vehicle_moving = hyundai_speed > HYUNDAI_STANDSTILL_THRSLD;
@@ -130,11 +130,7 @@ static int hyundai_community2_tx_hook(CANPacket_t *to_send) {
   int addr = GET_ADDR(to_send);
   int bus = GET_BUS(to_send);
 
-  if (!msg_allowed(to_send, HYUNDAI_COMMUNITY2_TX_MSGS, sizeof(HYUNDAI_COMMUNITY2_TX_MSGS)/sizeof(HYUNDAI_COMMUNITY2_TX_MSGS[0]))) {
-    tx = 0;
-    puth(addr);
-    puth(bus);
-  }
+  tx = msg_allowed(to_send, HYUNDAI_COMMUNITY2_TX_MSGS, sizeof(HYUNDAI_COMMUNITY2_TX_MSGS)/sizeof(HYUNDAI_COMMUNITY2_TX_MSGS[0]));
 
   // LKA STEER: safety check
   if (addr == 832) {
@@ -234,6 +230,13 @@ static int hyundai_community2_fwd_hook(int bus_num, int addr) {
 
 static const addr_checks* hyundai_community2_init(uint16_t param) {
   hyundai_common_init(param);
+  controls_allowed = false;
+  relay_malfunction_reset();
+
+  if (current_board->has_obd && HKG_forward_obd) {
+    current_board->set_can_mode(CAN_MODE_OBD_CAN2);
+  }
+
   hyundai_community2_rx_checks = (addr_checks){hyundai_community2_addr_checks, HYUNDAI_COMMUNITY2_ADDR_CHECK_LEN};
   return &hyundai_community2_rx_checks;
 }

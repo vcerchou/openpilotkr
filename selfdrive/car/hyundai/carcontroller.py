@@ -1140,7 +1140,7 @@ class CarController:
                   accel = interp(CS.clu_Vanz, [0, set_speed_in_units], [faccel, aReqValue])
                 else:
                   self.smooth_start = False
-                  accel = faccel*0.9
+                  accel = faccel
               else:
                 accel = aReqValue
           else:

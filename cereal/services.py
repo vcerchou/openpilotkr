@@ -97,7 +97,7 @@ services = {
 
   # opkr
   "liveENaviData": (False, 0.),
-  "liveMapData": (True, 0.),
+  "liveMapData": (False, 0.),
 }
 service_list = {name: Service(new_port(idx), *vals) for  # type: ignore
                 idx, (name, vals) in enumerate(services.items())}

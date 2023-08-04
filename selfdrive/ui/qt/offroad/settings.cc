@@ -124,8 +124,8 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   }
 
   // Toggles with confirmation dialogs
-  toggles["ExperimentalMode"]->setConfirmation(true, true);
-  toggles["ExperimentalLongitudinalEnabled"]->setConfirmation(true, true);
+  toggles["ExperimentalMode"]->setConfirmation(true, false);
+  toggles["ExperimentalLongitudinalEnabled"]->setConfirmation(true, false);
 }
 
 void TogglesPanel::expandToggleDescription(const QString &param) {

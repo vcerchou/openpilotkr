@@ -348,16 +348,14 @@ SwitchOpenpilot::SwitchOpenpilot() : ButtonControl(tr("Change Repo/Branch"), "",
               QString tcmd = "git clone --progress -b " + githubbranch + " --single-branch https://github.com/" + githubid + "/" + githubrepo + ".git /data/openpilot";
               QString cmd3 = "rm -f /data/openpilot_" + as + "/prebuilt";
 			        QString cmd4 = "touch /data/opkr_compiling";
-              std::system(cmd1.toUtf8().constData());
-              std::system(cmd3.toUtf8().constData());
-			        std::system(cmd4.toUtf8().constData());
-              textMsgProcess = new QProcess(this);
-              outbox = new QMessageBox(this);
-              outbox->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
-              QObject::connect(textMsgProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg()));
-              QObject::connect(textMsgProcess, SIGNAL(readyReadStandardError()), this, SLOT(printMsg()));
-              QObject::connect(textMsgProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
-              executeProgram(tcmd);
+              QProcess::execute(cmd1);
+              QProcess::execute(cmd3);
+			        QProcess::execute(cmd4);
+              outbox.setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
+              QObject::connect(&textMsgProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg()));
+              QObject::connect(&textMsgProcess, SIGNAL(readyReadStandardError()), this, SLOT(printMsg()));
+              QObject::connect(&textMsgProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished(int, QProcess::ExitStatus)));
+              textMsgProcess.start(tcmd);
             }
           }
         }
@@ -372,30 +370,19 @@ SwitchOpenpilot::SwitchOpenpilot() : ButtonControl(tr("Change Repo/Branch"), "",
 void SwitchOpenpilot::printMsg() {
   QByteArray datao;
   QByteArray datae;
-  datao = textMsgProcess->readAllStandardOutput();
-  datae = textMsgProcess->readAllStandardError();
+  datao = textMsgProcess.readAllStandardOutput();
+  datae = textMsgProcess.readAllStandardError();
   QString texto = QString::fromLocal8Bit(datao);
   QString texte = QString::fromLocal8Bit(datae);
   outdata = texto+texte;
-  outbox->setText(outdata.right(200));
-  outbox->show();
-}
-
-void SwitchOpenpilot::executeProgram(const QString &tcmd) {
-  QString program = QString(tcmd);
-  QStringList arguments;
-  arguments << "";
-  textMsgProcess->start(program, arguments);
-  textMsgProcess->waitForStarted();
+  outbox.setText(outdata.right(200));
+  outbox.show();
 }
 
 void SwitchOpenpilot::processFinished(int exitCode, QProcess::ExitStatus exitStatus) {
   if(exitStatus == QProcess::NormalExit) {
-    std::system("chmod -R g-rwx /data/openpilot");
-    std::system("chmod -R o-rwx /data/openpilot");
-    std::system("chmod 755 /data/openpilot");
-    std::system("chmod 755 /data/openpilot/cereal");
-    std::system("sudo reboot");
+    QProcess::execute("rm -f /data/openpilot/prebuilt");
+    QProcess::execute("sudo reboot");
   }
 }
 

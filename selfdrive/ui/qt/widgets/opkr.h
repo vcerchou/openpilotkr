@@ -105,7 +105,6 @@ class SwitchOpenpilot : public ButtonControl {
 
 public:
   SwitchOpenpilot();
-  void executeProgram(const QString &tcmd);
 
 private slots:
   void printMsg();
@@ -118,8 +117,8 @@ private:
   QString githubrepo;
   QString githubbranch;
 
-  QProcess *textMsgProcess;
-  QMessageBox *outbox;
+  QProcess textMsgProcess;
+  QMessageBox outbox;
   QString outdata;
 
   void refresh();

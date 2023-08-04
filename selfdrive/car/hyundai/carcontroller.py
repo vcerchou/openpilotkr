@@ -1003,13 +1003,13 @@ class CarController:
           if self.joystick_debug_mode:
             accel = actuators.accel
           elif self.radar_helper_option == 0: # Vision Only
-            if 0 < CS.lead_distance <= 4.0: # use radar by force to stop anyway below 4.0m if lead car is detected.
-              stock_weight = interp(CS.lead_distance, [2.5, 4.0], [1., 0.])
+            if 0 < CS.lead_distance <= self.stoppingdist:
+              stock_weight = interp(CS.lead_distance, [2.0, self.stoppingdist], [1., 0.])
               accel = accel * (1. - stock_weight) + aReqValue * stock_weight
-            elif 0.1 < self.dRel < 6.0 and self.vRel < 0:
-              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 3.0]))
+            elif 0.1 < self.dRel < (self.stoppingdist + 1.0) and self.vRel < 0:
+              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [1.0, 3.0], [0.5, 2.0]))
               self.stopped = False
-            elif 0.1 < self.dRel < 6.0:
+            elif 0.1 < self.dRel < (self.stoppingdist + 1.0):
               accel = min(-0.5, faccel*0.3)
               if stopping:
                 self.stopped = True
@@ -1062,12 +1062,13 @@ class CarController:
                   accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.0, 1.0, 2.0], [0.05, 1.0, 5.0]))
               elif aReqValue < 0.0:
                 dRel2 = self.dRel if self.dRel > 0 else CS.lead_distance
-                if ((CS.lead_distance - dRel2 > 3.0) or self.NC.cutInControl) and accel < 0 and not self.ed_rd_diff_on:
+                dist_by_drel = interp(CS.lead_distance, [10, 50], [3.0, 9.0])
+                if ((CS.lead_distance - dRel2 > dist_by_drel) or self.NC.cutInControl) and accel < 0 and not self.ed_rd_diff_on:
                   self.ed_rd_diff_on = True
                   self.ed_rd_diff_on_timer = min(400, int(self.dRel * 5))
                   self.ed_rd_diff_on_timer2 = min(400, int(self.dRel * 5))
                   stock_weight = 1.0
-                elif ((dRel2 - CS.lead_distance > 3.0) or self.NC.cutInControl) and not self.ed_rd_diff_on:
+                elif ((dRel2 - CS.lead_distance > dist_by_drel) or self.NC.cutInControl) and not self.ed_rd_diff_on:
                   self.ed_rd_diff_on = True
                   self.ed_rd_diff_on_timer = min(400, int(self.dRel * 10))
                   self.ed_rd_diff_on_timer2 = min(400, int(self.dRel * 10))
@@ -1102,7 +1103,7 @@ class CarController:
                       self.vrel_delta_timer3 = 0
                       stock_weight = interp(abs(lead_objspd), [1.0, 10.0], [1.0, 0.0])
                 accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
-                accel = min(accel, -0.5) if CS.lead_distance <= 4.5 and not CS.out.standstill else accel
+                accel = min(accel, -0.5) if CS.lead_distance <= self.stoppingdist and not CS.out.standstill else accel
               # elif aReqValue < 0.0:
               #   stock_weight = interp(CS.lead_distance, [6.0, 10.0, 18.0, 25.0, 32.0], [1.0, 0.85, 1.0, 0.4, 1.0])
               #   accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
@@ -1110,10 +1111,10 @@ class CarController:
                 stock_weight = 0.0
                 self.change_accel_fast = False
                 accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
-            elif 0.1 < self.dRel < 6.0 and int(self.vRel*3.6) < 0:
-              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.9, 3.0], [1.0, 3.0]))
+            elif 0.1 < self.dRel < (self.stoppingdist + 1.0) and int(self.vRel*3.6) < 0:
+              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [1.0, 3.0], [0.5, 3.0]))
               self.stopped = False
-            elif 0.1 < self.dRel < 6.0:
+            elif 0.1 < self.dRel < (self.stoppingdist + 1.0):
               accel = min(-0.5, faccel*0.3)
               if stopping:
                 self.stopped = True

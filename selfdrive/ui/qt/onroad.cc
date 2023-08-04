@@ -1034,10 +1034,12 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       QRect multi_btn_draw1(m_x-(int)s->scene.multi_btn_slide_timer, m_y, m_btn_size, m_btn_size);
       QRect multi_btn_draw2(m_x-(int)s->scene.multi_btn_slide_timer*2, m_y, m_btn_size, m_btn_size);
       QRect multi_btn_draw3(m_x-(int)s->scene.multi_btn_slide_timer*3, m_y, m_btn_size, m_btn_size);
-      if(s->scene.rec_stat3) p.setBrush(redColor(100));
+      if(s->scene.rec_stat3) p.setBrush(redColor(125));
       p.drawEllipse(multi_btn_draw1);
       p.setBrush(Qt::NoBrush);
+      if (s->scene.lateralPlan.lanelessModeStatus) p.setBrush(QColor(13, 177, 248, 100));
       p.drawEllipse(multi_btn_draw2);
+      p.setBrush(Qt::NoBrush);
       p.drawEllipse(multi_btn_draw3);
       p.drawText(multi_btn_draw1, Qt::AlignCenter, QString("REC"));
       if (s->scene.laneless_mode == 0) {

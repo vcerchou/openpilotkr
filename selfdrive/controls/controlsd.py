@@ -167,7 +167,7 @@ class Controls:
     self.lateral_control_method = 0
     if self.CP.steerControlType == car.CarParams.SteerControlType.angle:
       self.LaC = LatControlAngle(self.CP, self.CI)
-      self.lateral_control_method = 4
+      self.lateral_control_method = 5
     elif self.CP.lateralTuning.which() == 'pid':
       self.LaC = LatControlPID(self.CP, self.CI)
       self.lateral_control_method = 0
@@ -180,6 +180,9 @@ class Controls:
     elif self.CP.lateralTuning.which() == 'torque':
       self.LaC = LatControlTorque(self.CP, self.CI)
       self.lateral_control_method = 3
+    elif self.CP.lateralTuning.which() == 'atom':
+      self.LaC = LatControlATOM(self.CP, self.CI)
+      self.lateral_control_method = 4
 
     self.initialized = False
     self.state = State.disabled

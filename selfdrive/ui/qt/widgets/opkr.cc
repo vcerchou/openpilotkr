@@ -679,9 +679,9 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
           QProcess::execute(cmd1);
           QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
           outbox1.setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
-          QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg1()));
-          QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardError()), this, SLOT(printMsg1()));
-          QObject::connect(textMsgProcess1, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished1(int, QProcess::ExitStatus)));
+          QObject::connect(&textMsgProcess1, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg1()));
+          QObject::connect(&textMsgProcess1, SIGNAL(readyReadStandardError()), this, SLOT(printMsg1()));
+          QObject::connect(&textMsgProcess1, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished1(int, QProcess::ExitStatus)));
           textMsgProcess1.start(tcmd1);
         }
       }

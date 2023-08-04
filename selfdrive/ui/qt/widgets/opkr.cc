@@ -675,9 +675,9 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
         if (ConfirmationDialog::confirm2(tr("Now will checkout the branch") +", <" + selection + ">. " + tr("The device will be rebooted if completed."), this)) {
           QString cmd1 = "git -C /data/openpilot remote set-branches --add origin " + selection;
           QString tcmd1 = "git -C /data/openpilot fetch --progress origin";
-          std::system("git -C /data/openpilot clean -d -f -f");
-          std::system(cmd1.toUtf8().constData());
-          std::system("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
+          QProcess::execute("git -C /data/openpilot clean -d -f -f");
+          QProcess::execute(cmd1);
+          QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
           textMsgProcess1 = new QProcess(this);
           outbox1 = new QMessageBox(this);
           outbox1->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
@@ -722,17 +722,17 @@ void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exit
   QString cmd2 = "git -C /data/openpilot checkout --track origin/" + selection;
   QString cmd3 = "git -C /data/openpilot checkout " + selection;
   if(exitStatus == QProcess::NormalExit) {
-    std::system(cmd2.toUtf8().constData());
-    std::system(cmd3.toUtf8().constData());
-    std::system("touch /data/compiling");
-    std::system("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
+    QProcess::execute(cmd2);
+    QProcess::execute(cmd3);
+    QProcess::execute("touch /data/compiling");
+    QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
   }
 }
 
 void BranchSelectCombo::refresh() {
-  std::system("git -C /data/openpilot remote prune origin");
-  std::system("git -C /data/openpilot fetch origin");
-  std::system("git -C /data/openpilot ls-remote --refs | grep refs/heads | awk -F '/' '{print $3}' > /data/branches");
+  QProcess::execute("git -C /data/openpilot remote prune origin");
+  QProcess::execute("git -C /data/openpilot fetch origin");
+  QProcess::execute("git -C /data/openpilot ls-remote --refs | grep refs/heads | awk -F '/' '{print $3}' > /data/branches");
   QFile branchlistfile("/data/branches");
   if (branchlistfile.open(QIODevice::ReadOnly)) {
     QTextStream branchname(&branchlistfile);

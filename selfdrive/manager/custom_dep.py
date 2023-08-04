@@ -37,7 +37,7 @@ def wait_for_internet_connection(return_on_failure=False):
 def install_dep(spinner):
   wait_for_internet_connection()
 
-  TOTAL_PIP_STEPS = 21
+  TOTAL_PIP_STEPS = 2986
 
   try:
     os.makedirs(TMP_DIR)
@@ -65,10 +65,7 @@ def install_dep(spinner):
       break
     if output:
       steps += 1
-      if steps == 21:
-        spinner.update(f"Downloaded {round(MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS))}%")
-      else:
-        spinner.update(f"Downloading... {round(MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS))}%")
+      spinner.update(f"Downloading... {round(MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS))}%")
       print(output.decode('utf8', 'replace'))
 
   shutil.rmtree(TMP_DIR)

@@ -1,6 +1,6 @@
 
-2023-07
-- OPKR on C3
+2023-08
+- OPKR C3 is UAT stage. Try https://opkr.o-r.kr/c3test
 2023-06-12
 - Waze Nav Info on C2
 - No more Abrupt braking on Longitudinal of OPKR custom mode

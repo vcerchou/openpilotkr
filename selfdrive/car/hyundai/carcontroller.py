@@ -355,7 +355,7 @@ class CarController:
 
     # >90 degree steering fault prevention
     if self.to_avoid_lkas_fault_enabled:
-      self.angle_limit_counter, apply_steer_req = common_fault_avoidance(CS.out.steeringAngleDeg, self.to_avoid_lkas_fault_max_angle, CC.latActive,
+      self.angle_limit_counter, apply_steer_req = common_fault_avoidance(CS.out.steeringAngleDeg, self.to_avoid_lkas_fault_max_angle, lat_active,
                                                                          self.angle_limit_counter, self.to_avoid_lkas_fault_max_frame,
                                                                          MAX_ANGLE_CONSECUTIVE_FRAMES)
       # Hold torque with induced temporary fault when cutting the actuation bit

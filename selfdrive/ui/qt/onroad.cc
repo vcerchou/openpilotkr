@@ -590,9 +590,67 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?275:350):205, debug_y2, s->scene.alertTextMsg2.c_str());
   }
   if (s->scene.nDebugUi3 && s->scene.comma_stock_ui != 1) {
-    uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?275:350):205, debug_y3, s->scene.alertTextMsg3.c_str());
+    p.setFont(InterFont(s->scene.mapbox_running?26:35, QFont::DemiBold));
+    //uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?275:350):205, debug_y3, s->scene.alertTextMsg3.c_str());
+    uiText(p, ui_viz_rx, ui_viz_ry+560,
+    "0: " + QString::number(s->scene.longitudinalPlan.lead0[0], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[1], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[2], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[3], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[4], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[5], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[6], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[7], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[8], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[9], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[10], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[11], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead0[12], 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+600,
+    "1: " + QString::number(s->scene.longitudinalPlan.lead1[0], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[1], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[2], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[3], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[4], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[5], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[6], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[7], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[8], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[9], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[10], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[11], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.lead1[12], 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+640,
+    "C: " + QString::number(s->scene.longitudinalPlan.cruisetg[0], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[1], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[2], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[3], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[4], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[5], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[6], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[7], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[8], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[9], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[10], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[11], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.cruisetg[12], 'f', 2));
+    uiText(p, ui_viz_rx, ui_viz_ry+680,
+    "C: " + QString::number(s->scene.longitudinalPlan.e2ex[0], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[1], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[2], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[3], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[4], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[5], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[6], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[7], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[8], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[9], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[10], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[11], 'f', 2) +
+    " "   + QString::number(s->scene.longitudinalPlan.e2ex[12], 'f', 2));
   }
   if (s->scene.OPKR_Debug && s->scene.navi_select > 0 && s->scene.comma_stock_ui != 1) {
+      p.setFont(InterFont(s->scene.mapbox_running?26:35, QFont::DemiBold));
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+240, "0: " + QString::fromStdString(s->scene.liveENaviData.eopkr0));
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+280, "1: " + QString::fromStdString(s->scene.liveENaviData.eopkr1));
       uiText(p, ui_viz_rx+(s->scene.mapbox_running ? 300:400), ui_viz_ry+320, "2: " + QString::fromStdString(s->scene.liveENaviData.eopkr2));

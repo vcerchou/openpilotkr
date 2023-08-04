@@ -451,7 +451,10 @@ class LongitudinalMpc:
     self.e2e_x = x[:]
     self.lead_0_obstacle = lead_0_obstacle[:]
     self.lead_1_obstacle = lead_1_obstacle[:]
-    self.cruise_target = cruise_obstacle[:]
+    if self.mode == 'acc':
+      self.cruise_target = cruise_obstacle[:]
+    elif self.mode == 'blended':
+      self.cruise_target = cruise_target[:]
 
 
     self.run()

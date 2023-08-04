@@ -969,7 +969,7 @@ class CarController:
       #       if (self.frame - self.last_button_frame) * DT_CTRL >= 0.15:
       #         self.last_button_frame = self.frame
 
-      if self.frame % 2 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled:
+      if self.frame % 2 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled and not self.CP.sccBus == 2:
         # TODO: unclear if this is needed
         jerk = 3.0 if actuators.longControlState == LongCtrlState.pid else 1.0
         can_sends.extend(hyundaican.create_acc_commands(self.packer, CC.enabled, accel, jerk, int(self.frame / 2),
@@ -980,15 +980,15 @@ class CarController:
         can_sends.append(hyundaican.create_lfahda_mfc(self.packer, CC.enabled))
 
       # 5 Hz ACC options
-      if self.frame % 20 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled:
+      if self.frame % 20 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled and not self.CP.sccBus == 2:
         can_sends.extend(hyundaican.create_acc_opt(self.packer))
 
       # 2 Hz front radar options
-      if self.frame % 50 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled:
+      if self.frame % 50 == 0 and self.CP.openpilotLongitudinalControl and self.experimental_long_enabled and not self.CP.sccBus == 2:
         can_sends.append(hyundaican.create_frt_radar_opt(self.packer))
 
 
-      if self.CP.sccBus == 2 and self.counter_init and self.longcontrol and not self.experimental_long_enabled:
+      if self.CP.sccBus == 2 and self.counter_init and self.longcontrol:
         if self.frame % 2 == 0:
           self.scc12cnt += 1
           self.scc12cnt %= 0xF
@@ -1132,7 +1132,7 @@ class CarController:
                 pass
             else:
               self.stopped = False
-              if self.stopsign_enabled:
+              if self.stopsign_enabled or self.experimental_long_enabled:
                 if self.sm['longitudinalPlan'].longitudinalPlanSource == LongitudinalPlanSource.stop:
                   self.smooth_start = True
                   accel = faccel if faccel <= 0 else faccel*0.5
@@ -1140,7 +1140,7 @@ class CarController:
                   accel = interp(CS.clu_Vanz, [0, set_speed_in_units], [faccel, aReqValue])
                 else:
                   self.smooth_start = False
-                  accel = aReqValue
+                  accel = faccel*0.9
               else:
                 accel = aReqValue
           else:
@@ -1171,7 +1171,7 @@ class CarController:
           can_sends.append(hyundaican.create_scc13(self.packer, CS.scc13))
         if self.frame % 50 == 0:
           can_sends.append(hyundaican.create_scc42a(self.packer))
-      elif self.CP.sccBus != 0 and self.longcontrol and not self.experimental_long_enabled:
+      elif self.CP.sccBus == 2 and self.longcontrol:
         self.counter_init = True
         self.scc12cnt = CS.scc12init["CR_VSM_Alive"]
         self.scc11cnt = CS.scc11init["AliveCounterACC"]

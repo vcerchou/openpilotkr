@@ -101,8 +101,8 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   for (auto &[param, title, desc, icon] : toggle_defs) {
     auto toggle = new ParamControl(param, title, desc, icon, this);
 
-    bool locked = params.getBool((param + "Lock").toStdString());
-    toggle->setEnabled(!locked);
+    // bool locked = params.getBool((param + "Lock").toStdString());
+    toggle->setEnabled(true);
 
     addItem(toggle);
     toggles[param.toStdString()] = toggle;
@@ -116,7 +116,7 @@ TogglesPanel::TogglesPanel(SettingsWindow *parent) : ListWidget(parent) {
   // Toggles with confirmation dialogs
   toggles["ExperimentalMode"]->setActiveIcon("../assets/img_experimental.svg");
   toggles["ExperimentalMode"]->setConfirmation(true, true);
-  toggles["ExperimentalLongitudinalEnabled"]->setConfirmation(true, false);
+  toggles["ExperimentalLongitudinalEnabled"]->setConfirmation(true, true);
 
   connect(toggles["ExperimentalLongitudinalEnabled"], &ToggleControl::toggleFlipped, [=]() {
     updateToggles();
@@ -153,47 +153,10 @@ void TogglesPanel::updateToggles() {
                                   .arg(tr("The driving visualization will transition to the road-facing wide-angle camera at low speeds to better show some turns. The Experimental mode logo will also be shown in the top right corner."
 				          "When a navigation destination is set and the driving model is using it as input, the driving path on the map will turn green."));
 
-  const bool is_release = params.getBool("IsReleaseBranch");
-  auto cp_bytes = params.get("CarParamsPersistent");
-  if (!cp_bytes.empty()) {
-    AlignedBuffer aligned_buf;
-    capnp::FlatArrayMessageReader cmsg(aligned_buf.align(cp_bytes.data(), cp_bytes.size()));
-    cereal::CarParams::Reader CP = cmsg.getRoot<cereal::CarParams>();
-
-    if (!CP.getExperimentalLongitudinalAvailable()) {
-      params.remove("ExperimentalLongitudinalEnabled");
-    }
-    op_long_toggle->setVisible(CP.getExperimentalLongitudinalAvailable());
-    if (hasLongitudinalControl(CP)) {
-      // normal description and toggle
-      experimental_mode_toggle->setEnabled(true);
-      experimental_mode_toggle->setDescription(e2e_description);
-      long_personality_setting->setEnabled(true);
-    } else {
-      // no long for now
-      experimental_mode_toggle->setEnabled(false);
-      long_personality_setting->setEnabled(false);
-      params.remove("ExperimentalMode");
-
-      const QString unavailable = tr("Experimental mode is currently unavailable on this car since the car's stock ACC is used for longitudinal control.");
-
-      QString long_desc = unavailable + " " + \
-                          tr("openpilot longitudinal control may come in a future update.");
-      if (CP.getExperimentalLongitudinalAvailable()) {
-        if (is_release) {
-          long_desc = unavailable + " " + tr("An alpha version of openpilot longitudinal control can be tested, along with Experimental mode, on non-release branches.");
-        } else {
-          long_desc = tr("Enable the openpilot longitudinal control (alpha) toggle to allow Experimental mode.");
-        }
-      }
-      experimental_mode_toggle->setDescription("<b>" + long_desc + "</b><br><br>" + e2e_description);
-    }
-
-    experimental_mode_toggle->refresh();
-  } else {
+    op_long_toggle->setVisible(true);
+    long_personality_setting->setEnabled(true);
+    experimental_mode_toggle->setEnabled(true);
     experimental_mode_toggle->setDescription(e2e_description);
-    op_long_toggle->setVisible(false);
-  }
 }
 
 DevicePanel::DevicePanel(SettingsWindow *parent) : ListWidget(parent) {

@@ -583,7 +583,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   // debug
   int debug_y1 = 1015-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
   int debug_y2 = 1050-UI_BORDER_SIZE+(s->scene.mapbox_running ? 8:0)-(s->scene.animated_rpm?60:0);
-  int debug_y3 = 970-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
   if (s->scene.nDebugUi1 && s->scene.comma_stock_ui != 1) {
     p.setFont(InterFont(s->scene.mapbox_running?25:30, QFont::DemiBold));
     uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?275:350):205, debug_y1, s->scene.alertTextMsg1.c_str());
@@ -591,6 +590,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
   if (s->scene.nDebugUi3 && s->scene.comma_stock_ui != 1) {
     p.setFont(InterFont(s->scene.mapbox_running?26:35, QFont::DemiBold));
+    //int debug_y3 = 970-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
     //uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?275:350):205, debug_y3, s->scene.alertTextMsg3.c_str());
     uiText(p, ui_viz_rx, ui_viz_ry+560,
     "0: " + QString::number(s->scene.longitudinalPlan.lead0[0], 'f', 2) +

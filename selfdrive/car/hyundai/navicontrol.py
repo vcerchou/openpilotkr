@@ -72,10 +72,7 @@ class NaviControl():
     self.navi_sel = int(Params().get("OPKRNaviSelect", encoding="utf8"))
 
     self.na_timer = 0
-    self.t_interval = 7 if Params().get_bool("IsMetric") else 10
-    self.inc_change_time = 0
-    self.var_speed_prev = 0
-
+    self.t_interval = 7
     self.faststart = False
     self.safetycam_speed = 0
 
@@ -360,6 +357,7 @@ class NaviControl():
     self.driverSccSetControl = False
 
     if CS.driverAcc_time and CS.cruise_set_mode in (1,2,4):
+      self.t_interval = 10 if CS.is_set_speed_in_mph else 7
       self.driverSccSetControl = True
       return min(CS.clu_Vanz + (3 if CS.is_set_speed_in_mph else 5), navi_speed)
     # elif self.gasPressed_old:
@@ -367,16 +365,20 @@ class NaviControl():
     #   ctrl_speed = max(min_control_speed, ctrl_speed, clu_Vanz)
     #   CS.set_cruise_speed(ctrl_speed)
     elif CS.CP.resSpeed > 21:
+      self.t_interval = 10 if CS.is_set_speed_in_mph else 7
       res_speed = max(min_control_speed, CS.CP.resSpeed)
       return min(res_speed, navi_speed)
     elif CS.cruise_set_mode in (1,2,4):
       if CS.out.brakeLights and CS.out.vEgo == 0:
         self.faststart = True
+        self.t_interval = 10 if CS.is_set_speed_in_mph else 7
         var_speed = min(navi_speed, 30 if CS.is_set_speed_in_mph else 50)
       elif self.onSpeedBumpControl2 and not self.lead_0.status:
         var_speed = min(navi_speed, 30 if CS.is_set_speed_in_mph else 60)
+        self.t_interval = 10 if CS.is_set_speed_in_mph else 7
       elif self.onSpeedBumpControl:
         var_speed = min(navi_speed, 20 if CS.is_set_speed_in_mph else 30)
+        self.t_interval = 10 if CS.is_set_speed_in_mph else 7
       elif self.faststart and CS.CP.vFuture <= 40:
         var_speed = min(navi_speed, 30 if CS.is_set_speed_in_mph else 50)
       elif (self.lead_0.status or self.lead_1.status) and CS.CP.vFuture >= (min_control_speed-(4 if CS.is_set_speed_in_mph else 7)):
@@ -392,79 +394,33 @@ class NaviControl():
           self.cut_in_run_timer = 1500
         d_ratio = interp(CS.clu_Vanz, [40, 110], [0.3, 0.2])
         if self.cut_in_run_timer and dRel < CS.clu_Vanz * d_ratio: # keep decel when cut_in, max running time 15sec
+          self.t_interval = 10 if CS.is_set_speed_in_mph else 7
           self.cutInControl = True
           var_speed = min(CS.CP.vFutureA, navi_speed)
-        elif vRel >= (-3 if CS.is_set_speed_in_mph else -5):
-          tar_speed = min(CS.CP.vFuture + max(0, int(dRel*(0.11 if CS.is_set_speed_in_mph else 0.16)+vRel)), navi_speed)
+        elif vRel > (-3 if CS.is_set_speed_in_mph else -5):
+          var_speed = min(CS.CP.vFuture + max(0, int(dRel*(0.11 if CS.is_set_speed_in_mph else 0.16)+vRel)), navi_speed)
           ttime = 70 if CS.is_set_speed_in_mph else 40
-          inc_time = int(interp(dRel, [15, 50], [self.t_interval, ttime]))
-          self.inc_change_time += 1
-          if self.inc_change_time > inc_time:
-            self.inc_change_time = 0
-            if (tar_speed == round(CS.VSetDis)):
-              var_speed = tar_speed
-            elif (tar_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-              var_speed = min(tar_speed, round(self.var_speed_prev + 1))
-            elif (tar_speed < self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-              var_speed = max(tar_speed, round(self.var_speed_prev - 1))
-            self.var_speed_prev = var_speed
-          else:
-            if self.var_speed_prev != 0 and self.var_speed_prev != round(CS.VSetDis):
-              pass
-            else:
-              self.var_speed_prev = round(CS.VSetDis)
-            var_speed = self.var_speed_prev
+          self.t_interval = int(interp(dRel, [15, 50], [7, ttime])) if not (self.onSpeedControl or self.curvSpeedControl or self.cut_in) else 10 if CS.is_set_speed_in_mph else 7
           self.cutInControl = False
         else:
-          tar_speed = min(CS.CP.vFuture, navi_speed)
-          ttime = 40 if CS.is_set_speed_in_mph else 20
-          inc_time = int(interp(dRel, [15, 50], [self.t_interval, ttime]))
-          self.inc_change_time += 1
-          if self.inc_change_time > inc_time:
-            self.inc_change_time = 0
-            if (tar_speed == round(CS.VSetDis)):
-              var_speed = tar_speed
-            elif (tar_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-              var_speed = min(tar_speed, round(self.var_speed_prev + 1))
-            elif (tar_speed < self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-              var_speed = max(tar_speed, round(self.var_speed_prev - 1))
-            self.var_speed_prev = var_speed
-          else:
-            if self.var_speed_prev != 0 and self.var_speed_prev != round(CS.VSetDis):
-              pass
-            else:
-              self.var_speed_prev = round(CS.VSetDis)
-            var_speed = self.var_speed_prev
+          var_speed = min(CS.CP.vFuture, navi_speed)
+          self.t_interval = 10 if CS.is_set_speed_in_mph else 7
           self.cut_in_run_timer = 0
           self.cutInControl = False
       elif self.lead_0.status and CS.CP.vFuture < min_control_speed:
         self.faststart = False
         var_speed = min(CS.CP.vFuture, navi_speed)
+        self.t_interval = 10 if CS.is_set_speed_in_mph else 7
         self.cutInControl = False
       else:
         self.faststart = False
-        tar_speed = navi_speed
-        inc_time = 70 if CS.is_set_speed_in_mph else 40
-        self.inc_change_time += 1
-        if self.inc_change_time > inc_time:
-          self.inc_change_time = 0
-          if (tar_speed == round(CS.VSetDis)):
-            var_speed = tar_speed
-          elif (tar_speed > self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-            var_speed = min(tar_speed, round(self.var_speed_prev + 1))
-          elif (tar_speed < self.var_speed_prev and self.var_speed_prev == round(CS.VSetDis)):
-            var_speed = max(tar_speed, round(self.var_speed_prev - 1))
-          self.var_speed_prev = var_speed
-        else:
-          if self.var_speed_prev != 0 and self.var_speed_prev != round(CS.VSetDis):
-            pass
-          else:
-            self.var_speed_prev = round(CS.VSetDis)
-          var_speed = self.var_speed_prev
-
+        var_speed = navi_speed
+        ttime = 70 if CS.is_set_speed_in_mph else 40
+        self.t_interval = ttime if not (self.onSpeedControl or self.curvSpeedControl or self.cut_in) else 10 if CS.is_set_speed_in_mph else 7
         self.cutInControl = False
     else:
       var_speed = navi_speed
+      self.t_interval = 10 if CS.is_set_speed_in_mph else 7
       self.cut_in_run_timer = 0
       self.cutInControl = False
 

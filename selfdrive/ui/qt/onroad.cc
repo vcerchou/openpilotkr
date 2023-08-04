@@ -635,7 +635,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[11], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[12], 'f', 2));
     uiText(p, ui_viz_rx, ui_viz_ry+680,
-    "C: " + QString::number(s->scene.longitudinalPlan.e2ex[0], 'f', 2) +
+    "X: " + QString::number(s->scene.longitudinalPlan.e2ex[0], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.e2ex[1], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.e2ex[2], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.e2ex[3], 'f', 2) +

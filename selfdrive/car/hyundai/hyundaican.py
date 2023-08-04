@@ -25,11 +25,11 @@ def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
     "CF_Lkas_LdwsOpt_USM",
   ]}
   values["CF_Lkas_LdwsSysState"] = sys_state
-  values["CF_Lkas_SysWarning"] = 3 if (sys_warning and car_fingerprint not in LEGACY_SAFETY_MODE_CAR_ALT) else 0
+  values["CF_Lkas_SysWarning"] = 3 # if (sys_warning and car_fingerprint not in LEGACY_SAFETY_MODE_CAR_ALT) else 0
   values["CF_Lkas_LdwsLHWarning"] = left_lane_depart
   values["CF_Lkas_LdwsRHWarning"] = right_lane_depart
   values["CR_Lkas_StrToqReq"] = apply_steer
-  values["CF_Lkas_ActToi"] = steer_req and not (torque_fault and (1 if car_fingerprint in LEGACY_SAFETY_MODE_CAR_ALT else 0))
+  values["CF_Lkas_ActToi"] = steer_req # and not (torque_fault and (1 if car_fingerprint in LEGACY_SAFETY_MODE_CAR_ALT else 0))
   values["CF_Lkas_ToiFlt"] = torque_fault  # seems to allow actuation on CR_Lkas_StrToqReq
   values["CF_Lkas_MsgCount"] = frame % 0x10
   values["CF_Lkas_Chksum"] = 0

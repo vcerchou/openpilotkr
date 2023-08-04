@@ -3,7 +3,7 @@ from common.conversions import Conversions as CV
 from common.numpy_fast import clip, interp
 from common.realtime import DT_CTRL
 from opendbc.can.packer import CANPacker
-from selfdrive.car import apply_driver_steer_torque_limits
+from selfdrive.car import apply_driver_steer_torque_limits, common_fault_avoidance
 from selfdrive.car.hyundai import hyundaicanfd, hyundaican
 from selfdrive.car.hyundai.hyundaicanfd import CanBus
 from selfdrive.car.hyundai.values import HyundaiFlags, Buttons, CarControllerParams, CANFD_CAR, CAR
@@ -303,6 +303,20 @@ class CarController:
     self.vRel = self.sm['radarState'].leadOne.vRel #Vision Lead
     self.yRel = self.sm['radarState'].leadOne.yRel #Vision Lead
 
+    if abs(CS.out.steeringTorque) > 170 and CS.out.vEgo < LANE_CHANGE_SPEED_MIN:
+      self.driver_steering_torque_above = True
+    else:
+      self.driver_steering_torque_above = False
+
+    if self.driver_steering_torque_above == True:
+      self.driver_steering_torque_above_timer -= 1
+      if self.driver_steering_torque_above_timer <= 0:
+        self.driver_steering_torque_above_timer = 0
+    elif self.driver_steering_torque_above == False:
+      self.driver_steering_torque_above_timer += 5
+      if self.driver_steering_torque_above_timer >= 100:
+        self.driver_steering_torque_above_timer = 100
+
     # steering torque
     if self.CP.smoothSteer.method == 1:
       new_steer = int(round(actuators.steer * self.params.STEER_MAX))
@@ -336,22 +350,18 @@ class CarController:
     if self.emergency_manual_timer > 0:
       self.emergency_manual_timer -= 1
 
-    if abs(CS.out.steeringTorque) > 170 and CS.out.vEgo < LANE_CHANGE_SPEED_MIN:
-      self.driver_steering_torque_above = True
-    else:
-      self.driver_steering_torque_above = False
-
-    if self.driver_steering_torque_above == True:
-      self.driver_steering_torque_above_timer -= 1
-      if self.driver_steering_torque_above_timer <= 0:
-        self.driver_steering_torque_above_timer = 0
-    elif self.driver_steering_torque_above == False:
-      self.driver_steering_torque_above_timer += 5
-      if self.driver_steering_torque_above_timer >= 100:
-        self.driver_steering_torque_above_timer = 100
-
     if self.no_mdps_mods and CS.out.vEgo < self.CP.minSteerSpeed:
       lat_active = False
+
+    # >90 degree steering fault prevention
+    if self.to_avoid_lkas_fault_enabled:
+      self.angle_limit_counter, apply_steer_req = common_fault_avoidance(CS.out.steeringAngleDeg, self.to_avoid_lkas_fault_max_angle, CC.latActive,
+                                                                         self.angle_limit_counter, self.to_avoid_lkas_fault_max_frame,
+                                                                         MAX_ANGLE_CONSECUTIVE_FRAMES)
+      # Hold torque with induced temporary fault when cutting the actuation bit
+      torque_fault = lat_active and not apply_steer_req
+    else:
+      torque_fault = False
 
     if not lat_active:
       apply_steer = 0
@@ -380,25 +390,6 @@ class CarController:
       # for blinkers
       if self.CP.flags & HyundaiFlags.ENABLE_BLINKERS:
         can_sends.append([0x7b1, 0, b"\x02\x3E\x80\x00\x00\x00\x00\x00", self.CAN.ECAN])
-
-    # >90 degree steering fault prevention
-    # Count up to MAX_ANGLE_FRAMES, at which point we need to cut torque to avoid a steering fault
-
-    if self.to_avoid_lkas_fault_enabled:
-      if lat_active and abs(CS.out.steeringAngleDeg) >= self.to_avoid_lkas_fault_max_angle:
-        self.angle_limit_counter += 1
-      else:
-        self.angle_limit_counter = 0
-
-      # Cut steer actuation bit for two frames and hold torque with induced temporary fault
-      torque_fault = lat_active and self.angle_limit_counter > self.to_avoid_lkas_fault_max_frame
-      lat_active = lat_active and not torque_fault
-
-      if self.angle_limit_counter >= self.to_avoid_lkas_fault_max_frame + MAX_ANGLE_CONSECUTIVE_FRAMES:
-        self.angle_limit_counter = 0
-    else:
-      torque_fault = False
-
 
     # CAN-FD platforms
     if self.CP.carFingerprint in CANFD_CAR:
@@ -1196,9 +1187,9 @@ class CarController:
         # self.stopping_dist_adj_enabled = self.c_params.get_bool("StoppingDistAdj")
         # self.standstill_res_count = int(self.c_params.get("RESCountatStandstill", encoding="utf8"))
         # self.opkr_cruisegap_auto_adj = self.c_params.get_bool("CruiseGapAdjust")
-        self.to_avoid_lkas_fault_enabled = self.c_params.get_bool("AvoidLKASFaultEnabled")
-        self.to_avoid_lkas_fault_max_angle = int(self.c_params.get("AvoidLKASFaultMaxAngle", encoding="utf8"))
-        self.to_avoid_lkas_fault_max_frame = int(self.c_params.get("AvoidLKASFaultMaxFrame", encoding="utf8"))
+        # self.to_avoid_lkas_fault_enabled = self.c_params.get_bool("AvoidLKASFaultEnabled")
+        # self.to_avoid_lkas_fault_max_angle = int(self.c_params.get("AvoidLKASFaultMaxAngle", encoding="utf8"))
+        # self.to_avoid_lkas_fault_max_frame = int(self.c_params.get("AvoidLKASFaultMaxFrame", encoding="utf8"))
         # self.e2e_long_enabled = self.c_params.get_bool("E2ELong")
         # self.stopsign_enabled = self.c_params.get_bool("StopAtStopSign")
         # self.gap_by_spd_on = self.c_params.get_bool("CruiseGapBySpdOn")

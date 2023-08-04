@@ -678,13 +678,11 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
           QProcess::execute("git -C /data/openpilot clean -d -f -f");
           QProcess::execute(cmd1);
           QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
-          textMsgProcess1 = new QProcess(this);
-          outbox1 = new QMessageBox(this);
           outbox1->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
           QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg1()));
           QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardError()), this, SLOT(printMsg1()));
           QObject::connect(textMsgProcess1, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished1(int, QProcess::ExitStatus)));
-          executeProgram1(tcmd1);
+          textMsgProcess1->start(tcmd1);
         }
       }
     }
@@ -708,14 +706,6 @@ void BranchSelectCombo::printMsg1() {
   outdata1 = texto1+texte1;
   outbox1->setText(outdata1.right(200));
   outbox1->show();
-}
-
-void BranchSelectCombo::executeProgram1(const QString &tcmd1) {
-  QString program1 = QString(tcmd1);
-  QStringList arguments;
-  arguments << "";
-  textMsgProcess1->start(program1, arguments);
-  textMsgProcess1->waitForStarted();
 }
 
 void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exitStatus) {

@@ -1039,7 +1039,6 @@ class BranchSelectCombo : public AbstractControl
 
 public:
   BranchSelectCombo();
-  void executeProgram1(const QString &tcmd1);
 
 private slots:
   void printMsg1();
@@ -1050,8 +1049,8 @@ private:
   QPushButton btn2;
   Params params;
 
-  QProcess *textMsgProcess1;
-  QMessageBox *outbox1;
+  QProcess textMsgProcess1;
+  QMessageBox outbox1;
   QString outdata1;
   QString selection;
   QStringList stringList;

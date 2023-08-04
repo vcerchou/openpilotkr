@@ -678,11 +678,11 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
           QProcess::execute("git -C /data/openpilot clean -d -f -f");
           QProcess::execute(cmd1);
           QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_remove.sh");
-          outbox1->setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
+          outbox1.setStyleSheet("QLabel{min-width:800px; font-size: 50px;}");
           QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardOutput()), this, SLOT(printMsg1()));
           QObject::connect(textMsgProcess1, SIGNAL(readyReadStandardError()), this, SLOT(printMsg1()));
           QObject::connect(textMsgProcess1, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(processFinished1(int, QProcess::ExitStatus)));
-          textMsgProcess1->start(tcmd1);
+          textMsgProcess1.start(tcmd1);
         }
       }
     }
@@ -699,13 +699,13 @@ BranchSelectCombo::BranchSelectCombo() : AbstractControl("", "", "")
 void BranchSelectCombo::printMsg1() {
   QByteArray datao1;
   QByteArray datae1;
-  datao1 = textMsgProcess1->readAllStandardOutput();
-  datae1 = textMsgProcess1->readAllStandardError();
+  datao1 = textMsgProcess1.readAllStandardOutput();
+  datae1 = textMsgProcess1.readAllStandardError();
   QString texto1 = QString::fromLocal8Bit(datao1);
   QString texte1 = QString::fromLocal8Bit(datae1);
   outdata1 = texto1+texte1;
-  outbox1->setText(outdata1.right(200));
-  outbox1->show();
+  outbox1.setText(outdata1.right(200));
+  outbox1.show();
 }
 
 void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exitStatus) {

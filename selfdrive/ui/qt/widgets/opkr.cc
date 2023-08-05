@@ -198,7 +198,7 @@ CGitGroup::CGitGroup(void *p) : CGroupWidget( tr("Git Branch Change") )
   auto gitresetbtn = new ButtonControl(tr("Git Reset"), tr("RUN"));
   QObject::connect(gitresetbtn, &ButtonControl::clicked, [=]() {
     if (ConfirmationDialog::confirm2(tr("Apply the latest commitment details of Remote Git after forced initialization of local changes. Do you want to proceed?"), this)){
-      std::system("touch /data/compiling");
+      std::system("touch /data/opkr_compiling");
       std::system(git_reset);
     }
   });
@@ -701,7 +701,7 @@ void BranchSelectCombo::processFinished1(int exitCode, QProcess::ExitStatus exit
   if(exitStatus == QProcess::NormalExit) {
     QProcess::execute(cmd2);
     QProcess::execute(cmd3);
-    QProcess::execute("touch /data/compiling");
+    QProcess::execute("touch /data/opkr_compiling");
     QProcess::execute("/data/openpilot/selfdrive/assets/addon/script/git_reset.sh");
   }
 }

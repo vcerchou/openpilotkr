@@ -245,6 +245,7 @@ class CarController:
     self.e2e_standstill_timer_buf = 0
 
     self.experimental_long_enabled = self.c_params.get_bool("ExperimentalLongitudinalEnabled")
+    self.experimental_mode = self.c_params.get_bool("ExperimentalMode")
     self.live_torque_params = self.c_params.get_bool("OpkrLiveTorque")
 
     self.btnsignal = 0
@@ -1123,7 +1124,7 @@ class CarController:
                 pass
             else:
               self.stopped = False
-              if self.stopsign_enabled or self.experimental_long_enabled:
+              if self.stopsign_enabled or self.experimental_mode:
                 if self.sm['longitudinalPlan'].longitudinalPlanSource == LongitudinalPlanSource.stop:
                   self.smooth_start = True
                   accel = faccel if faccel <= 0 else faccel*0.5

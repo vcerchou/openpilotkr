@@ -592,7 +592,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     p.setFont(InterFont(s->scene.mapbox_running?26:35, QFont::DemiBold));
     //int debug_y3 = 970-UI_BORDER_SIZE+(s->scene.mapbox_running ? 18:0)-(s->scene.animated_rpm?60:0);
     //uiText(p, s->scene.low_ui_profile?(s->scene.mapbox_running?275:350):205, debug_y3, s->scene.alertTextMsg3.c_str());
-    uiText(p, ui_viz_rx, ui_viz_ry+560,
+    uiText(p, ui_viz_rx, ui_viz_ry+760,
     "0: " + QString::number(s->scene.longitudinalPlan.lead0[0], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead0[1], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead0[2], 'f', 2) +
@@ -606,7 +606,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     " "   + QString::number(s->scene.longitudinalPlan.lead0[10], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead0[11], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead0[12], 'f', 2));
-    uiText(p, ui_viz_rx, ui_viz_ry+600,
+    uiText(p, ui_viz_rx, ui_viz_ry+800,
     "1: " + QString::number(s->scene.longitudinalPlan.lead1[0], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead1[1], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead1[2], 'f', 2) +
@@ -620,7 +620,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     " "   + QString::number(s->scene.longitudinalPlan.lead1[10], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead1[11], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.lead1[12], 'f', 2));
-    uiText(p, ui_viz_rx, ui_viz_ry+640,
+    uiText(p, ui_viz_rx, ui_viz_ry+840,
     "C: " + QString::number(s->scene.longitudinalPlan.cruisetg[0], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[1], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[2], 'f', 2) +
@@ -634,7 +634,7 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[10], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[11], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.cruisetg[12], 'f', 2));
-    uiText(p, ui_viz_rx, ui_viz_ry+680,
+    uiText(p, ui_viz_rx, ui_viz_ry+880,
     "X: " + QString::number(s->scene.longitudinalPlan.e2ex[0], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.e2ex[1], 'f', 2) +
     " "   + QString::number(s->scene.longitudinalPlan.e2ex[2], 'f', 2) +

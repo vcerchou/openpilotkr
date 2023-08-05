@@ -1048,9 +1048,9 @@ class CarController:
                 else:
                   accel = aReqValue
               elif aReqValue < 0.0 and CS.lead_distance < self.stoppingdist and accel >= aReqValue and lead_objspd <= 0 and self.stopping_dist_adj_enabled:
-                if CS.lead_distance < 1.8:
+                if CS.lead_distance < 1.7:
                   accel = self.accel - (DT_CTRL * 4.0)
-                elif CS.lead_distance < self.stoppingdist:
+                elif CS.lead_distance < self.stoppingdist+0.5:
                   accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.0, 1.0, 2.0], [0.05, 1.0, 5.0]))
               elif aReqValue < 0.0:
                 dRel2 = self.dRel if self.dRel > 0 else CS.lead_distance
@@ -1107,7 +1107,7 @@ class CarController:
               accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [1.0, 3.0], [0.5, 3.0]))
               self.stopped = False
             elif 0.1 < self.dRel < (self.stoppingdist + 1.0):
-              accel = min(-0.5, faccel*0.3)
+              accel = accel
               if stopping:
                 self.stopped = True
               else:
@@ -1127,12 +1127,12 @@ class CarController:
               if self.stopsign_enabled or self.experimental_mode:
                 if self.sm['longitudinalPlan'].longitudinalPlanSource == LongitudinalPlanSource.stop:
                   self.smooth_start = True
-                  accel = faccel if faccel <= 0 else faccel*0.5
-                elif self.smooth_start and CS.clu_Vanz < set_speed_in_units:
-                  accel = interp(CS.clu_Vanz, [0, set_speed_in_units], [faccel, aReqValue])
+                  accel = accel
+                elif self.smooth_start and CS.clu_Vanz < round(CS.VSetDis):
+                  accel = interp(CS.clu_Vanz, [0, round(CS.VSetDis)], [accel, aReqValue])
                 else:
                   self.smooth_start = False
-                  accel = faccel
+                  accel = accel
               else:
                 accel = aReqValue
           else:

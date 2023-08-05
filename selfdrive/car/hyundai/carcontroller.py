@@ -1047,7 +1047,7 @@ class CarController:
                     accel = interp(self.dRel, [0, 40], [accel*0.1, accel*0.7])
                 else:
                   accel = aReqValue
-              elif aReqValue < 0.0 and CS.lead_distance < self.stoppingdist and accel >= aReqValue and lead_objspd <= 0 and self.stopping_dist_adj_enabled:
+              elif aReqValue < 0.0 and CS.lead_distance < self.stoppingdist+0.5 and accel >= aReqValue and lead_objspd <= 0 and self.stopping_dist_adj_enabled:
                 if CS.lead_distance < 1.7:
                   accel = self.accel - (DT_CTRL * 4.0)
                 elif CS.lead_distance < self.stoppingdist+0.5:
@@ -1095,7 +1095,7 @@ class CarController:
                       self.vrel_delta_timer3 = 0
                       stock_weight = interp(abs(lead_objspd), [1.0, 10.0], [1.0, 0.0])
                 accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
-                accel = min(accel, -0.5) if CS.lead_distance <= self.stoppingdist and not CS.out.standstill else accel
+                accel = min(accel, -0.5) if CS.lead_distance <= self.stoppingdist+0.5 and not CS.out.standstill else accel
               # elif aReqValue < 0.0:
               #   stock_weight = interp(CS.lead_distance, [6.0, 10.0, 18.0, 25.0, 32.0], [1.0, 0.85, 1.0, 0.4, 1.0])
               #   accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
@@ -1103,7 +1103,7 @@ class CarController:
                 stock_weight = 0.0
                 self.change_accel_fast = False
                 accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
-            elif 0.1 < self.dRel < (self.stoppingdist + 1.0) and int(self.vRel*3.6) < 0:
+            elif 0.1 < self.dRel < (self.stoppingdist + 0.5) and int(self.vRel*3.6) < 0:
               accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [1.0, 3.0], [0.5, 3.0]))
               self.stopped = False
             elif 0.1 < self.dRel < (self.stoppingdist + 1.0):
@@ -1189,8 +1189,8 @@ class CarController:
         # self.standstill_res_count = int(self.c_params.get("RESCountatStandstill", encoding="utf8"))
         # self.opkr_cruisegap_auto_adj = self.c_params.get_bool("CruiseGapAdjust")
         # self.to_avoid_lkas_fault_enabled = self.c_params.get_bool("AvoidLKASFaultEnabled")
-        # self.to_avoid_lkas_fault_max_angle = int(self.c_params.get("AvoidLKASFaultMaxAngle", encoding="utf8"))
-        # self.to_avoid_lkas_fault_max_frame = int(self.c_params.get("AvoidLKASFaultMaxFrame", encoding="utf8"))
+        self.to_avoid_lkas_fault_max_angle = int(self.c_params.get("AvoidLKASFaultMaxAngle", encoding="utf8"))
+        self.to_avoid_lkas_fault_max_frame = int(self.c_params.get("AvoidLKASFaultMaxFrame", encoding="utf8"))
         # self.e2e_long_enabled = self.c_params.get_bool("E2ELong")
         # self.stopsign_enabled = self.c_params.get_bool("StopAtStopSign")
         # self.gap_by_spd_on = self.c_params.get_bool("CruiseGapBySpdOn")

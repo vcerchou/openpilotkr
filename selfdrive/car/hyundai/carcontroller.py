@@ -314,16 +314,16 @@ class CarController:
       if self.driver_steering_torque_above_timer <= 0:
         self.driver_steering_torque_above_timer = 0
     elif self.driver_steering_torque_above == False:
-      self.driver_steering_torque_above_timer += 5
-      if self.driver_steering_torque_above_timer >= 100:
-        self.driver_steering_torque_above_timer = 100
+      self.driver_steering_torque_above_timer += 10
+      if self.driver_steering_torque_above_timer >= 150:
+        self.driver_steering_torque_above_timer = 150
 
     # steering torque
     if self.CP.smoothSteer.method == 1:
       new_steer = int(round(actuators.steer * self.params.STEER_MAX))
       new_steer = self.smooth_steer( new_steer, CS )
-    elif 0 <= self.driver_steering_torque_above_timer < 100:
-      new_steer = int(round(actuators.steer * self.params.STEER_MAX * (self.driver_steering_torque_above_timer / 100)))
+    elif 0 <= self.driver_steering_torque_above_timer < 150:
+      new_steer = int(round(actuators.steer * self.params.STEER_MAX * (self.driver_steering_torque_above_timer / 150)))
     else:
       new_steer = int(round(actuators.steer * self.params.STEER_MAX))
 

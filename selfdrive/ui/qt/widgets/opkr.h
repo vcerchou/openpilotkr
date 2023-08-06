@@ -412,6 +412,9 @@ public:
     QObject::connect(this, &PrebuiltToggle::toggleFlipped, [=](int state) {
       bool status = state ? true : false;
       Params().putBool("PutPrebuiltOn", status);
+      if (state) {
+        std::system("rm -f /data/openpilot/prebuilt");
+      }
     });
   }
 };

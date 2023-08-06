@@ -1005,6 +1005,30 @@ public:
   }
 };
 
+class EnableLogger : public ToggleControl {
+  Q_OBJECT
+
+public:
+  EnableLogger() : ToggleControl(tr("Enable Driving Log Record"), tr("Record the driving log locally for data analysis. Only loggers are activated and not uploaded to the server."), "../assets/offroad/icon_shell.png", Params().getBool("OpkrEnableLogger")) {
+    QObject::connect(this, &EnableLogger::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OpkrEnableLogger", status);
+    });
+  }
+};
+
+class EnableUploader : public ToggleControl {
+  Q_OBJECT
+
+public:
+  EnableUploader() : ToggleControl(tr("Enable Sending Log to Server"), tr("Activate the upload process to transmit system logs and other driving data to the server. Upload it only off-road."), "../assets/offroad/icon_shell.png", Params().getBool("OpkrEnableUploader")) {
+    QObject::connect(this, &EnableUploader::toggleFlipped, [=](int state) {
+      bool status = state ? true : false;
+      Params().putBool("OpkrEnableUploader", status);
+    });
+  }
+};
+
 // openpilot preview
 class OpenpilotView : public AbstractControl {
   Q_OBJECT

@@ -1564,12 +1564,22 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
   }
 
   // rec_stat and toggle
-  if (s->scene.rec_stat && !s->scene.rec_stat2) {
-    if (recorder) recorder->toggle();
-    s->scene.rec_stat2 = s->scene.rec_stat;
-  } else if (!s->scene.rec_stat && s->scene.rec_stat2) {
-    if (recorder) recorder->toggle();
-    s->scene.rec_stat = s->scene.rec_stat2;
+  if (s->scene.driving_record) {
+    if (!s->scene.rec_stat && s->scene.car_state.getVEgo() > 0.3) {
+      s->scene.rec_stat = !s->scene.rec_stat;
+      if (recorder) recorder->toggle();
+    } else if (s->scene.rec_stat && s->scene.standStill) {
+      if (recorder) recorder->toggle();
+      s->scene.rec_stat = !s->scene.rec_stat;
+    }
+  } else {
+    if (s->scene.rec_stat && !s->scene.rec_stat2) {
+      if (recorder) recorder->toggle();
+      s->scene.rec_stat2 = s->scene.rec_stat;
+    } else if (!s->scene.rec_stat && s->scene.rec_stat2) {
+      if (recorder) recorder->toggle();
+      s->scene.rec_stat = s->scene.rec_stat2;
+    }
   }
   if (s->scene.rec_stat3) {
     const int rw = 2160-UI_BORDER_SIZE*2;

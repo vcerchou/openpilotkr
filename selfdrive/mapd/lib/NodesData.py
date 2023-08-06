@@ -1,10 +1,11 @@
 import os
 import sys
-[sys.path.append(i) for i in ['.', '..']]
 import numpy as np
 from enum import Enum
 from selfdrive.mapd.lib.geo import DIRECTION, R, vectors
+[sys.path.append(i) for i in ['/data/openpilot/pyextra', '/data/openpilot/pyextra/..']]
 from scipy.interpolate import splev, splprep
+
 
 _TURN_CURVATURE_THRESHOLD = 0.002  # 1/mts. A curvature over this value will generate a speed limit section.
 _MAX_LAT_ACC = 2.3  # Maximum lateral acceleration in turns.

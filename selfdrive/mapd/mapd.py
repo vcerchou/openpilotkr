@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import os
+import sys
 import threading
 from traceback import print_exception
 import numpy as np

@@ -1,7 +1,9 @@
+import os
+import sys
 import numpy as np
 from enum import Enum
 from selfdrive.mapd.lib.geo import DIRECTION, R, vectors
-
+sys.path.append(os.path.join(BASEDIR, "pyextra"))
 from scipy.interpolate import splev, splprep
 
 

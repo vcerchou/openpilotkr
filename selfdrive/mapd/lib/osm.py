@@ -4,8 +4,8 @@ import subprocess
 import numpy as np
 from selfdrive.mapd.lib.geo import R
 
-from common.basedir import BASEDIR
-sys.path.append(os.path.join(BASEDIR, "pyextra"))
+from common.basedir import PYEXTRADIR
+sys.path.append(os.path.join(PYEXTRADIR, "pyextra"))
 
 import overpy
 

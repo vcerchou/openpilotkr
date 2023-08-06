@@ -10,7 +10,7 @@ from typing import List, Tuple, Union
 from cereal import log
 import cereal.messaging as messaging
 import selfdrive.sentry as sentry
-from common.basedir import BASEDIR
+from common.basedir import PYEXTRADIR
 from common.params import Params, ParamKeyType
 from common.text_window import TextWindow
 from selfdrive.boardd.set_time import set_time
@@ -25,7 +25,7 @@ from system.version import is_dirty, get_commit, get_version, get_origin, get_sh
                            is_tested_branch, is_release_branch
 
 
-sys.path.append(os.path.join(BASEDIR, "pyextra"))
+sys.path.append(os.path.join(PYEXTRADIR, "pyextra"))
 
 
 def manager_init() -> None:

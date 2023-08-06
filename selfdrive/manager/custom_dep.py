@@ -17,8 +17,14 @@ OPSPLINE_SPEC = importlib.util.find_spec('scipy')
 OVERPY_SPEC = importlib.util.find_spec('overpy')
 MAX_BUILD_PROGRESS = 100
 TMP_DIR = '/data/tmp'
-PYEXTRA_DIR = '/data/openpilot/pyextra'
+PYEXTRA_DIR = '/data/pyextra'
 
+def createFolder(directory):
+    try:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+    except OSError:
+        print ('Error: Creating directory. ' +  directory)
 
 def wait_for_internet_connection(return_on_failure=False):
   retries = 0
@@ -80,6 +86,7 @@ def install_dep(spinner):
 
 
 if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):
+  createFolder(PYEXTRA_DIR)
   spinner = Spinner()
   spinner.update_progress(0, 100)
   install_dep(spinner)

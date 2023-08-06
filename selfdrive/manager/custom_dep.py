@@ -13,6 +13,7 @@ from urllib.request import urlopen
 # NOTE: Do NOT import anything here that needs be built (e.g. params)
 from common.spinner import Spinner
 
+LIB_INSTALLED = os.path.exists('/data/pyextra/overpy')
 OPSPLINE_SPEC = importlib.util.find_spec('scipy')
 OVERPY_SPEC = importlib.util.find_spec('overpy')
 MAX_BUILD_PROGRESS = 100
@@ -85,7 +86,7 @@ def install_dep(spinner):
       shutil.rmtree(f'{PYEXTRA_DIR}/bin')
 
 
-if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):
+if __name__ == "__main__" and not LIB_INSTALLED:
   createFolder(PYEXTRA_DIR)
   spinner = Spinner()
   spinner.update_progress(0, 100)

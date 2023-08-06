@@ -10,7 +10,7 @@ from common.params import Params
 RADAR_START_ADDR = 0x500
 RADAR_MSG_COUNT = 32
 
-USE_RADAR_TRACK = Params().get_bool("UseRadarTrack") and Params().get_bool("ExperimentalLongitudinalEnabled")
+USE_RADAR_TRACK = Params().get_bool("UseRadarTrack") or Params().get_bool("ExperimentalLongitudinalEnabled")
 
 def get_radar_can_parser(CP):
   if USE_RADAR_TRACK:

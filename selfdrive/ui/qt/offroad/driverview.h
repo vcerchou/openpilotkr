@@ -29,6 +29,10 @@ private:
   QPixmap face_img;
   bool is_rhd = false;
   bool frame_updated = false;
+
+  // neokii screen recorder. thx for sharing your source. 
+  ScreenRecoder* recorder;
+  std::shared_ptr<QTimer> record_timer;
 };
 
 class DriverViewWindow : public QWidget {

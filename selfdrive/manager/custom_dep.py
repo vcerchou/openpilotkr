@@ -15,7 +15,6 @@ from common.spinner import Spinner
 
 OPSPLINE_SPEC = importlib.util.find_spec('scipy')
 OVERPY_SPEC = importlib.util.find_spec('overpy')
-AHA_SPEC = importlib.util.find_spec('aha')
 MAX_BUILD_PROGRESS = 100
 TMP_DIR = '/data/tmp'
 PYEXTRA_DIR = '/data/openpilot/pyextra'
@@ -54,8 +53,6 @@ def install_dep(spinner):
     packages.append('scipy==1.11.1')
   if OVERPY_SPEC is None:
     packages.append('overpy==0.6')
-  if AHA_SPEC is None:
-    packages.append('aha==0.85')
 
   pip = subprocess.Popen([sys.executable, "-m", "pip", "install", "-v"] + pip_target + packages,
                           stdout=subprocess.PIPE, env=my_env)
@@ -68,7 +65,7 @@ def install_dep(spinner):
       break
     if output:
       steps += 1
-      spinner.update(f"Downloading... {round(min(200, MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS)))}%")
+      spinner.update(f"Downloading... {round(min(100, MAX_BUILD_PROGRESS * (steps / TOTAL_PIP_STEPS)))}%")
       print(output.decode('utf8', 'replace'))
 
   shutil.rmtree(TMP_DIR)
@@ -82,7 +79,7 @@ def install_dep(spinner):
       shutil.rmtree(f'{PYEXTRA_DIR}/bin')
 
 
-if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None or AHA_SPEC is None):
+if __name__ == "__main__" and (OPSPLINE_SPEC is None or OVERPY_SPEC is None):
   spinner = Spinner()
   spinner.update_progress(0, 100)
   install_dep(spinner)

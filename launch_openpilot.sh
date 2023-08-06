@@ -4,13 +4,11 @@
 if [ -f "/data/opkr_compiling" ]; then
     sudo rm /data/opkr_compiling
     sudo rm /data/openpilot/prebuilt
-    sleep 1
 else
     if [ -f "/data/params/d/PutPrebuiltOn" ]; then
         PREBUILT_CHECK=$(cat /data/params/d/PutPrebuiltOn)
         if [[ "$PREBUILT_CHECK" == "1" && ! -f "/data/openpilot/prebuilt" ]]; then
             touch /data/openpilot/prebuilt
-            sleep 1
         fi
     fi
 fi

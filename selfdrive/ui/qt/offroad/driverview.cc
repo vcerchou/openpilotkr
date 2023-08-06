@@ -114,13 +114,13 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
     p.setRenderHint(QPainter::TextAntialiasing);
     p.setFont(InterFont(50, QFont::Bold));
 
-    p.drawText(1050, 50, "faceProb:  " + QString::number(driver_data.getFaceProb(), 'f', 2));
+    p.drawText(1550, 150, "faceProb:  " + QString::number(driver_data.getFaceProb(), 'f', 2));
 
-    p.drawText(1050, 150, "leftEyeProb:  " + QString::number(driver_data.getLeftEyeProb(), 'f', 2));
-    p.drawText(1050, 200, "rightEyeProb:  " + QString::number(driver_data.getRightEyeProb(), 'f', 2));
-    p.drawText(1050, 250, "leftBlinkProb:  " + QString::number(driver_data.getLeftBlinkProb(), 'f', 2));
-    p.drawText(1050, 300, "rightBlinkProb:  " + QString::number(driver_data.getRightBlinkProb(), 'f', 2));
-    p.drawText(1050, 400, "sunglassesProb:  " + QString::number(driver_data.getSunglassesProb(), 'f', 2));
+    p.drawText(1550, 250, "leftEyeProb:  " + QString::number(driver_data.getLeftEyeProb(), 'f', 2));
+    p.drawText(1550, 300, "rightEyeProb:  " + QString::number(driver_data.getRightEyeProb(), 'f', 2));
+    p.drawText(1550, 350, "leftBlinkProb:  " + QString::number(driver_data.getLeftBlinkProb(), 'f', 2));
+    p.drawText(1550, 400, "rightBlinkProb:  " + QString::number(driver_data.getRightBlinkProb(), 'f', 2));
+    p.drawText(1550, 500, "sunglassesProb:  " + QString::number(driver_data.getSunglassesProb(), 'f', 2));
 
     // rec_stat and toggle
     if (s->scene.rec_stat && !s->scene.rec_stat2) {
@@ -131,7 +131,7 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
       s->scene.rec_stat = s->scene.rec_stat2;
     }
 
-    QRect rec = {1800, 905, 140, 140};
+    QRect rec = {1800, 885, 140, 140};
     p.setBrush(Qt::NoBrush);
     if (s->scene.rec_stat3) p.setBrush(Qt::red);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));

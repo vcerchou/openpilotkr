@@ -6,7 +6,6 @@
 #include "selfdrive/ui/qt/util.h"
 
 const int FACE_IMG_SIZE = 130;
-bool infill = false;
 
 DriverViewWindow::DriverViewWindow(QWidget* parent) : QWidget(parent) {
   setAttribute(Qt::WA_OpaquePaintEvent);
@@ -24,12 +23,7 @@ DriverViewWindow::DriverViewWindow(QWidget* parent) : QWidget(parent) {
 
 void DriverViewWindow::mousePressEvent(QMouseEvent* e) {
   if (d_rec_btn.contains(e->pos())) {
-    infill = !infill;
-    if (infill) {
-
-    } else {
-
-    }
+    uiState()->scene.rec_stat = !uiState()->scene.rec_stat;
     return;
   }
   cameraView->stopVipcThread();
@@ -38,6 +32,18 @@ void DriverViewWindow::mousePressEvent(QMouseEvent* e) {
 
 DriverViewScene::DriverViewScene(QWidget* parent) : sm({"driverStateV2"}), QWidget(parent) {
   face_img = loadPixmap("../assets/img_driver_face_static.png", {FACE_IMG_SIZE, FACE_IMG_SIZE});
+
+  // neokii screen recorder, thx for sharing:)
+  record_timer = std::make_shared<QTimer>();
+  QObject::connect(record_timer.get(), &QTimer::timeout, [=]() {
+    if(recorder) {
+      recorder->update_screen();
+    }
+  });
+  record_timer->start(1000/UI_FREQ);
+
+  recorder = new ScreenRecoder(this);
+  recorder->hide();
 }
 
 void DriverViewScene::showEvent(QShowEvent* event) {
@@ -102,6 +108,7 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
 
   // opkr
   if (frame_updated) {
+  	UIState *s = uiState();
     p.setPen(QColor(0xff, 0xff, 0xff));
     p.setOpacity(1.0);
     p.setRenderHint(QPainter::TextAntialiasing);
@@ -115,9 +122,18 @@ void DriverViewScene::paintEvent(QPaintEvent* event) {
     p.drawText(1050, 300, "rightBlinkProb:  " + QString::number(driver_data.getRightBlinkProb(), 'f', 2));
     p.drawText(1050, 400, "sunglassesProb:  " + QString::number(driver_data.getSunglassesProb(), 'f', 2));
 
+    // rec_stat and toggle
+    if (s->scene.rec_stat && !s->scene.rec_stat2) {
+      if (recorder) recorder->toggle();
+      s->scene.rec_stat2 = s->scene.rec_stat;
+    } else if (!s->scene.rec_stat && s->scene.rec_stat2) {
+      if (recorder) recorder->toggle();
+      s->scene.rec_stat = s->scene.rec_stat2;
+    }
+
     QRect rec = {1800, 905, 140, 140};
     p.setBrush(Qt::NoBrush);
-    if (infill) p.setBrush(Qt::red);
+    if (s->scene.rec_stat3) p.setBrush(Qt::red);
     p.setPen(QPen(QColor(255, 255, 255, 80), 6));
     p.drawEllipse(rec);
     p.setPen(QColor(255, 255, 255, 200));

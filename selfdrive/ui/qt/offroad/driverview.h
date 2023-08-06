@@ -6,6 +6,8 @@
 
 #include "common/util.h"
 #include "selfdrive/ui/qt/widgets/cameraview.h"
+#include <QTimer>
+#include "selfdrive/ui/qt/screenrecorder/screenrecorder.h"
 
 class DriverViewScene : public QWidget {
   Q_OBJECT

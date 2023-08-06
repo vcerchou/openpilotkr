@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
   label->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
   ScrollView *scroll = new ScrollView(label);
   scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  main_layout->addWidget(scroll, 0, 0, 1, 4, Qt::AlignTop);
+  main_layout->addWidget(scroll, 0, 0, 1, 5, Qt::AlignTop);
 
   // Scroll to the bottom
   QObject::connect(scroll->verticalScrollBar(), &QAbstractSlider::rangeChanged, [=]() {
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
   }
   label2->setText(device_ip);
   label2->setStyleSheet("color: #e0e879");
-  main_layout->addWidget(label2, 0, 0, 1, 4, Qt::AlignRight | Qt::AlignTop);
+  main_layout->addWidget(label2, 0, 0, 1, 5, Qt::AlignRight | Qt::AlignTop);
   btn->setText(QObject::tr("Reboot"));
   btn2->setText(QObject::tr("Update"));
   btn3->setText(QObject::tr("Restore"));

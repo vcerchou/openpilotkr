@@ -838,8 +838,8 @@ AutoShutdown::AutoShutdown() : AbstractControl(tr("Device AutoShutdown"), tr("De
     auto str = QString::fromStdString(params.get("OpkrAutoShutdown"));
     int value = str.toInt();
     value = value - 1;
-    if (value <= 0) {
-      value = 0;
+    if (value <= -1) {
+      value = 14;
     }
     QString values = QString::number(value);
     params.put("OpkrAutoShutdown", values.toStdString());
@@ -850,8 +850,8 @@ AutoShutdown::AutoShutdown() : AbstractControl(tr("Device AutoShutdown"), tr("De
     auto str = QString::fromStdString(params.get("OpkrAutoShutdown"));
     int value = str.toInt();
     value = value + 1;
-    if (value >= 10) {
-      value = 10;
+    if (value >= 15) {
+      value = 0;
     }
     QString values = QString::number(value);
     params.put("OpkrAutoShutdown", values.toStdString());
@@ -884,6 +884,14 @@ void AutoShutdown::refresh() {
     label.setText(tr("3hours"));
   } else if (option == "10") {
     label.setText(tr("5hours"));
+  } else if (option == "11") {
+    label.setText(tr("10hours"));
+  } else if (option == "12") {
+    label.setText(tr("24hours"));
+  } else if (option == "13") {
+    label.setText(tr("48hours"));
+  } else if (option == "14") {
+    label.setText(tr("72hours"));
   }
 }
 

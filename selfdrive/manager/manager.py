@@ -50,7 +50,7 @@ def manager_init() -> None:
     ("LongitudinalPersonality", str(log.LongitudinalPersonality.standard)),
     ("IsMetric", "1"),
     ("IsOpenpilotViewEnabled", "0"),
-    ("OpkrAutoShutdown", "2"),
+    ("OpkrAutoShutdown", "12"),
     ("OpkrForceShutdown", "5"),
     ("OpkrAutoScreenOff", "-2"),
     ("OpkrUIBrightness", "0"),

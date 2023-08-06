@@ -1,23 +1,46 @@
 <h1 style="text-align:center">Welcome to OPKR</h1>
 
-![](https://i.imgur.com/b0ZyIx5.jpg)
+![](https://i.imgur.com/AyMRTBu.png)
 
 
 Table of Contents
 ==================
 
-<img src="https://i.imgur.com/aOxwC8R.png" align="right"
-     alt="OPKR" width="175" height="240">
-
+* [What is openpilot?](#what-is-openpilot-🤖🚘) 🤖🚘
+* [What is OPKR](#about-this-fork-🔎🍴) 🔎🍴
 * [Join Our Discord](#join-our-discord-🎟️💬) 🎟️💬
-* [About This Fork](#about-this-fork-🔎🍴) 🔎🍴
 * [Main Features](#main-features-🌟🪄) 🌟🪄
 * [Branch Definitions](#branch-definitions-🌳📄) 🌳📄
-* [How To Install](#how-to-install-❓💾) ❓💾
+* [How to Install](#how-to-install-❓💾) ❓💾
 * [Settings Menu](#setting-menu-⚙️📌) ⚙️📌
 * [Special Thanks](#special-thanks-🎖️👏) 🎖️👏
 * [Donate](#donate-🤝💵) 🤝💵
 * [Licensing](#licensing-🖋️📑) 🖋️📑
+
+What Is openpilot 🤖🚘
+------
+
+[openpilot](http://github.com/commaai/openpilot) is an open source driver assistance system. Currently, openpilot performs the functions of Adaptive Cruise Control (ACC), Automated Lane Centering (ALC), Forward Collision Warning (FCW) and Lane Departure Warning (LDW) for a growing variety of [supported car makes, models and model years](docs/CARS.md). In addition, while openpilot is engaged, a camera based Driver Monitoring (DM) feature alerts distracted and asleep drivers. See more about [the vehicle integration](docs/INTEGRATION.md) and [limitations](docs/LIMITATIONS.md).
+
+<table>
+  <tr>
+    <td><a href="https://youtu.be/NmBfgOanCyk" title="Video By Greer Viau"><img src="https://i.imgur.com/1w8c6d2.jpg"></a></td>
+    <td><a href="https://youtu.be/VHKyqZ7t8Gw" title="Video By Logan LeGrand"><img src="https://i.imgur.com/LnBucik.jpg"></a></td>
+    <td><a href="https://youtu.be/VxiR4iyBruo" title="Video By Charlie Kim"><img src="https://i.imgur.com/4Qoy48c.jpg"></a></td>
+    <td><a href="https://youtu.be/-IkImTe1NYE" title="Video By Aragon"><img src="https://i.imgur.com/04VNzPf.jpg"></a></td>
+  </tr>
+  <tr>
+    <td><a href="https://youtu.be/iIUICQkdwFQ" title="Video By Logan LeGrand"><img src="https://i.imgur.com/b1LHQTy.jpg"></a></td>
+    <td><a href="https://youtu.be/XOsa0FsVIsg" title="Video By PinoyDrives"><img src="https://i.imgur.com/6FG0Bd8.jpg"></a></td>
+    <td><a href="https://youtu.be/bCwcJ98R_Xw" title="Video By JS"><img src="https://i.imgur.com/zO18CbW.jpg"></a></td>
+    <td><a href="https://youtu.be/BQ0tF3MTyyc" title="Video By Tsai-Fi"><img src="https://i.imgur.com/eZzelq3.jpg"></a></td>
+  </tr>
+</table><br />
+
+What is OPKR 🔎🍴
+================
+
+This fork is specifically focused on Hyundai, Kia, and Genesis Vehicles, and is the ideal choice for enthusiasts seeking extreme customization and comprehensive control over the openpilot environment.
 
 Join our Discord 🎟️💬
 =================
@@ -25,11 +48,6 @@ Join our Discord 🎟️💬
 Click below to join us on the OPKR Discord server for discussions, questions, and updates!
 
 [<img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0b52aa9e99b832574a53_full_logo_blurple_RGB.png" width="150" height="30">](https://discord.gg/pppFp2pVW3)
-
-About This Fork 🔎🍴
-================
-
-This fork is specifically focused on Hyundai, Kia, and Genesis Vehicles, and is the ideal choice for enthusiasts seeking extreme customization and comprehensive control over the openpilot environment.
 
 Main Features 🌟🪄
 ==============
@@ -68,13 +86,13 @@ How To Install ❓💾
 
 - 📥 `Use the OPKR fork installer:`
   - Stable production branchs 
-    - Comma 2: https://opkr.o-r.kr/fork/c2
-    - Comma 3: https://opkr.o-r.kr/fork/c3
-    - Comma 3: https://opkr.o-r.kr/fork/opkr
+    - Comma 2: https://opkr.o-r.kr/c2
+    - Comma 3: https://opkr.o-r.kr/c3
+    - Comma 3: https://opkr.o-r.kr/opkr
 
   - Test branchs
-    - Comma 2: https://opkr.o-r.kr/fork/c2test
-    - Comma 3: https://opkr.o-r.kr/fork/c3test
+    - Comma 2: https://opkr.o-r.kr/c2test
+    - Comma 3: https://opkr.o-r.kr/c3test
 
 - ⌨️ `SSH:`
   - cd /data && mv openpilot openpilot_bak && git clone https://github.com/openpilotkr/openpilot.git -b OPKR && reboot <br />
@@ -83,103 +101,107 @@ Setting Menu ⚙️📌
 =============
 
  - `Device` (**Function Name:** Description)
-   - **Driving Camera:** You can preview/unview openpilot Driving Camera.
+   - **Driving Camera:** Ability to preview the openpilot Driving Camera.
 
  - `Network` (**Function Name:** Description)
-   - **HotSpot on Boot:** Turn on Hotspot when boot. (reboot required)
-   - **Use Legacy SSH Key:** Use old ssh key access(below 0.8.2). (no reboot required)
+   - **HotSpot on Boot:** Automatically turns on the hotspot during boot.  (reboot required)
+   - **Use Legacy SSH Key:** Uses the old ssh key access. (below 0.8.2) (no reboot required)
 
  - `Toggles` (**Function Name:** Description)
-   - **Enable Lane selector Mode:** Show a lane mode button on driving screen Laneline/LaneLess/AUTO. AUTO will automatically switch based on presence of lane markers. (no reboot required)
-   - **Enable Driver Monitoring:** On/Off driver monitoring for the EON without filterless IR camera or Someone cannot use front cam due to certain reasons.(reboot required)
-   - **Enable Driving Log Record:** Record driving logs to Local, not to online server. (reboot required)
-   - **Enable Sending Log to Server:** Enable log upload to online server. (reboot required)
-   - **Use Comma Stock UI:** this use original Comma's UI. Also this can be applied on driving screen in realtime (click MaxSpeed box at top-left corner). (no reboot required)
+   - **Enable Lane selector Mode:** Displays a lane mode button on the on-road driving screen, with Laneline/LaneLess/AUTO options. AUTO mode switches based on the presence of lane markers. (no reboot required)
+   - **Enable Driver Monitoring:** Toggles the driver monitoring feature. For devices without IR camera, a filterless IR camera, or for anyone unable to use the front cam for other reasons. (reboot required)
+   - **Enable Driving Log Record:** Records driving logs locally instead of on an online server. (reboot required)
+   - **Enable Sending Log to Server:** Enables log uploading to online server. (reboot required)
+   - **Use Comma Stock UI:** Enables the use of the original Comma UI. This can be applied on the on-road driving screen in real-time by clicking the MaxSpeed box at the top-left corner. (no reboot required)
 
  - `Software` (**Function Name:** Description)
-   - **Check for Updates:** You can confirm new commits of your fork, press ok will update and reboot.(like git pull).
-   - **Commit(Local/Remote):** Commit name of local(EON) and Remote.(run once when boot in manager.py, search gitcommit.sh at the file, internet connection required)
-   - **Git Pull On Boot:** run 'git pull' command when boot.
-   - **Load Preset/Save Preset:** Load your Parameters or Save Your Parameters. located /data/preset1 or /data/preset2. This function can save/load your settings)
-   - **Parameter Init:** Remove your settings changes and restore initial values.
-   - **Git Reset:** Remove your local changes and initialize to the original status of the branch.
-   - **Cancel Git Pull:** Move back to previous version of fork if last update is not desired.
+   - **Check for Updates:** Check for new commits of current fork. Pressing OK will initiate an update and reboot, similar to the 'git pull' command.
+   - **Commit(Local/Remote):** Commit name of local(device) and Remote.(run once when boot in manager.py, search gitcommit.sh at the file, internet connection required)
+   - **Git Pull On Boot:** Executes 'git pull' command during boot.
+   - **Load Preset/Save Preset:** Allows you to load or save your OPKR settings into two presets. The settings are stored in the files /data/preset1 and /data/preset2.
+   - **Parameter/Settings Reset :** Remove all user settings and restore default values.
+   - **Git Reset:** Discards local changes and reverts to the original status of the branch.
+   - **Cancel Git Pull:** Reverts to the previous version of the fork if the last update is not desired.
    - **Panda Flashing:** Run Panda flashing command manually. (This is not necessary on normal operation.)
-   - **Change Repo/Branch:** You can install others forks and/or branches through typing Git ID, Git Repository, Git Branch.
+   - **Change Repo/Branch:** Ability to install others forks and/or branches. Three prompts: Github Username, Github Repository, Github Branch.
 
  - `UI Menu` (**Function Name:** Description)
-   - **EON AutoShutdown:** When car ignition is turned off, the device will be shutdown after the set time.
-   - **EON ForceShutdown:** The device will be shutdown by force at offroad status after set time.
-   - **EON Volume Control(%):** Manually set device volume.
-   - **EON Brightness Control(%):** Manually set device brightness to particular brightness or set to let device automatically control .
-   - **EON SCR Off Timer:** The Brightness at SCR Off(%) will be in effect after set time when driving.
-   - **Brightness at SCR Off(%):** Work with (EON SCR Off Timer) setting, set screen brightness level %.
-   - **EON Detach Alert Sound:** Will play alert sound when your car ignition is turned off. (Can be used as a reminder to remove device from mount to protect from sun, theft, etc.)
+   - **Device Auto-Shutdown Time:** The device will be shutdown after the set time once car ignition is turned off.
+   - **Device Force-Shutdown Time:** The device will be shutdown by force at offroad status after the set time.
+   - **Deivce Volume Control(%):** Manually set device volume.
+   - **Device Brightness Control(%):** Manually set the device brightness to a specific percentage, or set it to adjust automatically.
+   - **Device Screen Off Timer:** The **Brightness at Screen Off(%)** setting will be in effect after this set time when driving.
+   - **Brightness at Screen Off(%):** Work with **Device Screen Off Timer setting** to set screen brightness level for timer.
+   - **Device Detach Reminder:** Will play alert sound when your car ignition is turned off. (Can be used as a reminder to remove device from mount to protect from sun, theft, etc.)
       - None
       - Korean
       - English
-   - **Enable Battery Charging Control:** battery charging control, min and max battery setting. (Not applicable for batteryless unit.)
-   - **Use Auto Screen Record:** At departure, screen recording starts automatically, when vehicle is stationary, screen recording stop.
-   - **Number of Recorded Files:** Max mp4 files that will be recorded before oldest file is overwritten. (to prevent device storage full)
-   - **Recording Quality:** Video quality of recordings
+   - **Enable Battery Charging Control:** Ability to configure min and max battery settings (not applicable for units without a battery).
+   - **Auto Screen Record:** Automatically begin screen recording upon departure and stops recording once the vehicle has been put in park.
+   - **Number of Recorded Files:** Set the maximum number of mp4 files to record before overwriting. (to prevent device storage filling up).
+   - **Recording Quality:** Adjust video quality of recordings. 
       - Low
       - Mid
       - High
       - U-High
-   - **Delete All Recorded Files:** from device /sdcard/videos
-   - **Delete All Driving Logs:** from device/sdcard/realdata
-   - **Driver Monitoring Mode:** Default/Unsleep (no reboot required)
-      - Default: This Comma's DM mode
-      - Unsleep: If you choose Unsleep, dm will be more sensitive than default. <br />
-        **You can switch the Mode on driving screen in realtime (touch monitoring face at bottom-left corner) <br />
-        **no background is Default Mode. Light green background is Unsleep Mode. 
+   - **Delete All Recorded Files:** Erase all recorded files from `/sdcard/videos` on the device.
+   - **Delete All Driving Logs:** Erase all driving logs from `/sdcard/realdata` on the device.
+   - **Driver Monitoring Mode:** Select Default or Unsleep. (reboot not required).
+      - Default: Uses the standard Comma's DM mode.
+      - Unsleep: A **MORE** sensitive DM mode than default. <br />
+        (Switch modes in real-time by tapping the DM face at the bottom-left corner of the on-road driving screen).  <br />
+        - No background is Default Mode. <br />
+        - Light green background is Unsleep Mode. 
    - **E2E EYE Threshold:** Experimental setting.
-   - **Normal EYE Threshold:** set the value below threshold of your face recognition.
+   - **Normal EYE Threshold:** Set the value below threshold of your face recognition.
    - **Blink Threshold:** For Driver Monitoring. Set the value below the threshold of your eyes blink recognition. The Driver Monitoring camera shows the values of your face recognition, eyes, and other metrics. (Preview 'Driver Camera' and check the recognition value of your eye blink to modify the value on menu.)
-   - **Navigation Select:** 
+   - **Navigation Select:** Choose navigation software:
       - iNavi (Korea)
       - Mappy (Korea)
       - Waze (Global)
-   - **RUN Navigation on Boot:** Run your selected iNavi, Mappy or Waze on boot. If it runs well, will go to background after few seconds.
-   - **Display Date on Screen:** shows the device date
-   - **Display Time on Screen:** shows the device time
-   - **API Server:** Choose driver log server
+   - **RUN Navigation on Boot:** Launch your selected navigation software on boot. (If loads correctly, it will automatically set to background task after a few seconds.)
+   - **Display Date on Screen:** Enable the device to display the current date.
+   - **Display Time on Screen:** Enable the device to display the current time.
+   - **API Server:** Choose the server to upload your driver logs:
       - OPKR
       - Comma
-      - User's
-   - **User's API:** Set User driver log server url.
-   - **Mapbox Style:** Choose from three styles
+      - User Defined
+   - **User's API Address:** Enter the URL for your driver log server.
+   - **Mapbox Style:** Choose a map style:
       - Mapbox
       - Comma
-      - OPKR (locallized in Korea) <br />
-        **if you want to use your own, Edit the file with yours(/data/params/d/MapboxStyleCustom). <br />
-        **You can make your mapbox style at https://studio.mapbox.com/. (If you publish the style you can use it.)
-   - **Top Text View:** Show Date/Time/Roadname at top of drive screen.
-   - **RPM Animation** Show RPMs on UI with adjustable limit
-   - **Show Stop Line**
-   - **Enable RTShield Process**
-   - **Offline OSM** (Korea only)(64G storage only) 
+      - OPKR (locallized in Korea)
+      - Customize your own map style
+        - Create a Mapbox style at https://studio.mapbox.com/ and publish it to use.
+        - Edit `/data/params/d/MapboxStyleCustom` with new map style.
+   - **Top Text View:** Display Date/Time/Roadname at the top of the driving screen.
+   - **RPM Animation:** Display RPMs on UI with a customizable limit.
+   - **Show Stop Line:** Enable visualization of stop lines on screen.
+   - **Enable RTShield Process:** Good for C2 openpilot, gives op higher cpu priority by ensuring CPU 3 always remains available for RT processes (runs as SCHED_FIFO with minimum priority to ensure kthreads don't get scheduled onto CPU 3, but it's always preemptible by realtime openpilot processes.) 
+   - **Offline OSM:** Enable offline use of OpenStreetMap. (Korea only) (64G storage only) 
 
  - `Driving Menu` (**Function Name:** Description)
-   - **Use Auto Resume at Stop:** after standstill, op will auto resume when leadcar start moving.
-   - **RES count at standstill:** some model need to be adjusted so car move when lead car start moving.(reboot required)
-   - **Change Cruise Gap at Stop:** Cruise Gap changed to 1 step for departure faster, it gets back to orignal Gap after few second.
-   - **Standstill Resume Alternative:** Some model need this for Auto Resume at Stop.
-   - **Use Cruise Button Spamming:** SCC set speed is changed up and down automatically. turn on to use many functions related to auto speed control.
-   - **Cruise Start Mode:** Set your custom Cruise Mode when boot. There are 6 modes. (OpenpilotStock/Dist+Curv/Dist/Curv/Oneway/CamSpeed) 
-      - OpenpilotStock: SCC button will set SCC speed, will work like stock button to set op. 
-      - Dist+Curv: changed by distance to leadcar and curvature. 
-      - Dist: distance only. 
-      - Curv: curvature only. 
-      - Oneway: change camera offset to approach the edge of a road. 
-      - CamSpeed: is changing set speed only by value of speed sign (OSM, iNavi, Mappy).
-   - **LaneChange Speed:** minimum lane change speed
-   - **LaneChange Delay:** adjust delay time before lane change
-      - Nudge/Nudgeless/Set Seconds
-   - **LaneChange Time(km/h: value):** How quick should lane change be completed, faster, increase the value, decrease for slower.
-   - **LeftCurv Offset:** if you are not satisfy with Left Curve Section, this can move your car to left or right side.(no reboot required)
+   - **Use Auto Resume at Stop:** After standstill, op will auto-resume when lead car start moving.
+   - **RES count at standstill:** Some model need RES count to be adjusted so car moves when lead car starts moving. (reboot required)
+   - **Accelerated Departure by Cruise Gap:** Cruise gap automatically changed to step 1 for faster departure, sets back to orignal gap selection after few second.
+   - **Alternative Standstill Resume:** Some model need this for Auto Resume at Stop.
+   - **Use Cruise Button Spamming:** For use in conjunction with stock SCC. The set speed is automatically changed up and down to facilitate many functions related to OPKR's auto speed control features.
+   - **Cruise Start Mode:** Set your custom Cruise Mode when boot. There are 6 modes. (OpenpilotStock, Dist+Curv, Dist, Curv, Oneway, CamSpeed) 
+      - OpenpilotStock: SCC button will set SCC speed, and then will work like stock button to set op. 
+      - Dist+Curv: Changed set speed by distance to lead car and curvature. 
+      - Dist: Changed set speed by Distance only. 
+      - Curv: Changed set speed by Curvature only. 
+      - Oneway: Changed set speed by camera offset to approach the edge of a road. 
+      - CamSpeed: Changing set speed only by value of speed sign (OSM, iNavi, Mappy).
+   - **LaneChange Speed:** Minimum speed op will assist making lane changes.
+   - **LaneChange Delay:** Adjust time before lane change initiates.
+      - Nudge
+      - Nudgeless
+      - Set seconds
+   - **LaneChange Time(km/h: value):** Adjust amount of time for lane change to be completed. For faster lane change increase the value, for slower decrease.
+   - **LeftCurv Offset:** If you are not satisfy with Left Curve Section, this can move your car to left or right side.(no reboot required)
    - **RightCurv Offset:** if you are not satisfy with Right Curve Section, this can move your car to left or right side.(no reboot required)
-   - **Show BSM Status:** Show when a car is in blindspot. need car BSM function.
+   - **Show BSM Status:** Shows when a car is in blindspot on UI. (Requires BSM feature on vehicle)
    - **Steer Control Method** Choose between normal and smooth.
    - **Max Steering Angle:** Default is 90. If you want more, increase this. Some car will not accept value above 90.
    - **Str Angle Adjust:** To keep car on a straight road, If the value of steering angle is not 0.0, adjust this to be 0.0

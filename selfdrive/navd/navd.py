@@ -310,6 +310,7 @@ class RouteEngine:
   def reset_recompute_limits(self):
     self.recompute_backoff = 0
     self.recompute_countdown = 0
+
   def should_recompute(self):
     if self.step_idx is None or self.route is None:
       return True

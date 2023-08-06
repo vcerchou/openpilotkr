@@ -121,15 +121,18 @@ class Controls:
     passive = self.params.get_bool("Passive") or not openpilot_enabled_toggle
 
     self.auto_enabled = self.params.get_bool("AutoEnable") and self.params.get_bool("UFCModeEnabled")
-    self.variable_cruise = self.params.get_bool('OpkrVariableCruise')
-    self.cruise_over_maxspeed = self.params.get_bool('CruiseOverMaxSpeed')
-    self.cruise_road_limit_spd_enabled = self.params.get_bool('CruiseSetwithRoadLimitSpeedEnabled')
+    self.variable_cruise = self.params.get_bool("OpkrVariableCruise")
+    self.cruise_over_maxspeed = self.params.get_bool("CruiseOverMaxSpeed")
+    self.cruise_road_limit_spd_enabled = self.params.get_bool("CruiseSetwithRoadLimitSpeedEnabled")
     self.cruise_road_limit_spd_offset = int(self.params.get("CruiseSetwithRoadLimitSpeedOffset", encoding="utf8"))
-    self.stock_lkas_on_disengaged_status = self.params.get_bool('StockLKASEnabled')
-    self.no_mdps_mods = self.params.get_bool('NoSmartMDPS')
+    self.stock_lkas_on_disengaged_status = self.params.get_bool("StockLKASEnabled")
+    self.no_mdps_mods = self.params.get_bool("NoSmartMDPS")
+    self.ufc_mode = self.params.get_bool("UFCModeEnabled")
 
     self.cruise_road_limit_spd_switch = True
     self.cruise_road_limit_spd_switch_prev = 0
+    
+    self.long_alt = int(self.params.get("OPKRLongAlt", encoding="utf8"))
 
     # detect sound card presence and ensure successful init
     sounds_available = HARDWARE.get_sound_card_online()
@@ -322,16 +325,17 @@ class Controls:
       self.events.add(EventName.resumeBlocked)
 
     # Disable on rising edge of accelerator or brake. Also disable on brake when speed > 0
-    #if (CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
-    #  (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill)) or \
-    #  (CS.regenBraking and (not self.CS_prev.regenBraking or not CS.standstill)):
-    #  self.events.add(EventName.pedalPressed)
+    if not self.ufc_mode:
+      if (CS.gasPressed and not self.CS_prev.gasPressed and self.disengage_on_accelerator) or \
+        (CS.brakePressed and (not self.CS_prev.brakePressed or not CS.standstill)) or \
+        (CS.regenBraking and (not self.CS_prev.regenBraking or not CS.standstill)):
+        self.events.add(EventName.pedalPressed)
 
-    #if CS.brakePressed and CS.standstill:
-    #  self.events.add(EventName.preEnableStandstill)
+      if CS.brakePressed and CS.standstill:
+        self.events.add(EventName.preEnableStandstill)
 
-    #if CS.gasPressed:
-    #  self.events.add(EventName.gasPressedOverride)
+      if CS.gasPressed:
+        self.events.add(EventName.gasPressedOverride)
 
     if not self.CP.notCar:
       self.events.add_from_msg(self.sm['driverMonitoringState'].events)
@@ -544,7 +548,7 @@ class Controls:
         self.events.add(EventName.localizerMalfunction)
 
     # atom
-    if self.auto_enabled and not self.no_mdps_mods:
+    if self.auto_enabled and not self.no_mdps_mods and self.ufc_mode:
       self.ready_timer += 1 if self.ready_timer < 350 else 350
       self.auto_enable( CS )
 
@@ -677,7 +681,8 @@ class Controls:
           else:
             self.state = State.enabled
           self.current_alert_types.append(ET.ENABLE)
-          #self.v_cruise_helper.initialize_v_cruise(CS, self.experimental_mode)
+          if not self.long_alt not in (1, 2)):
+            self.v_cruise_helper.initialize_v_cruise(CS, self.experimental_mode)
 
     # Check if openpilot is engaged and actuators are enabled
     self.enabled = self.state in ENABLED_STATES
@@ -715,11 +720,16 @@ class Controls:
     CC.enabled = self.enabled
 
     # Check which actuators can be enabled
-    standstill = (CS.vEgo <= max(self.CP.minSteerSpeed, MIN_LATERAL_CONTROL_SPEED) and self.no_mdps_mods) or CS.standstill
-    CC.latActive = self.active and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
-                   (not standstill or self.joystick_mode) and not self.lkas_temporary_off
-    CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
-
+    if self.ufc_mode:
+      standstill = (CS.vEgo <= max(self.CP.minSteerSpeed, MIN_LATERAL_CONTROL_SPEED) and self.no_mdps_mods) or CS.standstill
+      CC.latActive = self.active and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
+                     (not standstill or self.joystick_mode) and not self.lkas_temporary_off
+      CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
+    else:
+      standstill = CS.vEgo <= max(self.CP.minSteerSpeed, MIN_LATERAL_CONTROL_SPEED) or CS.standstill
+      CC.latActive = self.active and not CS.steerFaultTemporary and not CS.steerFaultPermanent and \
+                     (not standstill or self.joystick_mode)
+      CC.longActive = self.enabled and not self.events.any(ET.OVERRIDE_LONGITUDINAL) and self.CP.openpilotLongitudinalControl
     #print('CON_latActive={}'.format(CC.latActive))
 
     actuators = CC.actuators

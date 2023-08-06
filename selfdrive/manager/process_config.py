@@ -35,8 +35,7 @@ EnableOSM = Params().get_bool('OSMEnable') or Params().get_bool('OSMSpeedLimitEn
 EnableExternalNavi = Params().get("OPKRNaviSelect", encoding="utf8") == "1" or Params().get("OPKRNaviSelect", encoding="utf8") == "2"
 
 procs = [
-  # due to qualcomm kernel bugs SIGKILLing camerad sometimes causes page table corruption
-  NativeProcess("camerad", "system/camerad", ["./camerad"], unkillable=True, callback=driverview),
+  NativeProcess("camerad", "system/camerad", ["./camerad"], callback=driverview),
   NativeProcess("clocksd", "system/clocksd", ["./clocksd"]),
   #NativeProcess("logcatd", "system/logcatd", ["./logcatd"]),
   NativeProcess("proclogd", "system/proclogd", ["./proclogd"]),

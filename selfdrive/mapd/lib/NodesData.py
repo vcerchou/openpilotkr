@@ -1,9 +1,6 @@
-import os
-import sys
 import numpy as np
 from enum import Enum
 from selfdrive.mapd.lib.geo import DIRECTION, R, vectors
-[sys.path.append(i) for i in ['/data/openpilot/pyextra', '/data/openpilot/pyextra/..']]
 from scipy.interpolate import splev, splprep
 
 

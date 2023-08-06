@@ -108,6 +108,11 @@ void ScreenRecoder::start() {
   if(recording)
     return;
 
+  char purge[128] = "";
+  char videos_dir[50] = "/data/media";
+  snprintf(purge,sizeof(purge),"ls -td1 %s/*.mp4 | tail -n +%d | xargs rm -f&", videos_dir, uiState()->scene.recording_count);
+  system(purge);
+
   char filename[64];
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);

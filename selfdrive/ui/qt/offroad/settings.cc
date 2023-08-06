@@ -478,7 +478,7 @@ DrivingPanel::DrivingPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new LCTimingFactor());
   layout->addWidget(new LeftCurvOffset());
   layout->addWidget(new RightCurvOffset());
-  layout->addWidget(new BlindSpotDetectToggle());
+  //layout->addWidget(new BlindSpotDetectToggle());
 
   layout->addWidget(new CSteerWidget());
   layout->addWidget(new SteerAngleCorrection());

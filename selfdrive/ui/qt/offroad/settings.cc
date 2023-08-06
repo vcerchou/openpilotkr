@@ -416,6 +416,7 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new BrightnessOffControl());
   layout->addWidget(new DoNotDisturbMode());  
   layout->addWidget(new GetOffAlert());
+  layout->addWidget(horizontal_line());
   layout->addWidget(new DrivingRecordToggle());
   layout->addWidget(new RecordCount());
   //layout->addWidget(new RecordQuality());

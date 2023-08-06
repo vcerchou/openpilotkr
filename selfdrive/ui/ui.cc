@@ -615,7 +615,7 @@ void Device::updateBrightness(const UIState &s) {
   int brightness = brightness_filter.update(clipped_brightness);
   if (!awake) {
     brightness = 0;
-  } else if ((s.scene.comma_stock_ui == 2 && (s.scene.do_not_disturb_mode == 1 || s.scene.do_not_disturb_mode == 3)) && s.scene.started && sleep_time == 0) {
+  } else if ((s.scene.enabled && s.scene.comma_stock_ui == 2 && (s.scene.do_not_disturb_mode == 1 || s.scene.do_not_disturb_mode == 3)) && s.scene.started && sleep_time == 0) {
     brightness = 0;
   } else if (s.scene.started && sleep_time == 0 && s.scene.autoScreenOff != -3) {
     if (s.scene.brightness_off < 4) {

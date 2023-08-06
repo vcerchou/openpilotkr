@@ -87,6 +87,7 @@ void OnroadWindow::updateState(const UIState &s) {
   }
 
   if (s.scene.brakePress) bgColor = bg_colors[STATUS_DISENGAGED];
+  if (s.scene.comma_stock_ui == 2) bgColor = bg_colors[STATUS_DND];
 
   nvg->updateState(s);
 

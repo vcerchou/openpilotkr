@@ -5,6 +5,9 @@ import numpy as np
 from time import strftime, gmtime
 import cereal.messaging as messaging
 from common.realtime import Ratekeeper
+from common.basedir import BASEDIR
+sys.path.append(os.path.join(BASEDIR, "pyextra"))
+import overpy
 from selfdrive.mapd.lib.osm import OSM
 from selfdrive.mapd.lib.geo import distance_to_points
 from selfdrive.mapd.lib.WayCollection import WayCollection

@@ -2049,5 +2049,5 @@ DBC = {
   CAR.K7_HEV_YG: dbc_dict('hyundai_kia_generic', RadarTrack),
   CAR.SOUL_EV_SK3: dbc_dict('hyundai_kia_generic', RadarTrack),
   CAR.MOHAVE_HM: dbc_dict('hyundai_kia_generic', RadarTrack),
-  CAR.KONA_EV_2ND_GEN: dbc_dict('hyundai_canfd', RadarTrack),
+  CAR.KONA_EV_2ND_GEN: dbc_dict('hyundai_canfd', None),
 }

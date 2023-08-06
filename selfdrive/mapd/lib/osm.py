@@ -3,12 +3,13 @@ import sys
 import subprocess
 import numpy as np
 from selfdrive.mapd.lib.geo import R
-from selfdrive.mapd.lib.helpers import is_local_osm_installed
 
 from common.basedir import BASEDIR
 sys.path.append(os.path.join(BASEDIR, "pyextra"))
 
 import overpy
+
+from selfdrive.mapd.lib.helpers import is_local_osm_installed
 
 _LOCAL_OSM = is_local_osm_installed()
 

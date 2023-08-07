@@ -51,8 +51,10 @@ def get_radar_can_parser(CP):
 class RadarInterface(RadarInterfaceBase):
   def __init__(self, CP):
     super().__init__(CP)
+
+    self.CP = CP
     
-    if USE_RADAR_TRACK:
+    if USE_RADAR_TRACK or self.CP.carFingerprint in CANFD_CAR:
       self.updated_messages = set()
       self.trigger_msg = RADAR_START_ADDR + RADAR_MSG_COUNT - 1
       self.track_id = 0
@@ -67,7 +69,7 @@ class RadarInterface(RadarInterfaceBase):
       self.radar_off_can = CP.radarUnavailable
 
   def update(self, can_strings):
-    if USE_RADAR_TRACK:
+    if USE_RADAR_TRACK or self.CP.carFingerprint in CANFD_CAR:
       if self.radar_off_can or (self.rcp is None):
         return super().update(None)
     else:
@@ -88,7 +90,7 @@ class RadarInterface(RadarInterfaceBase):
   def _update(self, updated_messages):
     ret = car.RadarData.new_message()
 
-    if USE_RADAR_TRACK:
+    if USE_RADAR_TRACK or self.CP.carFingerprint in CANFD_CAR:
       if self.rcp is None:
         return ret
 

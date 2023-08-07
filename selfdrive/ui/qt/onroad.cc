@@ -1373,8 +1373,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         szTuneName = "LQR: DcGain";
       }
     } else if (lateralControlMethod == 3) {     // 3.TORQUE
-      float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
-
       if ( list_menu == 0 ) {
         szTuneParam.sprintf("%0.1f", s->scene.torqueKp*0.1);
         szTuneName = "TORQUE: Kp";
@@ -1392,7 +1390,6 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         szTuneName = "TORQUE: Fric";
       }
     } else if (lateralControlMethod == 4) {     // 4.MULTI
-      float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
       if ( list_menu == 0 ) {
         szTuneParam.sprintf("%0.2f", s->scene.pidKp*0.01);
         szTuneName = "Pid: Kp";

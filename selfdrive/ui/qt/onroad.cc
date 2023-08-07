@@ -1376,13 +1376,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
       float max_lat_accel = s->scene.torqueMaxLatAccel * 0.1;
 
       if ( list_menu == 0 ) {
-        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKp*0.1, (s->scene.torqueKp*0.1)/max_lat_accel);
+        szTuneParam.sprintf("%0.1f", s->scene.torqueKp*0.1);
         szTuneName = "TORQUE: Kp";
       } else if ( list_menu == 1 ) {
-        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKf*0.1, (s->scene.torqueKf*0.1)/max_lat_accel);
+        szTuneParam.sprintf("%0.1f", s->scene.torqueKf*0.1);
         szTuneName = "TORQUE: Kf";
       } else if ( list_menu == 2 ) {
-        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKi*0.1, (s->scene.torqueKi*0.1)/max_lat_accel);
+        szTuneParam.sprintf("%0.1f", s->scene.torqueKi*0.1);
         szTuneName = "TORQUE: Ki";
       } else if ( list_menu == 3 ) {
         szTuneParam.sprintf("%0.1f", s->scene.torqueMaxLatAccel*0.1);
@@ -1427,13 +1427,13 @@ void AnnotatedCameraWidget::drawHud(QPainter &p) {
         szTuneParam.sprintf("%0.5f", s->scene.lqrDcGain*0.00001);
         szTuneName = "LQR: DcGain";
       } else if ( list_menu == 11 ) {
-        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKp*0.1, (s->scene.torqueKp*0.1)/max_lat_accel);
+        szTuneParam.sprintf("%0.1f", s->scene.torqueKp*0.1);
         szTuneName = "TORQUE: Kp";
       } else if ( list_menu == 12 ) {
-        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKf*0.1, (s->scene.torqueKf*0.1)/max_lat_accel);
+        szTuneParam.sprintf("%0.1f", s->scene.torqueKf*0.1);
         szTuneName = "TORQUE: Kf";
       } else if ( list_menu == 13 ) {
-        szTuneParam.sprintf("%0.1f>%0.2f", s->scene.torqueKi*0.1, (s->scene.torqueKi*0.1)/max_lat_accel);
+        szTuneParam.sprintf("%0.1f", s->scene.torqueKi*0.1);
         szTuneName = "TORQUE: Ki";
       } else if ( list_menu == 14 ) {
         szTuneParam.sprintf("%0.1f", s->scene.torqueMaxLatAccel*0.1);

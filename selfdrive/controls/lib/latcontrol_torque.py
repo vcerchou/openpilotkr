@@ -49,9 +49,9 @@ class LatControlTorque(LatControl):
     self.mpc_frame += 1
     if self.mpc_frame % 300 == 0:
       self.max_lat_accel = float(Decimal(self.params.get("TorqueMaxLatAccel", encoding="utf8")) * Decimal('0.1'))
-      self.kp = float(Decimal(self.params.get("TorqueKp", encoding="utf8")) * Decimal('0.1')) / self.max_lat_accel
-      self.kf = float(Decimal(self.params.get("TorqueKf", encoding="utf8")) * Decimal('0.1')) / self.max_lat_accel
-      self.ki = float(Decimal(self.params.get("TorqueKi", encoding="utf8")) * Decimal('0.1')) / self.max_lat_accel
+      self.kp = float(Decimal(self.params.get("TorqueKp", encoding="utf8")) * Decimal('0.1'))
+      self.kf = float(Decimal(self.params.get("TorqueKf", encoding="utf8")) * Decimal('0.1'))
+      self.ki = float(Decimal(self.params.get("TorqueKi", encoding="utf8")) * Decimal('0.1'))
       self.friction = float(Decimal(self.params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001'))
       self.use_steering_angle = self.params.get_bool('TorqueUseAngle')
       self.steering_angle_deadzone_deg = float(Decimal(self.params.get("TorqueAngDeadZone", encoding="utf8")) * Decimal('0.1'))

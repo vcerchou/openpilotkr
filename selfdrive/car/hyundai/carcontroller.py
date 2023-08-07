@@ -1209,9 +1209,9 @@ class CarController:
             self.str_log2 = 'T={:04.0f}/{:05.3f}/{:07.5f}'.format(float(Decimal(self.c_params.get("Scale", encoding="utf8"))*Decimal('1.0')), \
             float(Decimal(self.c_params.get("LqrKi", encoding="utf8"))*Decimal('0.001')), float(Decimal(self.c_params.get("DcGain", encoding="utf8"))*Decimal('0.00001')))
           elif self.CP.lateralTuning.which() == 'torque':
-            max_lat_accel = float(Decimal(self.c_params.get("TorqueMaxLatAccel", encoding="utf8"))*Decimal('0.1'))
-            self.str_log2 = 'T={:0.2f}/{:0.2f}/{:0.2f}/{:0.3f}'.format(float(Decimal(self.c_params.get("TorqueKp", encoding="utf8"))*Decimal('0.1'))/max_lat_accel, \
-            float(Decimal(self.c_params.get("TorqueKf", encoding="utf8"))*Decimal('0.1'))/max_lat_accel, float(Decimal(self.c_params.get("TorqueKi", encoding="utf8"))*Decimal('0.1'))/max_lat_accel, \
+            self.str_log2 = 'T={:0.1f}/{:0.1f}/{:0.1f}/{:0.1f}/{:0.3f}'.format(float(Decimal(self.c_params.get("TorqueMaxLatAccel", encoding="utf8"))*Decimal('0.1')), \
+            float(Decimal(self.c_params.get("TorqueKp", encoding="utf8"))*Decimal('0.1')), \
+            float(Decimal(self.c_params.get("TorqueKf", encoding="utf8"))*Decimal('0.1')), float(Decimal(self.c_params.get("TorqueKi", encoding="utf8"))*Decimal('0.1')), \
             float(Decimal(self.c_params.get("TorqueFriction", encoding="utf8")) * Decimal('0.001')))
         elif self.CP.lateralTuning.which() == 'torque' and self.live_torque_params:
           torque_params = self.sm['liveTorqueParameters']

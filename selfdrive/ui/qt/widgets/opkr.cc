@@ -4639,12 +4639,9 @@ TorqueKp::TorqueKp() : AbstractControl(tr("Kp"), tr("Adjust Kp"), "../assets/off
 
 void TorqueKp::refresh() {
   auto strs = QString::fromStdString(params.get("TorqueKp"));
-  auto strs1 = QString::fromStdString(params.get("TorqueMaxLatAccel"));
-  float max_lat_accel = strs1.toInt() * 0.1;
   int valuei = strs.toInt();
   float valuef = valuei * 0.1;
-  float valuef1 = valuef/max_lat_accel;
-  QString valuefs = QString::number(valuef) + "/" + QString::number(max_lat_accel) + "= " + QString::number(valuef1);
+  QString valuefs = QString::number(valuef);
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
@@ -4707,12 +4704,9 @@ TorqueKf::TorqueKf() : AbstractControl(tr("Kf"), tr("Adjust Kf"), "../assets/off
 
 void TorqueKf::refresh() {
   auto strs = QString::fromStdString(params.get("TorqueKf"));
-  auto strs1 = QString::fromStdString(params.get("TorqueMaxLatAccel"));
-  float max_lat_accel = strs1.toInt() * 0.1;
   int valuei = strs.toInt();
   float valuef = valuei * 0.1;
-  float valuef1 = valuef/max_lat_accel;
-  QString valuefs = QString::number(valuef) + "/" + QString::number(max_lat_accel) + "= " + QString::number(valuef1);
+  QString valuefs = QString::number(valuef);
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 
@@ -4775,12 +4769,9 @@ TorqueKi::TorqueKi() : AbstractControl(tr("Ki"), tr("Adjust Ki"), "../assets/off
 
 void TorqueKi::refresh() {
   auto strs = QString::fromStdString(params.get("TorqueKi"));
-  auto strs1 = QString::fromStdString(params.get("TorqueMaxLatAccel"));
-  float max_lat_accel = strs1.toInt() * 0.1;
   int valuei = strs.toInt();
   float valuef = valuei * 0.1;
-  float valuef1 = valuef/max_lat_accel;
-  QString valuefs = QString::number(valuef) + "/" + QString::number(max_lat_accel) + "= " + QString::number(valuef1);
+  QString valuefs = QString::number(valuef);
   label.setText(QString::fromStdString(valuefs.toStdString()));
 }
 

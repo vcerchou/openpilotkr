@@ -408,14 +408,14 @@ UIPanel::UIPanel(QWidget *parent) : QFrame(parent) {
   layout->setSpacing(30);
 
   // OPKR
-  //layout->addWidget(new AutoShutdown());
+  layout->addWidget(new AutoShutdown());
   //layout->addWidget(new ForceShutdown());
   layout->addWidget(new VolumeControl());
   layout->addWidget(new BrightnessControl());
   layout->addWidget(new AutoScreenOff());
   layout->addWidget(new BrightnessOffControl());
   layout->addWidget(new DoNotDisturbMode());  
-  layout->addWidget(new GetOffAlert());
+  //layout->addWidget(new GetOffAlert());
   layout->addWidget(horizontal_line());
   layout->addWidget(new DrivingRecordToggle());
   layout->addWidget(new RecordCount());

@@ -1050,7 +1050,7 @@ class CarController:
                   accel = aReqValue
               elif aReqValue < 0.0 and CS.lead_distance < self.stoppingdist+0.5 and accel >= aReqValue and lead_objspd <= 0 and self.stopping_dist_adj_enabled:
                 if CS.lead_distance < 1.7:
-                  accel = self.accel - (DT_CTRL * 4.0)
+                  accel = self.accel - (DT_CTRL * 3.0)
                 elif CS.lead_distance < self.stoppingdist+0.5:
                   accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.0, 1.0, 2.0], [0.05, 1.0, 5.0]))
               elif aReqValue < 0.0:
@@ -1104,11 +1104,11 @@ class CarController:
                 stock_weight = 0.0
                 self.change_accel_fast = False
                 accel = accel * (1.0 - stock_weight) + aReqValue * stock_weight
-            elif 0.1 < self.dRel < (self.stoppingdist + 0.5) and int(self.vRel*3.6) < 0:
-              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [1.0, 3.0], [0.5, 3.0]))
+            elif 0.1 < self.dRel < (self.stoppingdist + 1.0) and int(self.vRel*3.6) < 0:
+              accel = self.accel - (DT_CTRL * interp(CS.out.vEgo, [0.0, 1.0, 2.0], [0.05, 1.0, 5.0]))
               self.stopped = False
             elif 0.1 < self.dRel < (self.stoppingdist + 1.0):
-              accel = accel
+              accel = min(-0.5, faccel*0.3)
               if stopping:
                 self.stopped = True
               else:
@@ -1128,12 +1128,12 @@ class CarController:
               if self.stopsign_enabled or self.experimental_mode:
                 if self.sm['longitudinalPlan'].longitudinalPlanSource == LongitudinalPlanSource.stop:
                   self.smooth_start = True
-                  accel = accel
+                  accel = min(-0.5, accel, faccel*0.3)
                 elif self.smooth_start and CS.clu_Vanz < round(CS.VSetDis):
-                  accel = interp(CS.clu_Vanz, [0, round(CS.VSetDis)], [accel, aReqValue])
+                  accel = interp(CS.clu_Vanz, [0, round(CS.VSetDis)], [min(accel, faccel), aReqValue])
                 else:
                   self.smooth_start = False
-                  accel = accel
+                  accel = aReqValue if self.dRel < 0.1 else accel
               else:
                 accel = aReqValue
           else:

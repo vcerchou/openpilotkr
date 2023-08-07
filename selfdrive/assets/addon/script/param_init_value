@@ -74,7 +74,7 @@ SteerThreshold:150
 RecordingCount:200
 RecordingQuality:1
 CruiseGapAdjust:0
-AutoEnable:1
+AutoEnable:0
 CruiseAutoRes:0
 AutoResOption:0
 AutoResCondition:0
@@ -82,6 +82,7 @@ OpkrMonitoringMode:0
 OpkrMonitorEyesThreshold:45
 OpkrMonitorNormalEyesThreshold:45
 OpkrMonitorBlinkThreshold:35
+UFCModeEnabled:0
 CruiseGap1:11
 CruiseGap2:12
 CruiseGap3:13
@@ -101,7 +102,7 @@ AutoEnableSpeed:9
 SafetyCamDecelDistGain:0
 OpkrLiveTunePanelEnable:0
 RadarLongHelper:2
-LiveSteerRatioPercent:-5
+LiveSteerRatioPercent:0
 StoppingDistAdj:0
 ShowError:1
 AutoResLimitTime:10
@@ -116,8 +117,9 @@ E2ELong:0
 OSMEnable:0
 OSMSpeedLimitEnable:0
 OPKRMapboxStyleSelect:0
-RESCountatStandstill:16
+RESCountatStandstill:18
 OpkrSpeedLimitOffsetOption:0
+StockLKASEnabled:0
 CurvDecelOption:2
 AutoRESDelay:1
 UseRadarTrack:0
@@ -129,7 +131,7 @@ SpdLaneWidthSet:2.8,3.5
 CloseToRoadEdge:0
 LeftEdgeOffset:0
 RightEdgeOffset:0
-AvoidLKASFaultEnabled:0
+AvoidLKASFaultEnabled:1
 AvoidLKASFaultMaxAngle:85
 AvoidLKASFaultMaxFrame:89
 AvoidLKASFaultBeyond:0
@@ -142,11 +144,11 @@ MultipleLateralOpS:3,3,0
 MultipleLateralSpd:60,90
 MultipleLateralOpA:3,3,0
 MultipleLateralAng:20,35
-StoppingDist:38
+StoppingDist:35
 SpeedCameraOffset:0
 OSMOfflineUse:0
 StopAtStopSign:0
-VarCruiseSpeedFactor:10
+VarCruiseSpeedFactor:15
 OPKRSpeedBump:0
 OPKREarlyStop:1
 DoNotDisturbMode:0

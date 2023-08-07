@@ -230,7 +230,6 @@ void CSteerWidget::FrameNormal(QWidget *parent)
     );
   pMenu1->SetControl( 80, 360, 10 );
   pMenu1->SetString( 80, "NoLimit");
-  pMenu1->refresh();
   menu_layout->addWidget( pMenu1 );
 }
 

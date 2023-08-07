@@ -83,7 +83,7 @@ class CarInterface(CarInterfaceBase):
     
     tire_stiffness_factor = 1.
 
-    set_long_tune(ret.longitudinalTuning, LongTunes.OPKR)
+    #set_long_tune(ret.longitudinalTuning, LongTunes.OPKR)
     lat_control_method = int(params.get("LateralControlMethod", encoding="utf8"))
     if lat_control_method == 0:
       set_lat_tune(ret.lateralTuning, LatTunes.PID)
@@ -337,8 +337,8 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kiV = [0.0]
       ret.experimentalLongitudinalAvailable = candidate in (HYBRID_CAR | EV_CAR) and candidate not in CANFD_RADAR_SCC_CAR
     else:
-      #ret.longitudinalTuning.kpV = [0.5]
-      #ret.longitudinalTuning.kiV = [0.0]
+      ret.longitudinalTuning.kpV = [0.5]
+      ret.longitudinalTuning.kiV = [0.0]
       ret.experimentalLongitudinalAvailable = True #candidate not in (LEGACY_SAFETY_MODE_CAR | CAMERA_SCC_CAR)
 
 

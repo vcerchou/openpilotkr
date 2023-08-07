@@ -5,6 +5,7 @@ from cereal import car
 from opendbc.can.parser import CANParser
 from selfdrive.car.interfaces import RadarInterfaceBase
 from selfdrive.car.hyundai.values import DBC
+from selfdrive.car.hyundai.values import CANFD_CAR
 from common.params import Params
 
 RADAR_START_ADDR = 0x500
@@ -13,7 +14,7 @@ RADAR_MSG_COUNT = 32
 USE_RADAR_TRACK = Params().get_bool("UseRadarTrack") and Params().get_bool("ExperimentalLongitudinalEnabled")
 
 def get_radar_can_parser(CP):
-  if USE_RADAR_TRACK:
+  if USE_RADAR_TRACK or CP.carFingerprint in CANFD_CAR:
     if DBC[CP.carFingerprint]['radar'] is None:
       return None
 

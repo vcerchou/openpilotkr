@@ -8597,3 +8597,38 @@ void LongAlternative::refresh() {
     label.setText(tr("None"));
   }
 }
+
+MapboxToken::MapboxToken() : AbstractControl(tr("MapboxToken"), tr("Mapbox Token"), "") {
+  btn.setStyleSheet(R"(
+    padding: -10;
+    border-radius: 35px;
+    font-size: 35px;
+    font-weight: 500;
+    color: #E4E4E4;
+    background-color: #393939;
+  )");
+  edit.setStyleSheet(R"(
+    background-color: grey;
+    font-size: 55px;
+    font-weight: 500;
+    height: 120px;
+  )");
+  btn.setFixedSize(200, 100);
+  hlayout->addWidget(&edit);
+  hlayout->addWidget(&btn);
+
+  QObject::connect(&btn, &QPushButton::clicked, [=]() {
+    QString targetvalue = InputDialog::getText(tr("MapboxToken"), this, tr("Put your MapboxToken starting with pk."), false, 1, QString::fromStdString(params.get("MapboxToken")));
+    if (targetvalue.length() > 0 && targetvalue != QString::fromStdString(params.get("MapboxToken"))) {
+      params.put("MapboxToken", targetvalue.toStdString());
+      refresh();
+    }
+   });
+  refresh();
+}
+
+void MapboxToken::refresh() {
+  auto strs = QString::fromStdString(params.get("MapboxToken"));
+  edit.setText(QString::fromStdString(strs.toStdString()));
+  btn.setText(tr("SET"));
+}

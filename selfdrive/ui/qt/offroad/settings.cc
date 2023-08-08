@@ -540,6 +540,7 @@ DeveloperPanel::DeveloperPanel(QWidget *parent) : QFrame(parent) {
   layout->addWidget(new JoystickModeToggle());
   layout->addWidget(new NoSmartMDPSToggle());
   layout->addWidget(new UserSpecificFeature());
+  layout->addWidget(new MapboxToken());
 
   layout->addWidget(horizontal_line());
   layout->addWidget(new CarSelectCombo());

@@ -2774,3 +2774,17 @@ private:
   
   void refresh();
 };
+
+class MapboxToken : public AbstractControl {
+  Q_OBJECT
+
+public:
+  MapboxToken();
+
+private:
+  QPushButton btn;
+  QLineEdit edit;
+  Params params;
+
+  void refresh();
+};

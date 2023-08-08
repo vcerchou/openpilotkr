@@ -233,9 +233,9 @@ static const addr_checks* hyundai_community2_init(uint16_t param) {
   controls_allowed = false;
   relay_malfunction_reset();
 
-  if (current_board->has_obd && HKG_forward_obd) {
-    current_board->set_can_mode(CAN_MODE_OBD_CAN2);
-  }
+  // if (current_board->has_obd && HKG_forward_obd) {
+  //   current_board->set_can_mode(CAN_MODE_OBD_CAN2);
+  // }
 
   hyundai_community2_rx_checks = (addr_checks){hyundai_community2_addr_checks, HYUNDAI_COMMUNITY2_ADDR_CHECK_LEN};
   return &hyundai_community2_rx_checks;

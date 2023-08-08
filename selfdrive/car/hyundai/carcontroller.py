@@ -355,7 +355,7 @@ class CarController:
       lat_active = False
 
     # >90 degree steering fault prevention
-    if self.to_avoid_lkas_fault_enabled:
+    if self.to_avoid_lkas_fault_enabled or self.CP.carFingerprint in CANFD_CAR:
       self.angle_limit_counter, apply_steer_req = common_fault_avoidance(CS.out.steeringAngleDeg, self.to_avoid_lkas_fault_max_angle, lat_active,
                                                                          self.angle_limit_counter, self.to_avoid_lkas_fault_max_frame,
                                                                          MAX_ANGLE_CONSECUTIVE_FRAMES)
@@ -380,6 +380,8 @@ class CarController:
 
     can_sends = []
 
+    # *** common hyundai stuff ***
+
     # tester present - w/ no response (keeps relevant ECU disabled)
     if self.frame % 100 == 0 and not (self.CP.flags & HyundaiFlags.CANFD_CAMERA_SCC.value) and self.CP.openpilotLongitudinalControl and self.CP.sccBus == 0:
       # for longitudinal control, either radar or ADAS driving ECU
@@ -396,13 +398,12 @@ class CarController:
     if self.CP.carFingerprint in CANFD_CAR:
       hda2 = self.CP.flags & HyundaiFlags.CANFD_HDA2
       hda2_long = hda2 and self.CP.openpilotLongitudinalControl
-      hda2_alt_steering = self.CP.flags & HyundaiFlags.CANFD_HDA2_ALT_STEERING
 
       # steering control
-      can_sends.extend(hyundaicanfd.create_steering_messages(self.packer, self.CP, self.CAN, CC.enabled, lat_active, apply_steer))
+      can_sends.extend(hyundaicanfd.create_steering_messages(self.packer, self.CP, self.CAN, CC.enabled, apply_steer_req, apply_steer))
 
       # disable LFA on HDA2
-      if self.frame % 5 == 0 and hda2 and not hda2_alt_steering:
+      if self.frame % 5 == 0 and hda2:
         can_sends.append(hyundaicanfd.create_cam_0x2a4(self.packer, self.CAN, CS.cam_0x2a4))
 
       # LFA and HDA icons

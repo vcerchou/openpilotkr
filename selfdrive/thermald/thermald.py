@@ -226,6 +226,7 @@ def thermald_thread(end_event, hw_queue):
 
     pandaStates = sm['pandaStates']
     peripheralState = sm['peripheralState']
+    peripheral_panda_present = peripheralState.pandaType != log.PandaState.PandaType.unknown
 
     msg = read_thermal(thermal_config)
 
@@ -239,7 +240,7 @@ def thermald_thread(end_event, hw_queue):
       in_car = pandaState.harnessStatus != log.PandaState.HarnessStatus.notConnected
 
       # Setup fan handler on first connect to panda
-      if fan_controller is None and peripheralState.pandaType != log.PandaState.PandaType.unknown:
+      if fan_controller is None and peripheral_panda_present:
         if TICI:
           fan_controller = TiciFanController()
     elif params.get_bool("IsOpenpilotViewEnabled") and not params.get_bool("IsDriverViewEnabled") and is_openpilot_view_enabled == 0:
@@ -317,7 +318,6 @@ def thermald_thread(end_event, hw_queue):
     #startup_conditions["up_to_date"] = params.get("Offroad_ConnectivityNeeded") is None or params.get_bool("DisableUpdates") or params.get_bool("SnoozeUpdate")
     startup_conditions["not_uninstalling"] = not params.get_bool("DoUninstall")
     startup_conditions["accepted_terms"] = params.get("HasAcceptedTerms") == terms_version
-    #startup_conditions["offroad_min_time"] = (not started_seen) or ((off_ts is not None) and (sec_since_boot() - off_ts) > 5.)
 
     # with 2% left, we killall, otherwise the phone will take a long time to boot
     startup_conditions["free_space"] = msg.deviceState.freeSpacePercent > 2

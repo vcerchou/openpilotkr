@@ -8598,7 +8598,7 @@ void LongAlternative::refresh() {
   }
 }
 
-MapboxToken::MapboxToken() : AbstractControl(tr("MapboxToken"), tr("Mapbox Token"), "") {
+MapboxToken::MapboxToken() : AbstractControl(tr("MapboxToken"), tr("MapboxToken"), "") {
   btn.setStyleSheet(R"(
     padding: -10;
     border-radius: 35px;

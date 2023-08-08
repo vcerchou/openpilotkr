@@ -1813,6 +1813,22 @@ This may take up to a minute.</source>
         <source>5hours</source>
         <translation>5시간</translation>
     </message>
+    <message>
+        <source>10hours</source>
+        <translation>10시간</translation>
+    </message>
+    <message>
+        <source>24hours</source>
+        <translation>24시간</translation>
+    </message>
+    <message>
+        <source>48hours</source>
+        <translation>48시간</translation>
+    </message>
+    <message>
+        <source>72hours</source>
+        <translation>72시간</translation>
+    </message>
 </context>
 <context>
     <name>ForceShutdown</name>
@@ -4090,6 +4106,17 @@ This may take up to a minute.</source>
     <message>
         <source>Low UI Profile to get UI more visible at bottom side.</source>
         <translation>UI의 일부 정보를 화면 하단으로 이동하여 시야에 잘 보이도록 합니다. 속도계나 설정속도가 룸미러에 가려지는 경우 유용할 수 있습니다.</translation>
+    </message>
+</context>
+<context>
+    <name>MapboxToken</name>
+    <message>
+        <source>MapboxToken</source>
+        <translation>맵박스 토큰</translation>
+    </message>
+    <message>
+        <source>Put your MapboxToken starting with pk.</source>
+        <translation>pk로 시작하는 맵박스 토큰을 입력합니다.</translation>
     </message>
 </context>
 </TS>

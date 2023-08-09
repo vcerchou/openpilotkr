@@ -758,7 +758,10 @@ BO_ 586 TI_FEEDBACK: 8 XXX
  SG_ RAMP_DOWN : 55|8@0+ (1,0) [0|1] "" XXX
  SG_ SPARE : 63|8@0+ (1,0) [0|255] "" XXX
 
-
+BO_ 1147 BSM_M3: 8 XXX
+ SG_ RIGHT_BSM : 0|1@0+ (1,0) [0|1] "" XXX
+ SG_ LEFT_BSM : 14|1@0+ (1,0) [0|1] "" XXX
+ 
 CM_ SG_ 357 GEAR "13P, 26R, 13N, 24D";
 CM_ SG_ 605 PED_BRAKE "3: no brake, 4: brake";
 CM_ SG_ 605 BRAKE_WARNING "Flashing brake warning and audible alert for potential forward collision";

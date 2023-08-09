@@ -45,10 +45,11 @@ class CarState(CarStateBase):
     ret.gearShifter = self.parse_gear_shifter(self.shifter_values.get(can_gear, None))
 
     ret.genericToggle = bool(cp.vl["BLINK_INFO"]["HIGH_BEAMS"])
-    ret.leftBlindspot = cp.vl["BSM"]["LEFT_BS_STATUS"] != 0
-    ret.rightBlindspot = cp.vl["BSM"]["RIGHT_BS_STATUS"] != 0
     ret.leftBlinker, ret.rightBlinker = self.update_blinker_from_lamp(40, cp.vl["BLINK_INFO"]["LEFT_BLINK"] == 1,
                                                                       cp.vl["BLINK_INFO"]["RIGHT_BLINK"] == 1)
+    if self.CP.enableBsm:
+      ret.leftBlindspot = cp.vl["BSM_M3"]["LEFT_BSM"] == 1
+      ret.rightBlindspot = cp.vl["BSM_M3"]["RIGHT_BSM"] == 1
 
     if self.CP.enableTorqueInterceptor:
       ret.steeringTorque = cp_body.vl["TI_FEEDBACK"]["TI_TORQUE_SENSOR"]
@@ -203,7 +204,14 @@ class CarState(CarStateBase):
       checks += [
         ("TI_FEEDBACK", 100),
       ]
+      
+    if CP.enableBsm:
+      signals += [
+        ("LEFT_BSM", "BSM_M3"),
+        ("RIGHT_BSM", "BSM_M3"),
+      ]
 
+      checks.append(("BSM_M3", 10))  
     return CANParser(DBC[CP.carFingerprint]["pt"], signals, checks, 0)
 
   @staticmethod

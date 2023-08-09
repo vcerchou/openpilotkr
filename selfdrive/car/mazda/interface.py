@@ -33,6 +33,8 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.8
     tire_stiffness_factor = 0.70   # not optimized yet
 
+    ret.enableBsm = 0x47b in fingerprint[0]
+    
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
 
     if candidate in (CAR.CX5, CAR.CX5_2022):

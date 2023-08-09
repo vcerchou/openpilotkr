@@ -187,7 +187,8 @@ class CarInterfaceBase(ABC):
     ret.longitudinalActuatorDelayLowerBound = 0.15
     ret.longitudinalActuatorDelayUpperBound = 0.15
     ret.steerLimitTimer = 1.0
-
+    ret.enableTorqueInterceptor = False
+    
     ret.vCruisekph = 0
     ret.resSpeed = 0
     ret.vFuture = 0
